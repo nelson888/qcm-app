@@ -1,11 +1,9 @@
 package com.polytech.qcm.server.qcmserver.configuration;
 
-import com.polytech.qcm.server.qcmserver.repository.FakeUserDetailsRepository;
-import com.polytech.qcm.server.qcmserver.repository.UserDetailsRepository;
 import com.polytech.qcm.server.qcmserver.security.JwtConfigurer;
 import com.polytech.qcm.server.qcmserver.security.JwtTokenProvider;
-import com.polytech.qcm.server.qcmserver.security.Role;
-import com.polytech.qcm.server.qcmserver.security.UserDetailsImpl;
+import com.polytech.qcm.server.qcmserver.data.Role;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,18 +16,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.List;
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  @Value("${security.jwt.token.secret-key:secret}")
-  private String secretKey = "secret";
+  @Value("${security.jwt.token.secret-key}")
+  private String secretKey; //encrypting base key for jwt token generation
 
   @Autowired
-  JwtTokenProvider jwtTokenProvider;
+  private JwtTokenProvider jwtTokenProvider;
 
   @Bean
   @Override
@@ -45,19 +41,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
-  }
-
-  @Bean
-  public List<UserDetailsImpl> users(PasswordEncoder passwordEncoder) {
-    return Arrays.asList(
-      new UserDetailsImpl("nelson", passwordEncoder.encode("nelson"), Role.STUDENT),
-      new UserDetailsImpl("nicolas", passwordEncoder.encode("nicolas"), Role.STUDENT),
-      new UserDetailsImpl("teacher", passwordEncoder.encode("teacher"), Role.TEACHER));
-  }
-
-  @Bean
-  public UserDetailsRepository userRepository(List<UserDetailsImpl> users) {
-    return new FakeUserDetailsRepository(users);
   }
 
   @Override

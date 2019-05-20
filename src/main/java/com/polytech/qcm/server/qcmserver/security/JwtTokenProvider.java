@@ -1,7 +1,7 @@
 package com.polytech.qcm.server.qcmserver.security;
 
 import com.polytech.qcm.server.qcmserver.exception.InvalidJwtAuthenticationException;
-import com.polytech.qcm.server.qcmserver.repository.UserDetailsRepository;
+import com.polytech.qcm.server.qcmserver.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 //TUTORIEL: https://www.codementor.io/hantsy/protect-rest-apis-with-spring-security-and-jwt-ms5uu3zd6
@@ -27,32 +26,32 @@ public class JwtTokenProvider {
   private static final long VALIDITY_IN_MILLISECONDS = TimeUnit.DAYS.toMillis(30); // infinite validity
 
   private final String secretKey;
-  private final UserDetailsRepository userDetailsRepository;
+  private final UserRepository userRepository;
 
-  public JwtTokenProvider(String secretKey, UserDetailsRepository userDetailsRepository) {
+  public JwtTokenProvider(String secretKey, UserRepository userRepository) {
     this.secretKey = secretKey;
-    this.userDetailsRepository = userDetailsRepository;
+    this.userRepository = userRepository;
   }
 
-  public String createToken(String username, List<String> roles) {
+  public String createToken(String username, String role) {
 
     Claims claims = Jwts.claims().setSubject(username);
-    claims.put("roles", roles);
+    claims.put("role", role);
 
     Date now = new Date();
     Date validity = new Date(now.getTime() + VALIDITY_IN_MILLISECONDS);
 
-    return Jwts.builder()//
-      .setClaims(claims)//
-      .setIssuedAt(now)//
-      .setExpiration(validity)//
-      .signWith(SignatureAlgorithm.HS256, secretKey)//
+    return Jwts.builder()
+      .setClaims(claims)
+      .setIssuedAt(now)
+      .setExpiration(validity)
+      .signWith(SignatureAlgorithm.HS256, secretKey)
       .compact();
   }
 
   public Authentication getAuthentication(String token) {
     String username = getUsername(token);
-    UserDetails userDetails = this.userDetailsRepository.findByUsername(username)
+    UserDetails userDetails = this.userRepository.findByUsername(username)
       .orElseThrow(() -> new BadCredentialsException("User with username " + username + " doesn't exists"));
     return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
   }

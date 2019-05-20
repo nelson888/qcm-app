@@ -1,4 +1,4 @@
-package com.polytech.qcm.server.qcmserver.security;
+package com.polytech.qcm.server.qcmserver.data;
 
 public enum Role {
   TEACHER, STUDENT, ADMIN;

@@ -1,14 +1,13 @@
 package com.polytech.qcm.server.qcmserver.controller;
 
 import com.polytech.qcm.server.qcmserver.data.AuthResponse;
-import com.polytech.qcm.server.qcmserver.data.User;
-import com.polytech.qcm.server.qcmserver.repository.UserDetailsRepository;
+import com.polytech.qcm.server.qcmserver.repository.UserRepository;
 import com.polytech.qcm.server.qcmserver.security.JwtTokenProvider;
-import com.polytech.qcm.server.qcmserver.security.UserDetailsImpl;
-import lombok.extern.slf4j.Slf4j;
+import com.polytech.qcm.server.qcmserver.data.User;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,24 +27,24 @@ public class AuthController {
 
   private final AuthenticationManager authenticationManager;
   private final JwtTokenProvider jwtTokenProvider;
-  private final UserDetailsRepository users;
+  private final UserRepository userRepository;
 
   public AuthController(AuthenticationManager authenticationManager,
                         JwtTokenProvider jwtTokenProvider,
-                        UserDetailsRepository users) {
+                        UserRepository userRepository) {
     this.authenticationManager = authenticationManager;
     this.jwtTokenProvider = jwtTokenProvider;
-    this.users = users;
+    this.userRepository = userRepository;
   }
 
   @PostMapping("/login")
-  public ResponseEntity login(@RequestBody User data) {
+  public ResponseEntity login(@RequestBody User data) { // only needs username and password (not hashed)
     try {
       String username = data.getUsername();
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
-      UserDetailsImpl user = this.users.findByUsername(username)
+      User user = this.userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException("Username " + username + "not found"));
-      String token = jwtTokenProvider.createToken(username, user.getRoles());
+      String token = jwtTokenProvider.createToken(username, user.getRole());
       LOGGER.info("User {} authenticated", username);
       return ResponseEntity.ok(new AuthResponse(username, user.getRole(), token));
     } catch (AuthenticationException e) {
