@@ -7,14 +7,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class User {
+public class AuthResponse {
 
-  private Long id; // TODO use JPA annotion for MySQL
   private String username;
-  private String password; //should be already hashed
-
-  public User(String username, String password) {
-    this(0L, username, password);
-  }
+  private String role;
+  private String jwt;
 
 }
