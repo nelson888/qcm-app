@@ -8,9 +8,9 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name = "choix")
+@Table(name = "choice")
 @Entity
-public class Choix {
+public class Choice {
 
     @Id
     @NonNull
