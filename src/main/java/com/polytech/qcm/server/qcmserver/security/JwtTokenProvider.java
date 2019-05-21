@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,10 +26,11 @@ public class JwtTokenProvider {
   private static final String BEARER = "Bearer ";
   private static final long VALIDITY_IN_MILLISECONDS = TimeUnit.DAYS.toMillis(30); // infinite validity
 
-  private final String secretKey;
+  @Value("${security.jwt.token.secret-key}")
+  private String secretKey; //encrypting base key for jwt token generation
   private final UserRepository userRepository;
 
-  public JwtTokenProvider(String secretKey, UserRepository userRepository) {
+  public JwtTokenProvider(UserRepository userRepository) {
     this.secretKey = secretKey;
     this.userRepository = userRepository;
   }
