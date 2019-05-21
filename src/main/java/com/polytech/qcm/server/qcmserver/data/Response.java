@@ -7,9 +7,9 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name = "reponse")
+@Table(name = "response")
 @Entity
-public class Reponse {
+public class Response {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,6 +22,6 @@ public class Reponse {
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id", nullable = false)
-    private Choix choix;
+    private Choice choice;
 
 }

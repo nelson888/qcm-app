@@ -1,6 +1,6 @@
 package com.polytech.qcm.server.qcmserver.repository;
 
-import com.polytech.qcm.server.qcmserver.data.Reponse;
+import com.polytech.qcm.server.qcmserver.data.Response;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * MySQL requests are handled directly by hibernates (jpa)
  */
 @Repository
-public interface ReponseRepository extends JpaRepository<Reponse, Integer> {
+public interface ReponseRepository extends JpaRepository<Response, Integer> {
 
 
 

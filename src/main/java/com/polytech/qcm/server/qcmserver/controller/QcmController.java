@@ -5,12 +5,10 @@ import com.polytech.qcm.server.qcmserver.data.QCM;
 import com.polytech.qcm.server.qcmserver.exception.BadRequestException;
 import com.polytech.qcm.server.qcmserver.repository.QcmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/qcm")
@@ -31,11 +29,29 @@ public class QcmController {
     return ResponseEntity.ok(qcm);
   }
 
-  @GetMapping("/new")
+  @PostMapping("/new")
   public ResponseEntity newQcm() {
     QCM qcm = new QCM();
 //    qcmRepository.save(qcm); TODO bug
     return ResponseEntity.status(HttpStatus.CREATED).body(qcm);
+  }
+
+  @PostMapping("/qcm/save")
+  public ResponseEntity save(@RequestBody QCM qcm){
+    qcmRepository.save(qcm);
+    return ResponseEntity.ok(qcm);
+  }
+  @DeleteMapping("/qcm/{id}/delete")
+  public ResponseEntity delete(@PathVariable("id") int id){
+    qcmRepository.deleteById(id);
+    return ResponseEntity.status(HttpStatus.OK).build();
+  }
+
+  @PostMapping("/qcm/{id}/launch")
+  public ResponseEntity launchQCM(@PathVariable("id") int id){
+    QCM qcm = qcmRepository.findById(id);
+    qcm.setState(State.);
+
   }
 
 }
