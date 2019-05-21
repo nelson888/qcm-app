@@ -31,7 +31,8 @@ public class QCM {
 
     @NonNull
     @NotBlank
-    private String state;
+    @Enumerated(EnumType.STRING)
+    private State state;
 
     @OneToMany(mappedBy = "question")
     private List<Question> questions;
