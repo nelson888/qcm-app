@@ -13,9 +13,9 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-
+/*
 @Configuration
-@EnableWebSocket
+@EnableWebSocket*/
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
   @Override
