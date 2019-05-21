@@ -51,8 +51,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     final String teacher = Role.TEACHER.name();
     final String admin = Role.ADMIN.name();
     http
+      .cors()
+      .and()
+      .csrf()
+      .disable()
       .httpBasic().disable()
-      .csrf().disable()
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       .and()
       .authorizeRequests()
