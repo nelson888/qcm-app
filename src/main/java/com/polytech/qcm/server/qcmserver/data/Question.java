@@ -9,11 +9,9 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name = "qcm")
+@Table(name = "question")
 @Entity
-public class QCM {
-
-    private static final String ALPHABETIC_REGEX = "[a-zA-Z]+";
+public class Question {
 
     @Id
     @NonNull
@@ -21,17 +19,11 @@ public class QCM {
 
     @NonNull
     @NotBlank
-    private String name;
+    private String question;
 
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "username", nullable = false)
-    private User author;
-
-    @NonNull
-    @NotBlank
-    private String state;
-
-    public String getState(){ return state;}
+    @JoinColumn(name = "id", nullable = false)
+    private QCM qcm_id;
 
 }
