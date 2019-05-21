@@ -4,8 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -17,6 +17,7 @@ public class QCM {
 
     @Id
     @NonNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @NonNull
@@ -32,6 +33,6 @@ public class QCM {
     @NotBlank
     private String state;
 
-    public String getState(){ return state;}
-
+    @OneToMany(mappedBy = "question")
+    private List<Question> questions;
 }

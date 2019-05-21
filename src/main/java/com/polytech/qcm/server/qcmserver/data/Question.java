@@ -23,7 +23,7 @@ public class Question {
 
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id", nullable = false)
-    private QCM qcm_id;
+    @JoinColumn(name = "qcm_id", nullable = false)
+    private QCM qcm;
 
 }

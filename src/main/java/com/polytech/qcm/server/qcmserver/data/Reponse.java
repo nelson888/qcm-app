@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -12,6 +11,9 @@ import javax.persistence.*;
 @Entity
 public class Reponse {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int reponseId;
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "username", nullable = false)
@@ -20,6 +22,6 @@ public class Reponse {
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id", nullable = false)
-    private Choix choix_id;
+    private Choix choix;
 
 }

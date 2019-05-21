@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -15,6 +14,7 @@ public class Choix {
 
     @Id
     @NonNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @NonNull
@@ -26,7 +26,7 @@ public class Choix {
 
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "question_id", nullable = false)
     private Question question_id;
 
 
