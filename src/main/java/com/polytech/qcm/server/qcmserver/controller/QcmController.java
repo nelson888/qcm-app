@@ -2,13 +2,14 @@ package com.polytech.qcm.server.qcmserver.controller;
 
 import com.polytech.qcm.server.qcmserver.data.ErrorResponse;
 import com.polytech.qcm.server.qcmserver.data.QCM;
+import com.polytech.qcm.server.qcmserver.data.State;
 import com.polytech.qcm.server.qcmserver.exception.BadRequestException;
 import com.polytech.qcm.server.qcmserver.repository.QcmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/qcm")
@@ -25,7 +26,7 @@ public class QcmController {
   @GetMapping("/{id}")
   public ResponseEntity getById(@PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
-      .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
+            .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
     return ResponseEntity.ok(qcm);
   }
 
@@ -47,11 +48,20 @@ public class QcmController {
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 
-  @PostMapping("/qcm/{id}/launch")
+  @GetMapping("/qcm/{id}/launch")
   public ResponseEntity launchQCM(@PathVariable("id") int id){
-    QCM qcm = qcmRepository.findById(id);
-    qcm.setState(State.);
+    QCM qcm = qcmRepository.findById(id)
+            .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
+    qcm.setState(State.STARTED);
+    return ResponseEntity.ok(qcm);
+  }
 
+  @GetMapping("/qcm/{id}/next")
+    public ResponseEntity nextQuestion(@PathVariable("id") int id){ //TODO implement going to teh next question
+    /*
+      QCM qcm = qcmRepository.findById(id)
+              .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
+    */
   }
 
 }
