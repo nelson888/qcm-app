@@ -31,7 +31,6 @@ public class JwtTokenProvider {
   private final UserRepository userRepository;
 
   public JwtTokenProvider(UserRepository userRepository) {
-    this.secretKey = secretKey;
     this.userRepository = userRepository;
   }
 
