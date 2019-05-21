@@ -58,9 +58,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       .antMatchers(HttpMethod.GET, "/auth/student/session").hasRole(student)
       .antMatchers(HttpMethod.GET, "/auth/teacher/session").hasRole(teacher)
       //TODO fill when doing controllers
-      //CommandController
-      .antMatchers(HttpMethod.POST, "/api/commands/").hasAnyRole(student, admin)
-      .antMatchers(HttpMethod.GET, "/api/commands/consume").hasAnyRole(admin, teacher)
+      //QcmController
+      .antMatchers(HttpMethod.GET, "/qcm/new").hasAnyRole(teacher, admin)
+      .antMatchers(HttpMethod.GET, "/qcm/**").authenticated()
       //ExecutionController
       .antMatchers(HttpMethod.POST, "/api/executions/").hasAnyRole(student, admin)
       .antMatchers(HttpMethod.GET, "/api/executions/").authenticated()
