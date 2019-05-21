@@ -1,4 +1,4 @@
-package com.polytech.qcm.server.qcmserver.data;
+package com.polytech.qcm.server.qcmserver.data.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

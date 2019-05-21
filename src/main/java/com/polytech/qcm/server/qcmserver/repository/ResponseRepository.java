@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * MySQL requests are handled directly by hibernates (jpa)
  */
 @Repository
-public interface ReponseRepository extends JpaRepository<Response, Integer> {
+public interface ResponseRepository extends JpaRepository<Response, Integer> {
 
 
 

@@ -13,7 +13,7 @@ public class Response {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int reponseId;
+    private int responseId;
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "username", nullable = false)

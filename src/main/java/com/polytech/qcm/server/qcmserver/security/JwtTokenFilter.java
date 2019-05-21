@@ -1,6 +1,6 @@
 package com.polytech.qcm.server.qcmserver.security;
 
-import com.polytech.qcm.server.qcmserver.data.ErrorResponse;
+import com.polytech.qcm.server.qcmserver.data.response.ErrorResponse;
 import com.polytech.qcm.server.qcmserver.exception.InvalidJwtAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

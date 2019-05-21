@@ -1,11 +1,10 @@
 package com.polytech.qcm.server.qcmserver.controller;
 
-import com.polytech.qcm.server.qcmserver.data.ErrorResponse;
+import com.polytech.qcm.server.qcmserver.data.response.ErrorResponse;
 import com.polytech.qcm.server.qcmserver.data.QCM;
 import com.polytech.qcm.server.qcmserver.data.State;
 import com.polytech.qcm.server.qcmserver.exception.BadRequestException;
 import com.polytech.qcm.server.qcmserver.repository.QcmRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/qcm")
 public class QcmController {
 
-  @Autowired
-  private QcmRepository qcmRepository;
+  private final QcmRepository qcmRepository;
 
-  @GetMapping("/")
-  public ResponseEntity test() {
-    return ResponseEntity.ok(new ErrorResponse("test", "test"));
+  public QcmController(QcmRepository qcmRepository) {
+    this.qcmRepository = qcmRepository;
   }
 
   @GetMapping("/{id}")
@@ -37,19 +34,21 @@ public class QcmController {
     return ResponseEntity.status(HttpStatus.CREATED).body(qcm);
   }
 
-  @PostMapping("/qcm/save")
-  public ResponseEntity save(@RequestBody QCM qcm){
+  @PostMapping("/qcm/{id}")
+  public ResponseEntity save(@PathVariable("id") int id, @RequestBody QCM qcm){
+    qcm.setId(id);
     qcmRepository.save(qcm);
     return ResponseEntity.ok(qcm);
   }
-  @DeleteMapping("/qcm/{id}/delete")
+
+  @DeleteMapping("/qcm/{id}")
   public ResponseEntity delete(@PathVariable("id") int id){
     qcmRepository.deleteById(id);
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 
   @GetMapping("/qcm/{id}/launch")
-  public ResponseEntity launchQCM(@PathVariable("id") int id){
+  public ResponseEntity launchQCM(@PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
             .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
     qcm.setState(State.STARTED);
@@ -58,10 +57,10 @@ public class QcmController {
 
   @GetMapping("/qcm/{id}/next")
     public ResponseEntity nextQuestion(@PathVariable("id") int id){ //TODO implement going to teh next question
-    /*
       QCM qcm = qcmRepository.findById(id)
               .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
-    */
+      //TODO
+    return ResponseEntity.status(HttpStatus.OK).build();
   }
 
 }

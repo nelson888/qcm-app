@@ -1,6 +1,6 @@
 package com.polytech.qcm.server.qcmserver.controller;
 
-import com.polytech.qcm.server.qcmserver.data.AuthResponse;
+import com.polytech.qcm.server.qcmserver.data.response.AuthResponse;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
 import com.polytech.qcm.server.qcmserver.security.JwtTokenProvider;
 import com.polytech.qcm.server.qcmserver.data.User;

@@ -1,6 +1,6 @@
 package com.polytech.qcm.server.qcmserver.exception;
 
-import com.polytech.qcm.server.qcmserver.data.ErrorResponse;
+import com.polytech.qcm.server.qcmserver.data.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
