@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
-@RestController("/reponse")
+@RestController("/response")
 public class ResponseController {
   private final ChoiceRepository choiceRepository;
   private final UserRepository userRepository;
