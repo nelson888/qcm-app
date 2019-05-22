@@ -1,12 +1,13 @@
 package com.polytech.qcm.server.qcmserver.exception;
 
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class BadRequestException extends RuntimeException {
+@ResponseStatus(value = HttpStatus.FORBIDDEN)
+public class ForbiddenRequestException extends RuntimeException {
 
-  public BadRequestException(String message) {
+  public ForbiddenRequestException(String message) {
     super(message);
   }
 

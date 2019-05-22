@@ -1,6 +1,5 @@
 package com.polytech.qcm.server.qcmserver.security;
 
-import com.polytech.qcm.server.qcmserver.data.response.ErrorResponse;
 import com.polytech.qcm.server.qcmserver.exception.InvalidJwtAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,9 +38,8 @@ public class JwtTokenFilter extends GenericFilterBean {
       HttpServletResponse response = (HttpServletResponse) res;
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       response.setContentType("application/json");
-      ErrorResponse errorResponse = new ErrorResponse("Bad authentication", exception.getMessage());
       try (PrintWriter out = response.getWriter()) {
-        out.println(String.format("{ \"title\": \"%s\", \"message\":\"%s\"}", errorResponse.getTitle(), errorResponse.getMessage()));
+        out.println(String.format("{ \"error\": \"Bad authentication\", \"message\":\"%s\"}", exception.getMessage()));
       }
       return;
     }

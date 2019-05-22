@@ -6,7 +6,6 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Table(name = "choice")
@@ -16,7 +15,7 @@ public class Choice {
     @Id
     @NonNull
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
 
     @NonNull
     @NotBlank
@@ -26,9 +25,23 @@ public class Choice {
     private boolean isAnswer;
 
     @NonNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "question_id", nullable = false)
     @JsonIgnore
     private Question question;
 
+    public Choice(@NonNull @NotBlank String value, @NonNull boolean isAnswer, @NonNull Question question) {
+        this.value = value;
+        this.isAnswer = isAnswer;
+        this.question = question;
+    }
+
+    @Override
+    public String toString() {
+        return "Choice{" +
+          "id=" + id +
+          ", value='" + value + '\'' +
+          ", isAnswer=" + isAnswer +
+          '}';
+    }
 }

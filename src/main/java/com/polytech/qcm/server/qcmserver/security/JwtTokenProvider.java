@@ -1,5 +1,6 @@
 package com.polytech.qcm.server.qcmserver.security;
 
+import com.polytech.qcm.server.qcmserver.exception.BadCredentialsException;
 import com.polytech.qcm.server.qcmserver.exception.InvalidJwtAuthenticationException;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -8,7 +9,6 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;

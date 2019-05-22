@@ -1,6 +1,8 @@
 package com.polytech.qcm.server.qcmserver.controller;
 
 import com.polytech.qcm.server.qcmserver.data.response.AuthResponse;
+import com.polytech.qcm.server.qcmserver.exception.BadCredentialsException;
+import com.polytech.qcm.server.qcmserver.exception.NotFoundException;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
 import com.polytech.qcm.server.qcmserver.security.JwtTokenProvider;
 import com.polytech.qcm.server.qcmserver.data.User;
@@ -10,10 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,7 +44,7 @@ public class AuthController {
       String username = data.getUsername();
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
       User user = this.userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException("Username " + username + "not found"));
+        .orElseThrow(() -> new NotFoundException("Username " + username + "not found"));
       String token = jwtTokenProvider.createToken(username, user.getRole());
       LOGGER.info("User {} authenticated", username);
       return ResponseEntity.ok(new AuthResponse(username, user.getRole(), token));

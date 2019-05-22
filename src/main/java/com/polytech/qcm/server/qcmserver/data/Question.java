@@ -7,8 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-@Getter
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Table(name = "question")
@@ -24,13 +22,26 @@ public class Question {
     @NotBlank
     private String question;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Choice> choices;
 
     @NonNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "qcm_id", nullable = false)
     @JsonIgnore
     private QCM qcm;
 
+    public Question(@NonNull @NotBlank String question, List<Choice> choices, @NonNull QCM qcm) {
+        this.question = question;
+        this.choices = choices;
+        this.qcm = qcm;
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+          "id=" + id +
+          ", question='" + question + '\'' +
+          '}';
+    }
 }

@@ -1,5 +1,7 @@
 package com.polytech.qcm.server.qcmserver.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -34,6 +36,7 @@ public class User implements UserDetails {
   private String username;
   @NonNull
   @NotBlank
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) //don't deserialize it
   private String password; //should be already hashed in database
 
   @NonNull
@@ -41,26 +44,31 @@ public class User implements UserDetails {
   private String role; //CAREFUL ROLES MUST START WITH THE PREFIX 'ROLE_' BUT NOT IN SECURITY CONFIGURATION
 
   @Override
+  @JsonIgnore
   public boolean isAccountNonExpired() {
     return true;
   }
 
   @Override
+  @JsonIgnore
   public boolean isAccountNonLocked() {
     return true;
   }
 
   @Override
+  @JsonIgnore
   public boolean isCredentialsNonExpired() {
     return true;
   }
 
   @Override
+  @JsonIgnore
   public boolean isEnabled() {
     return true;
   }
 
   @Override
+  @JsonIgnore
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return Collections.singleton(new SimpleGrantedAuthority(role));
   }

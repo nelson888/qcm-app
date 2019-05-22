@@ -1,21 +1,23 @@
 package com.polytech.qcm.server.qcmserver.controller;
 
 import com.polytech.qcm.server.qcmserver.data.Choice;
+import com.polytech.qcm.server.qcmserver.data.Question;
 import com.polytech.qcm.server.qcmserver.data.Response;
 import com.polytech.qcm.server.qcmserver.exception.BadRequestException;
 import com.polytech.qcm.server.qcmserver.repository.ChoiceRepository;
 import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
-@RestController("/response")
+@RestController
+@RequestMapping("/response")
 public class ResponseController {
   private final ChoiceRepository choiceRepository;
   private final UserRepository userRepository;
@@ -28,22 +30,20 @@ public class ResponseController {
     this.userRepository = userRepository;
     this.responseRepository = responseRepository;
   }
-/*
-  @GetMapping(value = "/username")
-  @ResponseBody
-  public String currentUserName(Principal user) {
-    return principal.getName();
-  }*/
 
   @PostMapping("/")
   @ResponseBody
   public ResponseEntity postResponse(Principal user, @RequestBody Choice c) {
-    Response response = new Response();
     Choice choice = choiceRepository.findById(c.getId()).orElseThrow(() -> new BadRequestException("Choice with id " + c.getId() + " doesn't exists"));
-    response.setUser(userRepository.findByUsername(user.getName()).get());
-    response.setChoice(choice);
+    String username = user.getName();
+    Question question = choice.getQuestion();
+    Response existingAnswer = responseRepository.findByUser_UsernameAndChoice_Question_Id(username, question.getId());
+    if (existingAnswer != null) {
+      throw new BadRequestException("User " + username + " has already answered question " + question);
+    }
+    Response response = new Response(userRepository.findByUsername(user.getName()).get(), choice);
     responseRepository.saveAndFlush(response);
 
-    return ResponseEntity.status(HttpStatus.OK).build();
+    return ResponseEntity.ok(response);
   }
 }

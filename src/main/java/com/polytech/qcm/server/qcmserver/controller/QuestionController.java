@@ -1,26 +1,19 @@
 package com.polytech.qcm.server.qcmserver.controller;
 
 import com.polytech.qcm.server.qcmserver.data.Choice;
-import com.polytech.qcm.server.qcmserver.data.Question;
 import com.polytech.qcm.server.qcmserver.data.Response;
-import com.polytech.qcm.server.qcmserver.exception.BadRequestException;
 import com.polytech.qcm.server.qcmserver.repository.ChoiceRepository;
 import com.polytech.qcm.server.qcmserver.repository.QuestionRepository;
 import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +39,7 @@ public class QuestionController {
 
 
   @GetMapping("/{id}/responses")
-  public ResponseEntity getAllResponses(@PathVariable("id") int id) {
+  public ResponseEntity getAllResponses(Principal principal, @PathVariable("id") int id) {
     List<Choice> choices = choiceRepository.findAllByQuestion_Id(id);
     List<Response> responses = choices.stream()
       .flatMap(c -> responseRepository.findAllByChoice_Id(c.getId()).stream())
