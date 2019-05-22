@@ -14,6 +14,7 @@ import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +23,8 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,6 +47,11 @@ public class ApplicationConfiguration {
     this.choiceRepository = choiceRepository;
     this.responseRepository = responseRepository;
     this.passwordEncoder = passwordEncoder;
+  }
+
+  @Bean
+  Map<Integer, Question> currentQuestionMap() {
+    return new ConcurrentHashMap<>();
   }
 
   @PostConstruct
