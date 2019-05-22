@@ -39,7 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
           .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH")
-          .allowedHeaders("Authorization")
+          .allowedHeaders("*")
           .allowedOrigins("*");
       }
     };
