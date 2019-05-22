@@ -38,7 +38,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-          .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
+          .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH")
+          .allowedHeaders("Authorization")
+          .allowedOrigins("*");
       }
     };
   }
@@ -74,8 +76,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       .and()
       .authorizeRequests()
       .antMatchers("/auth/login").permitAll()
-      .antMatchers(HttpMethod.GET, "/auth/student/session").permitAll()
-      .antMatchers(HttpMethod.GET, "/auth/teacher/session").permitAll()
+      .antMatchers(HttpMethod.GET, "/auth/session/**").permitAll()
       //TODO fill when doing controllers
       //QcmController
       .antMatchers(HttpMethod.GET, "/qcm/new").hasAnyRole(teacher, admin)
