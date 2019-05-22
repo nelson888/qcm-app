@@ -108,6 +108,7 @@ public class QcmController {
       .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
     checkRights(user, qcm);
     qcm.setState(State.STARTED);
+    currentQuestionMap.put(id, 0);
     return ResponseEntity.ok(qcmRepository.saveAndFlush(qcm));
   }
 
