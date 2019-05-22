@@ -27,8 +27,6 @@ public class Choice {
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "question_id", nullable = false)
-    private Question question_id;
-
-
+    private Question question;
 
 }

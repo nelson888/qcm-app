@@ -44,7 +44,8 @@ public class QuestionController {
   @ResponseBody
   public ResponseEntity postResponse(@PathVariable("id") int id, Principal user, @RequestBody Choice c) {
     Response response = new Response();
-    Choice choice = choiceRepository.findById(c.getId()).orElseThrow(() -> new BadRequestException("Question with id " + c.getId() + " doesn't exists"));
+    Choice choice = choiceRepository.findById(c.getId()).orElseThrow(() -> new BadRequestException("Choice with id " + c.getId() + " doesn't exists"));
+    choice.setQuestion(questionRepository.findById(id).orElseThrow(() -> new BadRequestException("Question with id " + id + " doesn't exists")));
     response.setUser(userRepository.findByUsername(user.getName()).get());
     response.setChoice(choice);
     responseRepository.saveAndFlush(response);

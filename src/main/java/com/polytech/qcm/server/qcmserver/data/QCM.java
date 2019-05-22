@@ -18,7 +18,7 @@ public class QCM {
     @Id
     @NonNull
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Integer id;
 
     @NonNull
     @NotBlank
@@ -30,10 +30,10 @@ public class QCM {
     private User author;
 
     @NonNull
-    @NotBlank
     @Enumerated(EnumType.STRING)
     private State state;
 
     @OneToMany(mappedBy = "question")
     private List<Question> questions;
+
 }

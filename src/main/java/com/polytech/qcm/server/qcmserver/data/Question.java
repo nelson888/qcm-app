@@ -15,7 +15,8 @@ public class Question {
 
     @Id
     @NonNull
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
     @NonNull
     @NotBlank
