@@ -39,7 +39,7 @@ public class QuestionController {
 
 
   @GetMapping("/{id}/responses")
-  public ResponseEntity getAllResponses(Principal principal, @PathVariable("id") int id) {
+  public ResponseEntity getAllResponses(@PathVariable("id") int id) {
     List<Choice> choices = choiceRepository.findAllByQuestion_Id(id);
     List<Response> responses = choices.stream()
       .flatMap(c -> responseRepository.findAllByChoice_Id(c.getId()).stream())

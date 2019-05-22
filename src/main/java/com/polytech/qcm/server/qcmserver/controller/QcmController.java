@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Map;
 
 
 @RestController
@@ -26,15 +27,18 @@ public class QcmController {
   private final QuestionRepository questionRepository;
   private final ChoiceRepository choiceRepository;
   private final UserRepository userRepository;
+  private final Map<Integer, Question> currentQuestionMap; //map qcmId => question INDEX (not id)
 
   public QcmController(QcmRepository qcmRepository,
                        QuestionRepository questionRepository,
                        ChoiceRepository choiceRepository,
-                       UserRepository userRepository) {
+                       UserRepository userRepository,
+                       Map<Integer, Question> currentQuestionMap) {
     this.qcmRepository = qcmRepository;
     this.questionRepository = questionRepository;
     this.choiceRepository = choiceRepository;
     this.userRepository = userRepository;
+    this.currentQuestionMap = currentQuestionMap;
   }
 
   @GetMapping("/{id}")
@@ -43,6 +47,12 @@ public class QcmController {
             .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
    // checkRights(principal, qcm);
     return ResponseEntity.ok(qcm);
+  }
+
+  @GetMapping("/{id}/currentQuestion")
+  public ResponseEntity getCurrentQuestion( @PathVariable("id") int id) {
+    //TODO check if an entry exists in the currentQuestion map for the given id and return it if it does
+    return null; //TODO return responseEntity
   }
 
   @PostMapping("/")
@@ -80,7 +90,8 @@ public class QcmController {
   }
 
   @GetMapping("/{id}/nextQuestion")
-    public ResponseEntity nextQuestion(Principal user, @PathVariable("id") int id){ //TODO implement going to teh next question
+    public ResponseEntity nextQuestion(Principal user, @PathVariable("id") int id){
+    //TODO update the currentQuestionMap
       QCM qcm = qcmRepository.findById(id)
               .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
     checkRights(user, qcm);

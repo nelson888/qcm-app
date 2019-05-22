@@ -7,6 +7,7 @@ import com.polytech.qcm.server.qcmserver.exception.BadRequestException;
 import com.polytech.qcm.server.qcmserver.repository.ChoiceRepository;
 import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
+import com.polytech.qcm.server.qcmserver.service.MessageSender;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,13 +23,16 @@ public class ResponseController {
   private final ChoiceRepository choiceRepository;
   private final UserRepository userRepository;
   private final ResponseRepository responseRepository;
+  private final MessageSender messageSender;
 
   public ResponseController(ChoiceRepository choiceRepository,
                             UserRepository userRepository,
-                            ResponseRepository responseRepository) {
+                            ResponseRepository responseRepository,
+                            MessageSender messageSender) {
     this.choiceRepository = choiceRepository;
     this.userRepository = userRepository;
     this.responseRepository = responseRepository;
+    this.messageSender = messageSender;
   }
 
   @PostMapping("/")
@@ -44,6 +48,8 @@ public class ResponseController {
     Response response = new Response(userRepository.findByUsername(user.getName()).get(), choice);
     responseRepository.saveAndFlush(response);
 
+    //TODO check if all users have responded to the giben question and if so, send a message to all student with the message sender.
+    //TODO We'll also need to change the state of the qcm as complete(?)
     return ResponseEntity.ok(response);
   }
 }
