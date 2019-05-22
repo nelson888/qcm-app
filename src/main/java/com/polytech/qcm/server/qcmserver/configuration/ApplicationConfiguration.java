@@ -50,7 +50,7 @@ public class ApplicationConfiguration {
   }
 
   @Bean
-  Map<Integer, Question> currentQuestionMap() {
+  Map<Integer, Integer> currentQuestionMap() {
     return new ConcurrentHashMap<>();
   }
 

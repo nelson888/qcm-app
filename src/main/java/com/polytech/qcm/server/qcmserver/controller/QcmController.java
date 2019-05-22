@@ -27,13 +27,13 @@ public class QcmController {
   private final QuestionRepository questionRepository;
   private final ChoiceRepository choiceRepository;
   private final UserRepository userRepository;
-  private final Map<Integer, Question> currentQuestionMap; //map qcmId => question INDEX (not id)
+  private final Map<Integer, Integer> currentQuestionMap; //map qcmId => question INDEX (not id)
 
   public QcmController(QcmRepository qcmRepository,
                        QuestionRepository questionRepository,
                        ChoiceRepository choiceRepository,
                        UserRepository userRepository,
-                       Map<Integer, Question> currentQuestionMap) {
+                       Map<Integer, Integer> currentQuestionMap) {
     this.qcmRepository = qcmRepository;
     this.questionRepository = questionRepository;
     this.choiceRepository = choiceRepository;
