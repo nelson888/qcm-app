@@ -42,11 +42,16 @@ public class QcmController {
     this.currentQuestionMap = currentQuestionMap;
   }
 
+  @GetMapping("/all")
+  public ResponseEntity getAll() {
+    return ResponseEntity.ok(qcmRepository.findAll());
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity getById( @PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
-            .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
-   // checkRights(principal, qcm);
+      .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
+    // checkRights(principal, qcm);
     return ResponseEntity.ok(qcm);
   }
 
