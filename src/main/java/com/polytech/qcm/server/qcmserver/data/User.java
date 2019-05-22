@@ -27,7 +27,7 @@ import java.util.Collections;
 @Entity
 public class User implements UserDetails {
 
-  private static final String ALPHABETIC_REGEX = "[a-zA-Z]+";
+  private static final String ALPHABETIC_REGEX = "[a-zA-Z1-9]+";
 
   @Id
   @NonNull
