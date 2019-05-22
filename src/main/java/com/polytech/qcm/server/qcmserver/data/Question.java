@@ -1,9 +1,11 @@
 package com.polytech.qcm.server.qcmserver.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -22,9 +24,13 @@ public class Question {
     @NotBlank
     private String question;
 
+    @OneToMany(mappedBy = "question")
+    private List<Choice> choices;
+
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "qcm_id", nullable = false)
+    @JsonIgnore
     private QCM qcm;
 
 }

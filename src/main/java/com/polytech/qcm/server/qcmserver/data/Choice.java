@@ -1,5 +1,6 @@
 package com.polytech.qcm.server.qcmserver.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,6 +28,7 @@ public class Choice {
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "question_id", nullable = false)
+    @JsonIgnore
     private Question question;
 
 }

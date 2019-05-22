@@ -33,7 +33,7 @@ public class QCM {
     @Enumerated(EnumType.STRING)
     private State state;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "qcm")
     private List<Question> questions;
 
 }

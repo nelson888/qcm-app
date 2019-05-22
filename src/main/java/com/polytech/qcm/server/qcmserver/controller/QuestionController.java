@@ -11,6 +11,7 @@ import com.polytech.qcm.server.qcmserver.repository.UserRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/question")
@@ -40,16 +44,15 @@ public class QuestionController {
     this.choiceRepository = choiceRepository;
   }
 
-  @PostMapping("/{id}")
-  @ResponseBody
-  public ResponseEntity postResponse(@PathVariable("id") int id, Principal user, @RequestBody Choice c) {
-    Response response = new Response();
-    Choice choice = choiceRepository.findById(c.getId()).orElseThrow(() -> new BadRequestException("Choice with id " + c.getId() + " doesn't exists"));
-    choice.setQuestion(questionRepository.findById(id).orElseThrow(() -> new BadRequestException("Question with id " + id + " doesn't exists")));
-    response.setUser(userRepository.findByUsername(user.getName()).get());
-    response.setChoice(choice);
-    responseRepository.saveAndFlush(response);
 
-    return ResponseEntity.status(HttpStatus.OK).build();
+  @GetMapping("/{id}/responses")
+  public ResponseEntity getAllResponses(@PathVariable("id") int id) {
+    List<Choice> choices = choiceRepository.findAllByQuestion_Id(id);
+    List<Response> responses = choices.stream()
+      .flatMap(c -> responseRepository.findAllByChoice_Id(c.getId()).stream())
+      .collect(Collectors.toList());
+
+    return ResponseEntity.ok(responses);
   }
+
 }
