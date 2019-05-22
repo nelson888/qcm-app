@@ -1,5 +1,6 @@
 package com.polytech.qcm.server.qcmserver.repository;
 
+import com.polytech.qcm.server.qcmserver.data.Role;
 import com.polytech.qcm.server.qcmserver.data.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,5 @@ public interface UserRepository extends JpaRepository<User, String> {
 
   void deleteByUsername(String username);
 
-  List<User> findAllByRole(String role);
-
+  List<User> findAllByRole(Role role);
 }

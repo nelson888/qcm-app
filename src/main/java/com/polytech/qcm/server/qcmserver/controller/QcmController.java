@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Null;
 import java.security.Principal;
 import java.util.Map;
 
@@ -51,8 +52,15 @@ public class QcmController {
 
   @GetMapping("/{id}/currentQuestion")
   public ResponseEntity getCurrentQuestion( @PathVariable("id") int id) {
-    //TODO check if an entry exists in the currentQuestion map for the given id and return it if it does
-    return null; //TODO return responseEntity
+    QCM qcm = qcmRepository.findById(id)
+            .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
+    Integer questionIndex = currentQuestionMap.get(id);
+    if (questionIndex == null){
+      throw new BadRequestException("The qcm has not started");
+    }
+    else {
+      return ResponseEntity.ok(qcm.getQuestions().get(questionIndex));
+    }
   }
 
   @GetMapping("/new")
@@ -109,13 +117,17 @@ public class QcmController {
 
   @GetMapping("/{id}/nextQuestion")
     public ResponseEntity nextQuestion(Principal user, @PathVariable("id") int id){
-    //TODO update the currentQuestionMap
       QCM qcm = qcmRepository.findById(id)
               .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
     checkRights(user, qcm);
-      //TODO
-    Question question = qcm.getQuestions().get(0);
-    return ResponseEntity.ok(question); //TODO retourner la nouvelle question en cours
+    if (currentQuestionMap.get(id) == qcm.getQuestions().size()-1){
+      return ResponseEntity.ok("END OF QCM");
+    }
+    else{
+      currentQuestionMap.put(id, currentQuestionMap.get(id)+1);
+      Question question = qcm.getQuestions().get(currentQuestionMap.get(id));
+      return ResponseEntity.ok(question);
+    }
   }
 
   private void checkRights(Principal user, QCM qcm) {
