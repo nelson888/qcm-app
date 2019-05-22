@@ -55,11 +55,20 @@ public class QcmController {
     return null; //TODO return responseEntity
   }
 
+  @GetMapping("/new")
+  public ResponseEntity newQvm(Principal principal) {
+    QCM qcm = new QCM();
+    User user = userRepository.findByUsername(principal.getName()).get();
+    qcm.setAuthor(user);
+    qcm.setState(State.INCOMPLETE);
+    return ResponseEntity.ok(qcm);
+  }
+
   @PostMapping("/")
   public ResponseEntity save(Principal principal, @RequestBody QCM qcm) {
     User user = userRepository.findByUsername(principal.getName()).get();
     qcm.setAuthor(user);
-    qcm.setState(State.INCOMPLETE);
+    qcm.setState(State.COMPLETE);
     for (Question question : qcm.getQuestions()) {
       question.setQcm(qcm);
       for (Choice choice : question.getChoices()) {
@@ -83,9 +92,18 @@ public class QcmController {
   @GetMapping("/{id}/launch")
   public ResponseEntity launchQCM(Principal user, @PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
-            .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
+      .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
     checkRights(user, qcm);
     qcm.setState(State.STARTED);
+    return ResponseEntity.ok(qcmRepository.saveAndFlush(qcm));
+  }
+
+  @GetMapping("/{id}/finish")
+  public ResponseEntity finishQCM(Principal user, @PathVariable("id") int id) {
+    QCM qcm = qcmRepository.findById(id)
+      .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
+    checkRights(user, qcm);
+    qcm.setState(State.FINISHED);
     return ResponseEntity.ok(qcmRepository.saveAndFlush(qcm));
   }
 

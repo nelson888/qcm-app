@@ -48,8 +48,6 @@ public class ResponseController {
     Response response = new Response(userRepository.findByUsername(user.getName()).get(), choice);
     responseRepository.saveAndFlush(response);
 
-    //TODO check if all users have responded to the giben question and if so, send a message to all student with the message sender.
-    //TODO We'll also need to change the state of the qcm as complete(?)
     return ResponseEntity.ok(response);
   }
 }
