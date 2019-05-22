@@ -136,7 +136,7 @@ public class QcmController {
   }
 
   private void checkRights(Principal user, QCM qcm) {
-    if (false && !user.getName().equals(qcm.getAuthor().getUsername())) {
+    if (!user.getName().equals(qcm.getAuthor().getUsername())) {
       throw new ForbiddenRequestException("You cannot access this QCM: it is not yours!");
     }
   }

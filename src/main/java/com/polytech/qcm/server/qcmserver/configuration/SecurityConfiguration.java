@@ -73,6 +73,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       .and()
       .authorizeRequests()
+      .antMatchers("/auth/login").permitAll()
+      .antMatchers(HttpMethod.GET, "/auth/session/**").permitAll()
+      //TODO fill when doing controllers
+      //QcmController
+      .antMatchers(HttpMethod.GET, "/qcm/new").hasAnyRole(teacher, admin)
+      .antMatchers(HttpMethod.GET, "/qcm/**").authenticated()
+      //ExecutionController
+      .antMatchers(HttpMethod.POST, "/api/executions/").hasAnyRole(student, admin)
+      .antMatchers(HttpMethod.GET, "/api/executions/").authenticated()
+      .antMatchers(HttpMethod.DELETE, "/api/executions/**").hasAnyRole(student, admin)
+      .antMatchers(HttpMethod.PUT, "/api/executions/**").hasAnyRole(student, admin)
+      .antMatchers(HttpMethod.GET, "/api/executions/count").authenticated()
+      .antMatchers(HttpMethod.GET, "/api/executions/soonest").authenticated()
+      .antMatchers(HttpMethod.GET, "/api/executions/current").authenticated()
+      .antMatchers(HttpMethod.GET, "/api/executions/").authenticated()
+      //StateController
+      .antMatchers(HttpMethod.GET, "/api/state").authenticated()
+      .antMatchers(HttpMethod.PUT, "/api/state").hasAnyRole(teacher, admin)
+      .antMatchers(HttpMethod.GET, "/api/globalState").hasRole(student)
+      //StorageController
+      .antMatchers(HttpMethod.PUT, "/storage/**").hasAnyRole(teacher, admin)
+      .antMatchers(HttpMethod.GET, "/storage/**").hasAnyRole(student, admin)
 
       .anyRequest().permitAll()
       .and()
