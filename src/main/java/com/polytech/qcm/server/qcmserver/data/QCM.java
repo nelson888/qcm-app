@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @NoArgsConstructor
@@ -36,7 +35,7 @@ public class QCM {
     @OneToMany(mappedBy = "qcm", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Question> questions;
 
-    public QCM(@NonNull @NotBlank String name, @NonNull User author, @NonNull State state, List<Question> questions) {
+    public QCM(@NonNull String name, @NonNull User author, @NonNull State state, List<Question> questions) {
         this.name = name;
         this.author = author;
         this.state = state;

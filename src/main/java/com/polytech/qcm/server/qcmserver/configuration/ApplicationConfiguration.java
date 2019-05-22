@@ -75,6 +75,8 @@ public class ApplicationConfiguration {
     List<User> users = Arrays.asList(
       new User("nelson", passwordEncoder.encode("nelson"), student),
       new User("nicolas", passwordEncoder.encode("nicolas"), student),
+      new User("teacher2", passwordEncoder.encode("teacher2"), student),
+      new User("admin", passwordEncoder.encode("admin"), Role.ADMIN.roleName()),
         teacherUser);
     users.forEach(userRepository::saveAndFlush);
 
