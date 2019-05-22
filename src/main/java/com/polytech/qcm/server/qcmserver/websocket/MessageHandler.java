@@ -3,6 +3,7 @@ package com.polytech.qcm.server.qcmserver.websocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
@@ -29,4 +30,10 @@ public class MessageHandler extends TextWebSocketHandler {
     LOGGER.info("Session {} was established", session);
     webSocketSessions.add(session);
   }
+
+  @Override
+  protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    LOGGER.info("A message was received: {}", message.getPayload());
+  }
+
 }

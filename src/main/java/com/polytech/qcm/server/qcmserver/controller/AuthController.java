@@ -53,13 +53,4 @@ public class AuthController {
     }
   }
 
-  @GetMapping("/student/session")
-  public ResponseEntity studentSession() {
-    return ResponseEntity.ok().build();
-  }
-
-  @GetMapping("/teacher/session")
-  public ResponseEntity teacherSession() {
-    return ResponseEntity.ok().build();
-  }
 }

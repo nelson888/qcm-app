@@ -15,9 +15,10 @@ public interface ResponseRepository extends JpaRepository<Response, Integer> {
 
   List<Response> findAllByChoice_Id(int id);
 
-  // returns wether a user has already answered for a question
+  // returns whether a user has already answered for a question
   Response findByUser_UsernameAndChoice_Question_Id(String username, Integer questionId);
 
+  //returns all response for a given question
   List<Response> findAllByChoice_Question_Id(Integer questionId);
 
 }

@@ -21,7 +21,6 @@ public class QCM {
     private Integer id;
 
     @NonNull
-    @NotBlank
     private String name;
 
     @NonNull

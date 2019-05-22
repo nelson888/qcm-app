@@ -13,17 +13,17 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-/*
+
 @Configuration
-@EnableWebSocket*/
+@EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
   @Override
   public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
     MessageHandler studentsSessions = new MessageHandler(new CopyOnWriteArraySet<>());
     MessageHandler teachersSessions = new MessageHandler(new CopyOnWriteArraySet<>());
-    registry.addHandler(studentsSessions, "/auth/student/session");
-    registry.addHandler(teachersSessions, "/auth/teacher/session");
+    registry.addHandler(studentsSessions, "/auth/session/student");
+    registry.addHandler(teachersSessions, "/auth/session/teacher");
   }
 
 }

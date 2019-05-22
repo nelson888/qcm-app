@@ -79,14 +79,17 @@ public class ApplicationConfiguration {
     users.forEach(userRepository::saveAndFlush);
 
     List<Question> questions = new ArrayList<>();
-    QCM qcm = qcmRepository.saveAndFlush(new QCM("Test QCM", teacherUser, State.COMPLETE, questions));
+    QCM qcm = new QCM("Test QCM", teacherUser, State.COMPLETE, questions);
 
-    questions.addAll(questionRepository.saveAll(
+    questions.addAll((
       Arrays.asList(
         new Question("What is life?", new ArrayList<>(), qcm),
         new Question("What is love?", new ArrayList<>(), qcm),
         new Question("What is something?", new ArrayList<>(), qcm))));
-    questionRepository.flush();
+
+    qcmRepository.saveAndFlush(qcm);
+    questions = questionRepository.findAll();
+
     List<Choice> choices = choiceRepository.saveAll(
       Arrays.asList(
         new Choice("life itself", true, questions.get(0)),
@@ -102,9 +105,9 @@ public class ApplicationConfiguration {
     );
     choiceRepository.flush();
 
-    List<Response> responses = responseRepository.saveAll(
+    responseRepository.saveAll(
       Arrays.asList(
-        new Response(users.get(0), choices.get(1)),
+        new Response(users.get(0), choices.get(0)),
         new Response(users.get(1), choices.get(2)),
         new Response(users.get(1), choices.get(3)),
         new Response(users.get(0), choices.get(8))
