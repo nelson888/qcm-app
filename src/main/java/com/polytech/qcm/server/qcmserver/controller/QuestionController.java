@@ -3,9 +3,7 @@ package com.polytech.qcm.server.qcmserver.controller;
 import com.polytech.qcm.server.qcmserver.data.Choice;
 import com.polytech.qcm.server.qcmserver.data.Response;
 import com.polytech.qcm.server.qcmserver.repository.ChoiceRepository;
-import com.polytech.qcm.server.qcmserver.repository.QuestionRepository;
 import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
-import com.polytech.qcm.server.qcmserver.repository.UserRepository;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,17 +20,11 @@ public class QuestionController {
 
 
   private final ResponseRepository responseRepository;
-  private final QuestionRepository questionRepository;
-  private final UserRepository userRepository;
   private final ChoiceRepository choiceRepository;
 
   public QuestionController(ResponseRepository responseRepository,
-                            QuestionRepository questionRepository,
-                            UserRepository userRepository,
                             ChoiceRepository choiceRepository) {
     this.responseRepository = responseRepository;
-    this.questionRepository = questionRepository;
-    this.userRepository = userRepository;
     this.choiceRepository = choiceRepository;
   }
 

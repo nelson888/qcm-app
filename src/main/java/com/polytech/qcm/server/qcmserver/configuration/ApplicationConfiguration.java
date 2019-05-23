@@ -19,6 +19,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -30,6 +35,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Configuration
+@EnableSwagger2
 public class ApplicationConfiguration {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationConfiguration.class);
@@ -55,6 +61,15 @@ public class ApplicationConfiguration {
   @Bean
   Map<Integer, Integer> currentQuestionMap() {
     return new ConcurrentHashMap<>();
+  }
+
+  @Bean
+  public Docket api() {
+    return new Docket(DocumentationType.SWAGGER_2)
+      .select()
+      .apis(RequestHandlerSelectors.any())
+      .paths(PathSelectors.any())
+      .build();
   }
 
   @PostConstruct

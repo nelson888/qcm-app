@@ -17,6 +17,10 @@ import com.polytech.qcm.server.qcmserver.repository.QcmRepository;
 import com.polytech.qcm.server.qcmserver.repository.QuestionRepository;
 import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +35,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/qcm")
+@Api(value = "Controller to access data about a qcm")
 public class QcmController {
 
   private final QcmRepository qcmRepository;
@@ -54,20 +59,36 @@ public class QcmController {
   }
 
   @GetMapping("/all")
+  @ApiOperation(value = "View the list of all qcm", response = List.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully retrieved list"),
+    @ApiResponse(code = 403, message = "You are not authenticated"),
+  })
   public ResponseEntity getAll() {
     return ResponseEntity.ok(qcmRepository.findAll());
   }
 
-  @GetMapping("/mine")
+  @GetMapping("/mines")
+  @ApiOperation(value = "View the list of QCMs created by the given user", response = List.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully retrieved list"),
+    @ApiResponse(code = 403, message = "You are not authenticated"),
+  })
   public ResponseEntity getMyQcms(Principal principal) {
     return ResponseEntity.ok(qcmRepository.findAllByAuthor_Username(principal.getName()));
   }
 
 
   @GetMapping("/{id}")
+  @ApiOperation(value = "View a qcm with a given id", response = QCM.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully retrieved qcm"),
+    @ApiResponse(code = 403, message = "You are not authenticated"),
+    @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
+  })
   public ResponseEntity getById(Principal principal, @PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
-      .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
+      .orElseThrow(() -> new NotFoundException("Qcm with id " + id + " doesn't exists"));
 
     if (!isTeacher(principal)){
       for(Question question:qcm.getQuestions()){
@@ -82,6 +103,11 @@ public class QcmController {
 
 
   @GetMapping("/new")
+  @ApiOperation(value = "Creates a new qcm", response = QCM.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully created qcm"),
+    @ApiResponse(code = 403, message = "You are not a teacher"),
+  })
   public ResponseEntity newQvm(Principal principal) {
     QCM qcm = new QCM("",
       getUser(principal), State.INCOMPLETE, Collections.emptyList());
@@ -89,6 +115,13 @@ public class QcmController {
   }
 
   @PutMapping("/{id}")
+  @ApiOperation(value = "Updates a qcm", response = QCM.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully updated qcm"),
+    @ApiResponse(code = 400, message = "The qcm is malformed"),
+    @ApiResponse(code = 403, message = "You are the owner of this qcm"),
+    @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
+  })
   public ResponseEntity save(Principal principal, @RequestBody QCM newQcm, @PathVariable("id") int id) {
     for(Question question: newQcm.getQuestions()){
       if (question.getChoices().stream().noneMatch(Choice::isAnswer)) {
@@ -97,7 +130,7 @@ public class QcmController {
     }
 
     User user = getUser(principal);
-    QCM qcm = qcmRepository.findById(id).orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
+    QCM qcm = qcmRepository.findById(id).orElseThrow(() -> new NotFoundException("Qcm with id " + id + " doesn't exists"));
     qcm.setAuthor(user);
     qcm.setState(State.COMPLETE);
     if (newQcm.getName() != null) {
@@ -119,9 +152,15 @@ public class QcmController {
   }
 
   @DeleteMapping("/{id}")
+  @ApiOperation(value = "Deletes a qcm", response = QCM.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully deleted qcm"),
+    @ApiResponse(code = 403, message = "You are not the owner of this qcm"),
+    @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
+  })
   public ResponseEntity delete(Principal user, @PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
-      .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
+      .orElseThrow(() -> new NotFoundException("Qcm with id " + id + " doesn't exist"));
     checkRights(user, qcm);
 
     qcmRepository.deleteById(id);
@@ -129,6 +168,12 @@ public class QcmController {
   }
 
   @GetMapping("/{id}/launch")
+  @ApiOperation(value = "Launches a qcm", response = QCM.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully launched qcm"),
+    @ApiResponse(code = 403, message = "You are not the owner of this qcm"),
+    @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
+  })
   public ResponseEntity launchQCM(Principal user, @PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
       .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
@@ -139,15 +184,27 @@ public class QcmController {
   }
 
   @GetMapping("/{id}/finish")
+  @ApiOperation(value = "Ends a qcm", response = QCM.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully ended qcm"),
+    @ApiResponse(code = 403, message = "You are not the owner of this qcm"),
+    @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
+  })
   public ResponseEntity finishQCM(Principal user, @PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
-      .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
+      .orElseThrow(() -> new NotFoundException("Qcm with id " + id + " doesn't exist"));
     checkRights(user, qcm);
     qcm.setState(State.FINISHED);
     return ResponseEntity.ok(qcmRepository.saveAndFlush(qcm));
   }
 
   @GetMapping("/{id}/currentQuestion")
+  @ApiOperation(value = "View the current question of a qcm", response = QCM.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully returned the current question"),
+    @ApiResponse(code = 403, message = "You are not authenticated"),
+    @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
+  })
   public ResponseEntity getCurrentQuestion(Principal user, @PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
       .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
@@ -166,6 +223,12 @@ public class QcmController {
   }
 
   @GetMapping("/{id}/nextQuestion")
+  @ApiOperation(value = "Pass to the next question", response = QCM.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully passed to the next question"),
+    @ApiResponse(code = 403, message = "You are not the owner of this qcm"),
+    @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
+  })
     public ResponseEntity nextQuestion(Principal user, @PathVariable("id") int id){
       QCM qcm = qcmRepository.findById(id)
               .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
@@ -185,6 +248,12 @@ public class QcmController {
   }
 
   @GetMapping("/{id}/result")
+  @ApiOperation(value = "Get the result of a qcm. A teacher can see all responses but a student can only see his result", response = QCM.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully view the result"),
+    @ApiResponse(code = 403, message = "You are not authenticated"),
+    @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
+  })
   public ResponseEntity qcmResult(Principal user, @PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
       .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));

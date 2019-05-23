@@ -59,6 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     return new BCryptPasswordEncoder();
   }
 
+  //swagger at url http://localhost:8080/swagger-ui.html
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     final String student = Role.STUDENT.name();
@@ -73,7 +74,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       .and()
       .authorizeRequests()
-      .antMatchers("/spring-security-rest/api/v2/api-docs").permitAll()
       //AuthController
       .antMatchers("/auth/login").permitAll()
       .antMatchers(HttpMethod.GET, "/auth/session/**").permitAll()
@@ -84,15 +84,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       .antMatchers(HttpMethod.PUT, "/qcm/**").hasAnyRole(teacher, admin)
       .antMatchers(HttpMethod.POST, "/qcm/**").hasAnyRole(teacher, admin)
       .antMatchers(HttpMethod.DELETE, "/qcm/**").hasAnyRole(teacher, admin)
-
+      .antMatchers(HttpMethod.GET, "/qcm/**").authenticated()
       //UserController
-      .antMatchers(HttpMethod.GET, "/user/**").hasAnyRole(teacher, admin)
+      .antMatchers("/user/**").hasAnyRole(teacher, admin)
       //QuestionController
-      .antMatchers(HttpMethod.GET, "/question/**").hasAnyRole(teacher, admin)
+      .antMatchers("/question/**").authenticated()
       //ResponseController
       .antMatchers(HttpMethod.POST, "/response/**").hasAnyRole(student, admin)
       //other requests
-      .anyRequest().authenticated()
+      .anyRequest().permitAll()
       .and()
       .apply(new JwtConfigurer(jwtTokenProvider));
   }
