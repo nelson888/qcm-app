@@ -7,17 +7,20 @@ import com.polytech.qcm.server.qcmserver.data.Question;
 import com.polytech.qcm.server.qcmserver.data.Response;
 import com.polytech.qcm.server.qcmserver.exception.BadRequestException;
 import com.polytech.qcm.server.qcmserver.exception.ForbiddenRequestException;
+import com.polytech.qcm.server.qcmserver.exception.NotFoundException;
 import com.polytech.qcm.server.qcmserver.repository.ChoiceRepository;
 import com.polytech.qcm.server.qcmserver.repository.QcmRepository;
 import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
 import com.polytech.qcm.server.qcmserver.service.MessageSender;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -51,11 +54,17 @@ public class ResponseController {
   }
 
   @PostMapping("/")
-  @ResponseBody
+  @ApiOperation(value = "Posts responses", response = List.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully posted the response"),
+    @ApiResponse(code = 403, message = "You are not a student"),
+    @ApiResponse(code = 400, message = "The user has already responded for a given question"),
+    @ApiResponse(code = 404, message = "A choice hasn't been found")
+  })
   public ResponseEntity postResponse(Principal user, @RequestBody ChoiceIds cIds) {
     List<Response> responses = new ArrayList<>();
     for (int id : cIds.getIds()) {
-      Choice choice = choiceRepository.findById(id).orElseThrow(() -> new BadRequestException("Choice with id " + id + " doesn't exists"));
+      Choice choice = choiceRepository.findById(id).orElseThrow(() -> new NotFoundException("Choice with id " + id + " doesn't exists"));
       //checkCanAnswer(choice);
       String username = user.getName();
       Question question = choice.getQuestion();
