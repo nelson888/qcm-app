@@ -138,12 +138,16 @@ public class QcmController {
       QCM qcm = qcmRepository.findById(id)
               .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
     checkRights(user, qcm);
-    if (currentQuestionMap.get(id) == qcm.getQuestions().size()-1){
+    List<Question> questions = qcm.getQuestions();
+    int questionIndex = currentQuestionMap.get(id);
+    if (questionIndex >= questions.size() - 1) {
+      qcm.setState(State.FINISHED);
+      qcmRepository.saveAndFlush(qcm);
+      currentQuestionMap.remove(id);
       return ResponseEntity.ok("END OF QCM");
-    }
-    else{
-      currentQuestionMap.put(id, currentQuestionMap.get(id)+1);
-      Question question = qcm.getQuestions().get(currentQuestionMap.get(id));
+    } else {
+      currentQuestionMap.put(id, questionIndex + 1);
+      Question question = questions.get(currentQuestionMap.get(id));
       return ResponseEntity.ok(question);
     }
   }
