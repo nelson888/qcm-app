@@ -11,6 +11,7 @@ import com.polytech.qcm.server.qcmserver.data.response.QcmResult;
 import com.polytech.qcm.server.qcmserver.data.response.QuestionResult;
 import com.polytech.qcm.server.qcmserver.exception.BadRequestException;
 import com.polytech.qcm.server.qcmserver.exception.ForbiddenRequestException;
+import com.polytech.qcm.server.qcmserver.exception.NotFoundException;
 import com.polytech.qcm.server.qcmserver.repository.ChoiceRepository;
 import com.polytech.qcm.server.qcmserver.repository.QcmRepository;
 import com.polytech.qcm.server.qcmserver.repository.QuestionRepository;
@@ -157,7 +158,7 @@ public class QcmController {
       qcm.setState(State.FINISHED);
       qcmRepository.saveAndFlush(qcm);
       currentQuestionMap.remove(id);
-      return ResponseEntity.ok("END OF QCM");
+      throw new NotFoundException("There is no next question");
     } else {
       currentQuestionMap.put(id, questionIndex + 1);
       Question question = questions.get(currentQuestionMap.get(id));
