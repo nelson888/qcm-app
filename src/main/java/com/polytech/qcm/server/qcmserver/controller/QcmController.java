@@ -26,10 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -282,19 +279,17 @@ public class QcmController {
   }
 
   private QuestionResult toResult(Question question) {
+    Set<Choice> rightAnswers = question.getChoices().stream().filter(Choice::isAnswer).collect(Collectors.toSet());
     List<Response> responses = responseRepository.findAllByChoice_Question_Id(question.getId());
+    Map<User, Set<Choice>> userResponsesMap = new HashMap<>();
+    for (Response r: responses) {
+      Set<Choice> userResponses = userResponsesMap.computeIfAbsent(r.getUser(), (k) -> new HashSet<>());
+      userResponses.add(r.getChoice());
+    }
     Map<String, Boolean> responsesMap = new HashMap<>();
-    //TODO this part is responsible of verifying if a user has found the good answer
-    //TODO at this moment, it only checks if the answer the user corrected is correct
-    //TODO we must change that.
-    //TODO here is the new behavior:
-    // for all responses of the question (question.getChoices()):
-    //     if the response is a good answer:
-    //          check that the user has a response with this choice (can be accessed with response.getChoice())
-    //          and if not put in the map false (responsesMap.put(response.getUser().getUsername(), false))
-    // if all choices was given by the user, put true instead
-    for (Response response : responses) {
-      responsesMap.put(response.getUser().getUsername(), response.getChoice().isAnswer());
+
+    for (Map.Entry<User, Set<Choice>> entry : userResponsesMap.entrySet()) {
+      responsesMap.put(entry.getKey().getUsername(), entry.getValue().equals(rightAnswers));
     }
     return new QuestionResult(question, responsesMap);
   }
