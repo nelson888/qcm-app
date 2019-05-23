@@ -35,24 +35,21 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/qcm")
-@Api(value = "Controller to access data about a qcm")
+@Api(value = "Controller to manipulates qcms")
 public class QcmController {
 
   private final QcmRepository qcmRepository;
   private final QuestionRepository questionRepository;
-  private final ChoiceRepository choiceRepository;
   private final ResponseRepository responseRepository;
   private final UserRepository userRepository;
   private final Map<Integer, Integer> currentQuestionMap; //map qcmId => question INDEX (not id)
 
   public QcmController(QcmRepository qcmRepository,
                        QuestionRepository questionRepository,
-                       ChoiceRepository choiceRepository,
                        ResponseRepository responseRepository, UserRepository userRepository,
                        Map<Integer, Integer> currentQuestionMap) {
     this.qcmRepository = qcmRepository;
     this.questionRepository = questionRepository;
-    this.choiceRepository = choiceRepository;
     this.responseRepository = responseRepository;
     this.userRepository = userRepository;
     this.currentQuestionMap = currentQuestionMap;
@@ -287,6 +284,15 @@ public class QcmController {
   private QuestionResult toResult(Question question) {
     List<Response> responses = responseRepository.findAllByChoice_Question_Id(question.getId());
     Map<String, Boolean> responsesMap = new HashMap<>();
+    //TODO this part is responsible of verifying if a user has found the good answer
+    //TODO at this moment, it only checks if the answer the user corrected is correct
+    //TODO we must change that.
+    //TODO here is the new behavior:
+    // for all responses of the question (question.getChoices()):
+    //     if the response is a good answer:
+    //          check that the user has a response with this choice (can be accessed with response.getChoice())
+    //          and if not put in the map false (responsesMap.put(response.getUser().getUsername(), false))
+    // if all choices was given by the user, put true instead
     for (Response response : responses) {
       responsesMap.put(response.getUser().getUsername(), response.getChoice().isAnswer());
     }
