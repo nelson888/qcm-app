@@ -58,23 +58,27 @@ public class QcmController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity getById(@PathVariable("id") int id) {
+  public ResponseEntity getById(Principal principal, @PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
       .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
-    // checkRights(principal, qcm);
+    User user = getUser(principal);
+    //TODO check if user is teacher. If not, for all choices of all questions, set the field 'isanswer' to false
+    //TODO
     return ResponseEntity.ok(qcm);
   }
+
+
 
   @GetMapping("/new")
   public ResponseEntity newQvm(Principal principal) {
     QCM qcm = new QCM("",
-      userRepository.findByUsername(principal.getName()).get(), State.INCOMPLETE, Collections.emptyList());
+      getUser(principal), State.INCOMPLETE, Collections.emptyList());
     return ResponseEntity.ok(qcmRepository.saveAndFlush(qcm));
   }
 
   @PutMapping("/{id}")
   public ResponseEntity save(Principal principal, @RequestBody QCM newQcm, @PathVariable("id") int id) {
-    User user = userRepository.findByUsername(principal.getName()).get();
+    User user = getUser(principal);
     QCM qcm = qcmRepository.findById(id).orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
     qcm.setAuthor(user);
     qcm.setState(State.COMPLETE);
@@ -120,17 +124,15 @@ public class QcmController {
   }
 
   @GetMapping("/{id}/currentQuestion")
-  public ResponseEntity getCurrentQuestion( @PathVariable("id") int id) {
-    //TODO cacher le champ anwser
+  public ResponseEntity getCurrentQuestion(Principal user, @PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
       .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
     Integer questionIndex = currentQuestionMap.get(id);
     if (questionIndex == null){
       throw new BadRequestException("The qcm has not started");
     }
-    else {
-      return ResponseEntity.ok(qcm.getQuestions().get(questionIndex));
-    }
+    //TODO do the same check as in GET {id}
+    return ResponseEntity.ok(qcm.getQuestions().get(questionIndex));
   }
 
   @GetMapping("/{id}/nextQuestion")
@@ -185,5 +187,13 @@ public class QcmController {
     if (!user.getName().equals(qcm.getAuthor().getUsername())) {
       throw new ForbiddenRequestException("You cannot access this QCM: it is not yours!");
     }
+  }
+
+  private User getUser(Principal principal) {
+    return userRepository.findByUsername(principal.getName()).get();
+  }
+  private boolean isTeacher(Principal principal) {
+    //TODO get the user, and compare the role with Role.TEACHER.roleName()
+    return false;
   }
 }
