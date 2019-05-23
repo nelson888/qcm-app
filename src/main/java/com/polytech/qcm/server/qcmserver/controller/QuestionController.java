@@ -5,6 +5,10 @@ import com.polytech.qcm.server.qcmserver.data.Response;
 import com.polytech.qcm.server.qcmserver.repository.ChoiceRepository;
 import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/question")
+@Api(value = "Controller to access data about a question")
 public class QuestionController {
 
 
@@ -30,6 +35,11 @@ public class QuestionController {
 
 
   @GetMapping("/{id}/responses")
+  @ApiOperation(value = "View the list of responses for a given question", response = List.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully retrieved list"),
+    @ApiResponse(code = 403, message = "You are not authenticated"),
+  })
   public ResponseEntity getAllResponses(@PathVariable("id") int id) {
     List<Choice> choices = choiceRepository.findAllByQuestion_Id(id);
     List<Response> responses = choices.stream()

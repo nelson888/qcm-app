@@ -12,6 +12,7 @@ import com.polytech.qcm.server.qcmserver.repository.QcmRepository;
 import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
 import com.polytech.qcm.server.qcmserver.service.MessageSender;
+import io.swagger.annotations.Api;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/response")
+@Api(value = "Controller to authenticate")
 public class ResponseController {
   private final ChoiceRepository choiceRepository;
   private final UserRepository userRepository;
