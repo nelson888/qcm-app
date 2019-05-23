@@ -84,6 +84,18 @@ public class QcmController {
 
   @PutMapping("/{id}")
   public ResponseEntity save(Principal principal, @RequestBody QCM newQcm, @PathVariable("id") int id) {
+    for(Question question: newQcm.getQuestions()){
+      boolean hasRightAnswer = false;
+      for (Choice choice: question.getChoices()){
+        if (choice.isAnswer()){
+          hasRightAnswer = true;
+        }
+      }
+      if (!hasRightAnswer){
+        throw new BadRequestException(question.getId().toString());
+      }
+    }
+
     User user = getUser(principal);
     QCM qcm = qcmRepository.findById(id).orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
     qcm.setAuthor(user);

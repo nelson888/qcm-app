@@ -43,7 +43,6 @@ public class QCM {
         this.questions = questions;
     }
 
-    // =FIXME qcm repository returns duplicated filter
     public List<Question> getQuestions() {
         List<Question> uniqueQuestions = new ArrayList<>();
         for (Question question : questions) {
