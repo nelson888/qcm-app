@@ -46,7 +46,7 @@ public class QCM {
     public List<Question> getQuestions() {
         List<Question> uniqueQuestions = new ArrayList<>();
         for (Question question : questions) {
-            if (question.getId() == null || !uniqueQuestions.contains(question)) {
+            if (question.getId() == null || !uniqueQuestions.contains(question) && uniqueQuestions.stream().noneMatch(q -> q.getQuestion().equals(question.getQuestion()))) {
                 uniqueQuestions.add(question);
             }
         }
