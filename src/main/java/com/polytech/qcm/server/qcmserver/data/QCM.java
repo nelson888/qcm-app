@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -40,6 +41,17 @@ public class QCM {
         this.author = author;
         this.state = state;
         this.questions = questions;
+    }
+
+    // =FIXME qcm repository returns duplicated filter
+    public List<Question> getQuestions() {
+        List<Question> uniqueQuestions = new ArrayList<>();
+        for (Question question : questions) {
+            if (!uniqueQuestions.contains(question)) {
+                uniqueQuestions.add(question);
+            }
+        }
+        return uniqueQuestions;
     }
 
     @Override
