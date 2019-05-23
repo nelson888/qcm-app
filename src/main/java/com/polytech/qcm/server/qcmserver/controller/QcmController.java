@@ -20,6 +20,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/qcm")
 @Api(value = "Controller to manipulates qcms")
 public class QcmController {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(QcmController.class);
 
   private final QcmRepository qcmRepository;
   private final QuestionRepository questionRepository;
@@ -99,6 +103,7 @@ public class QcmController {
   public ResponseEntity newQvm(Principal principal) {
     QCM qcm = new QCM("",
       getUser(principal), State.INCOMPLETE, Collections.emptyList());
+    LOGGER.info("User {} created a new qcm", principal.getName());
     return ResponseEntity.ok(qcmRepository.saveAndFlush(qcm));
   }
 
@@ -151,6 +156,7 @@ public class QcmController {
     checkRights(user, qcm);
 
     qcmRepository.deleteById(id);
+    LOGGER.info("User {} deleted qcm with id {}", user.getName(), id);
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 
@@ -166,6 +172,7 @@ public class QcmController {
     checkRights(user, qcm);
     qcm.setState(State.STARTED);
     currentQuestionMap.put(id, 0);
+    LOGGER.info("User {} launched qcm with id {}", user.getName(), id);
     return ResponseEntity.ok(qcmRepository.saveAndFlush(qcm));
   }
 
@@ -180,6 +187,7 @@ public class QcmController {
     QCM qcm = getQcm(id);
     checkRights(user, qcm);
     qcm.setState(State.FINISHED);
+    LOGGER.info("User {} ended qcm with id {}", user.getName(), id);
     return ResponseEntity.ok(qcmRepository.saveAndFlush(qcm));
   }
 

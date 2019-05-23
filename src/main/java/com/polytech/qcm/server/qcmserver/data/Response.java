@@ -28,4 +28,11 @@ public class Response {
         this.choice = choice;
     }
 
+    @Override
+    public String toString() {
+        return "Response{" +
+          "user=" + user.getUsername() +
+          ", choice=" + choice +
+          '}';
+    }
 }

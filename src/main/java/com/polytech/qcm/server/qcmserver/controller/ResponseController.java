@@ -17,6 +17,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +35,9 @@ import java.util.Map;
 @RequestMapping("/response")
 @Api(value = "Controller to authenticate")
 public class ResponseController {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ResponseController.class);
+
   private final ChoiceRepository choiceRepository;
   private final UserRepository userRepository;
   private final ResponseRepository responseRepository;
@@ -77,6 +82,7 @@ public class ResponseController {
 
     responses = responseRepository.saveAll(responses);
     responseRepository.flush();
+    LOGGER.info("user {} submitted the given answers {}", user.getName(), responses);
     return ResponseEntity.ok(responses);
   }
 

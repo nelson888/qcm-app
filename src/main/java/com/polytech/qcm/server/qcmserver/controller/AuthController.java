@@ -57,7 +57,7 @@ public class AuthController {
       User user = this.userRepository.findByUsername(username)
         .orElseThrow(() -> new NotFoundException("Username " + username + "not found"));
       String token = jwtTokenProvider.createToken(username, user.getRole());
-      LOGGER.info("User {} authenticated", username);
+      LOGGER.info("User {} authenticated successfully", username);
       return ResponseEntity.ok(new AuthResponse(username, user.getRole(), token));
     } catch (AuthenticationException e) {
       throw new BadCredentialsException("Invalid username/password supplied");
