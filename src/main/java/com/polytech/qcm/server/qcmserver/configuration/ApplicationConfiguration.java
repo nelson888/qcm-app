@@ -89,10 +89,10 @@ public class ApplicationConfiguration {
 
   @PostConstruct
   public void initDatabase() {
-    /*
     if (!activeProfile.equals("local")) {
+      //clean only if running on local mysql
       return;
-    }*/
+    }
     LOGGER.info("Clearing repositories...");
     Stream.of( // ORDER OF DELETE MATTERS!!!
       choiceRepository,
