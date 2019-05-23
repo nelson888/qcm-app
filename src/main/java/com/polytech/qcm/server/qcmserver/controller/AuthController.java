@@ -45,7 +45,7 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  @ApiOperation(value = "Returns Json Web Token for the user to authenticates in his following requests", response = List.class)
+  @ApiOperation(value = "Returns Json Web Token for the user to authenticates in his following requests", response = AuthResponse.class)
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "The JWT"),
     @ApiResponse(code = 400, message = "The credentials supplied aren't correct"),
