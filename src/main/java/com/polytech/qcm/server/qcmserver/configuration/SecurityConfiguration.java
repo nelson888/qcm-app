@@ -76,7 +76,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       .authorizeRequests()
       //AuthController
       .antMatchers("/auth/login").permitAll()
-      .antMatchers(HttpMethod.GET, "/auth/session/**").permitAll()
       //QcmController
       .antMatchers(HttpMethod.GET, "/qcm/new").hasAnyRole(teacher, admin)
       .antMatchers(HttpMethod.GET, "/qcm/**/nextQuestion").hasAnyRole(teacher, admin)
