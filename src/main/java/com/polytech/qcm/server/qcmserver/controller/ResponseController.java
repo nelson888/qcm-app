@@ -35,6 +35,7 @@ public class ResponseController {
     this.messageSender = messageSender;
   }
 
+  //TODO check if the given choice is for the current question
   @PostMapping("/")
   @ResponseBody
   public ResponseEntity postResponse(Principal user, @RequestBody Choice c) {

@@ -85,14 +85,8 @@ public class QcmController {
   @PutMapping("/{id}")
   public ResponseEntity save(Principal principal, @RequestBody QCM newQcm, @PathVariable("id") int id) {
     for(Question question: newQcm.getQuestions()){
-      boolean hasRightAnswer = false;
-      for (Choice choice: question.getChoices()){
-        if (choice.isAnswer()){
-          hasRightAnswer = true;
-        }
-      }
-      if (!hasRightAnswer){
-        throw new BadRequestException(question.getId().toString());
+      if (question.getChoices().stream().noneMatch(Choice::isAnswer)) {
+        throw new BadRequestException("Question with id " + id + " has no good answer");
       }
     }
 
@@ -100,14 +94,20 @@ public class QcmController {
     QCM qcm = qcmRepository.findById(id).orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
     qcm.setAuthor(user);
     qcm.setState(State.COMPLETE);
-    qcm.setQuestions(newQcm.getQuestions());
-    qcm.setName(newQcm.getName());
-    for (Question question : qcm.getQuestions()) {
-      question.setQcm(qcm);
-      for (Choice choice : question.getChoices()) {
-        choice.setQuestion(question);
-      }
+    if (newQcm.getName() != null) {
+      qcm.setName(newQcm.getName());
     }
+    //delete old questions
+    questionRepository.deleteAll(qcm.getQuestions());
+
+    //store new questions in jpa
+    List<Question> questions = newQcm.getQuestions();
+    for (Question question : questions) {
+      question.setQcm(qcm);
+      question.getChoices().forEach(c -> c.setQuestion(question));
+    }
+    questions = questionRepository.saveAll(newQcm.getQuestions());
+    qcm.setQuestions(questions);
 
     return ResponseEntity.ok(qcmRepository.save(qcm));
   }
