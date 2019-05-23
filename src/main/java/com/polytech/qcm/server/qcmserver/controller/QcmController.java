@@ -62,8 +62,13 @@ public class QcmController {
     QCM qcm = qcmRepository.findById(id)
       .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
     User user = getUser(principal);
-    //TODO check if user is teacher. If not, for all choices of all questions, set the field 'isanswer' to false
-    //TODO
+    if (!isTeacher(principal)){
+      for(Question question:qcm.getQuestions()){
+        for (Choice choice:question.getChoices()){
+          choice.setAnswer(false);
+        }
+      }
+    }
     return ResponseEntity.ok(qcm);
   }
 
@@ -131,7 +136,13 @@ public class QcmController {
     if (questionIndex == null){
       throw new BadRequestException("The qcm has not started");
     }
-    //TODO do the same check as in GET {id}
+    if (!isTeacher(user)){
+      for(Question question:qcm.getQuestions()){
+        for (Choice choice:question.getChoices()){
+          choice.setAnswer(false);
+        }
+      }
+    }
     return ResponseEntity.ok(qcm.getQuestions().get(questionIndex));
   }
 
@@ -193,7 +204,10 @@ public class QcmController {
     return userRepository.findByUsername(principal.getName()).get();
   }
   private boolean isTeacher(Principal principal) {
-    //TODO get the user, and compare the role with Role.TEACHER.roleName()
+    User usr = getUser(principal);
+    if (usr.getRole().equals(Role.TEACHER.roleName())){
+      return true;
+    }
     return false;
   }
 }
