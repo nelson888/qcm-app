@@ -73,14 +73,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       .and()
       .authorizeRequests()
+      .antMatchers("/spring-security-rest/api/v2/api-docs").permitAll()
       //AuthController
       .antMatchers("/auth/login").permitAll()
       .antMatchers(HttpMethod.GET, "/auth/session/**").permitAll()
       //QcmController
       .antMatchers(HttpMethod.GET, "/qcm/new").hasAnyRole(teacher, admin)
+      .antMatchers(HttpMethod.GET, "/qcm/**/nextQuestion").hasAnyRole(teacher, admin)
+      .antMatchers(HttpMethod.PUT, "/qcm/**").hasAnyRole(teacher, admin)
       .antMatchers(HttpMethod.PUT, "/qcm/**").hasAnyRole(teacher, admin)
       .antMatchers(HttpMethod.POST, "/qcm/**").hasAnyRole(teacher, admin)
       .antMatchers(HttpMethod.DELETE, "/qcm/**").hasAnyRole(teacher, admin)
+
       //UserController
       .antMatchers(HttpMethod.GET, "/user/**").hasAnyRole(teacher, admin)
       //QuestionController

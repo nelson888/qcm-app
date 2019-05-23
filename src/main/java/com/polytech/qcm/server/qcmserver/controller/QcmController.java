@@ -188,8 +188,19 @@ public class QcmController {
   public ResponseEntity qcmResult(Principal user, @PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
       .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
-    checkRights(user, qcm);
-    return ResponseEntity.ok(toResult(qcm));
+    String username = user.getName();
+    QcmResult result = toResult(qcm);
+    if (!isTeacher(user)) {
+      result.getParticipants().clear();
+      result.getParticipants().add(username);
+      for (QuestionResult qr : result.getQuestionResults()) {
+        Map<String, Boolean> responses = qr.getReponses();
+        Boolean response = responses.get(username);
+        responses.clear();
+        responses.put(username, response);
+      }
+    }
+    return ResponseEntity.ok(result);
   }
 
   private QcmResult toResult(QCM qcm) {
