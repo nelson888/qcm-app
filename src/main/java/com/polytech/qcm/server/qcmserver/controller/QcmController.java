@@ -12,7 +12,6 @@ import com.polytech.qcm.server.qcmserver.data.response.QuestionResult;
 import com.polytech.qcm.server.qcmserver.exception.BadRequestException;
 import com.polytech.qcm.server.qcmserver.exception.ForbiddenRequestException;
 import com.polytech.qcm.server.qcmserver.exception.NotFoundException;
-import com.polytech.qcm.server.qcmserver.repository.ChoiceRepository;
 import com.polytech.qcm.server.qcmserver.repository.QcmRepository;
 import com.polytech.qcm.server.qcmserver.repository.QuestionRepository;
 import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
@@ -84,12 +83,8 @@ public class QcmController {
     QCM qcm = qcmRepository.findById(id)
       .orElseThrow(() -> new NotFoundException("Qcm with id " + id + " doesn't exists"));
 
-    if (!isTeacher(principal)){
-      for(Question question:qcm.getQuestions()){
-        for (Choice choice:question.getChoices()){
-          choice.setAnswer(false);
-        }
-      }
+    if (isStudent(principal)) { //if is student, we have to hide answer choices
+      hideAnswers(qcm);
     }
     return ResponseEntity.ok(qcm);
   }
@@ -206,12 +201,8 @@ public class QcmController {
     if (questionIndex == null){
       throw new BadRequestException("The qcm has not started");
     }
-    if (!isTeacher(user)){
-      for(Question question:qcm.getQuestions()){
-        for (Choice choice:question.getChoices()){
-          choice.setAnswer(false);
-        }
-      }
+    if (isStudent(user)) {
+      hideAnswers(qcm);
     }
     return ResponseEntity.ok(qcm.getQuestions().get(questionIndex));
   }
@@ -253,7 +244,7 @@ public class QcmController {
       .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
     String username = user.getName();
     QcmResult result = toResult(qcm);
-    if (!isTeacher(user)) {
+    if (isStudent(user)) {
       result.getParticipants().clear();
       result.getParticipants().add(username);
       for (QuestionResult qr : result.getQuestionResults()) {
@@ -280,17 +271,17 @@ public class QcmController {
 
   private QuestionResult toResult(Question question) {
     Set<Choice> rightAnswers = question.getChoices().stream().filter(Choice::isAnswer).collect(Collectors.toSet());
-    List<Response> responses = responseRepository.findAllByChoice_Question_Id(question.getId());
-    Map<User, Set<Choice>> userResponsesMap = new HashMap<>();
+    List<Response> responses = responseRepository.findAllByChoice_Question_Id(question.getId()); // get all responses for the given question
+    Map<User, Set<Choice>> userResponsesMap = new HashMap<>(); // map to split choices by users
     for (Response r: responses) {
       Set<Choice> userResponses = userResponsesMap.computeIfAbsent(r.getUser(), (k) -> new HashSet<>());
       userResponses.add(r.getChoice());
     }
     Map<String, Boolean> responsesMap = new HashMap<>();
 
-    for (Map.Entry<User, Set<Choice>> entry : userResponsesMap.entrySet()) {
-      responsesMap.put(entry.getKey().getUsername(), entry.getValue().equals(rightAnswers));
-    }
+    userResponsesMap
+      .forEach((User u, Set<Choice> userChoices) -> responsesMap.put(u.getUsername(), rightAnswers.equals(userChoices)));
+
     return new QuestionResult(question, responsesMap);
   }
 
@@ -303,11 +294,17 @@ public class QcmController {
   private User getUser(Principal principal) {
     return userRepository.findByUsername(principal.getName()).get();
   }
-  private boolean isTeacher(Principal principal) {
+
+  private boolean isStudent(Principal principal) {
     User usr = getUser(principal);
-    if (usr.getRole().equals(Role.TEACHER.roleName())){
-      return true;
+    return usr.getRole().equals(Role.STUDENT.roleName());
+  }
+
+  private void hideAnswers(QCM qcm) {
+    for(Question question:qcm.getQuestions()){
+      for (Choice choice:question.getChoices()){
+        choice.setAnswer(false);
+      }
     }
-    return false;
   }
 }
