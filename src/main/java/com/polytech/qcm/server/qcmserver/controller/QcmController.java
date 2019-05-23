@@ -58,11 +58,17 @@ public class QcmController {
     return ResponseEntity.ok(qcmRepository.findAll());
   }
 
+  @GetMapping("/mine")
+  public ResponseEntity getMyQcms(Principal principal) {
+    return ResponseEntity.ok(qcmRepository.findAllByAuthor_Username(principal.getName()));
+  }
+
+
   @GetMapping("/{id}")
   public ResponseEntity getById(Principal principal, @PathVariable("id") int id) {
     QCM qcm = qcmRepository.findById(id)
       .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
-    User user = getUser(principal);
+
     if (!isTeacher(principal)){
       for(Question question:qcm.getQuestions()){
         for (Choice choice:question.getChoices()){
