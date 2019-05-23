@@ -89,9 +89,10 @@ public class ApplicationConfiguration {
 
   @PostConstruct
   public void initDatabase() {
+    /*
     if (!activeProfile.equals("local")) {
       return;
-    }
+    }*/
     LOGGER.info("Clearing repositories...");
     Stream.of( // ORDER OF DELETE MATTERS!!!
       choiceRepository,
