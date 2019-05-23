@@ -1,7 +1,7 @@
 package com.polytech.qcm.server.qcmserver.controller;
 
 import com.polytech.qcm.server.qcmserver.data.response.ErrorResponse;
-import io.swagger.annotations.Api;
+
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpStatus;
@@ -9,13 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@Api(hidden = true)
+@ApiIgnore
 public class AppErrorController implements ErrorController  {
 
   public static final String ERROR_PATH = "/error";
