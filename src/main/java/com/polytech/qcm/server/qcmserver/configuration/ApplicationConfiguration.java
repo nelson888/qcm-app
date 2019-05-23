@@ -21,6 +21,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -28,6 +30,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -64,12 +67,24 @@ public class ApplicationConfiguration {
   }
 
   @Bean
-  public Docket api() {
+  public Docket api(ApiInfo info) {
     return new Docket(DocumentationType.SWAGGER_2)
       .select()
       .apis(RequestHandlerSelectors.any())
       .paths(PathSelectors.any())
-      .build();
+      .build()
+      .apiInfo(info);
+  }
+
+  @Bean
+  public ApiInfo info() {
+    return new ApiInfo(
+      "QCM REST API",
+      "API to handle a QCM between teachers and students.",
+      "1.0",
+      "Terms of service",
+      new Contact("FONKOUA Tambue Nelson", "https://webiste-42a9e.firebaseapp.com/index.html", "tambapps@gmail.com"),
+      "MIT License", "TODO", Collections.emptyList());
   }
 
   @PostConstruct
@@ -148,9 +163,6 @@ public class ApplicationConfiguration {
     for (Response response : responseRepository.findAll()) {
       LOGGER.info("Created {}", response);
     }
-
-
-
   }
 
 }
