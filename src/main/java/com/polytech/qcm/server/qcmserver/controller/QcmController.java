@@ -80,8 +80,7 @@ public class QcmController {
     @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
   })
   public ResponseEntity getById(Principal principal, @PathVariable("id") int id) {
-    QCM qcm = qcmRepository.findById(id)
-      .orElseThrow(() -> new NotFoundException("Qcm with id " + id + " doesn't exists"));
+    QCM qcm = getQcm(id);
 
     if (isStudent(principal)) { //if is student, we have to hide answer choices
       hideAnswers(qcm);
@@ -119,7 +118,7 @@ public class QcmController {
     }
 
     User user = getUser(principal);
-    QCM qcm = qcmRepository.findById(id).orElseThrow(() -> new NotFoundException("Qcm with id " + id + " doesn't exists"));
+    QCM qcm = getQcm(id);
     qcm.setAuthor(user);
     qcm.setState(State.COMPLETE);
     if (newQcm.getName() != null) {
@@ -148,8 +147,7 @@ public class QcmController {
     @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
   })
   public ResponseEntity delete(Principal user, @PathVariable("id") int id) {
-    QCM qcm = qcmRepository.findById(id)
-      .orElseThrow(() -> new NotFoundException("Qcm with id " + id + " doesn't exist"));
+    QCM qcm = getQcm(id);
     checkRights(user, qcm);
 
     qcmRepository.deleteById(id);
@@ -164,8 +162,7 @@ public class QcmController {
     @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
   })
   public ResponseEntity launchQCM(Principal user, @PathVariable("id") int id) {
-    QCM qcm = qcmRepository.findById(id)
-      .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
+    QCM qcm = getQcm(id);
     checkRights(user, qcm);
     qcm.setState(State.STARTED);
     currentQuestionMap.put(id, 0);
@@ -180,8 +177,7 @@ public class QcmController {
     @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
   })
   public ResponseEntity finishQCM(Principal user, @PathVariable("id") int id) {
-    QCM qcm = qcmRepository.findById(id)
-      .orElseThrow(() -> new NotFoundException("Qcm with id " + id + " doesn't exist"));
+    QCM qcm = getQcm(id);
     checkRights(user, qcm);
     qcm.setState(State.FINISHED);
     return ResponseEntity.ok(qcmRepository.saveAndFlush(qcm));
@@ -195,8 +191,7 @@ public class QcmController {
     @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
   })
   public ResponseEntity getCurrentQuestion(Principal user, @PathVariable("id") int id) {
-    QCM qcm = qcmRepository.findById(id)
-      .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exists"));
+    QCM qcm = getQcm(id);
     Integer questionIndex = currentQuestionMap.get(id);
     if (questionIndex == null){
       throw new BadRequestException("The qcm has not started");
@@ -212,11 +207,10 @@ public class QcmController {
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Successfully passed to the next question"),
     @ApiResponse(code = 403, message = "You are not the owner of this qcm"),
-    @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
+    @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found or there is no next question")
   })
     public ResponseEntity nextQuestion(Principal user, @PathVariable("id") int id){
-      QCM qcm = qcmRepository.findById(id)
-              .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
+      QCM qcm = getQcm(id);
     checkRights(user, qcm);
     List<Question> questions = qcm.getQuestions();
     int questionIndex = currentQuestionMap.get(id);
@@ -240,8 +234,7 @@ public class QcmController {
     @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
   })
   public ResponseEntity qcmResult(Principal user, @PathVariable("id") int id) {
-    QCM qcm = qcmRepository.findById(id)
-      .orElseThrow(() -> new BadRequestException("Qcm with id " + id + " doesn't exist"));
+    QCM qcm = getQcm(id);
     String username = user.getName();
     QcmResult result = toResult(qcm);
     if (isStudent(user)) {
@@ -306,5 +299,10 @@ public class QcmController {
         choice.setAnswer(false);
       }
     }
+  }
+
+  private QCM getQcm(int id) {
+    return qcmRepository.findById(id)
+      .orElseThrow(() -> new NotFoundException("Qcm with id " + id + " doesn't exist"));
   }
 }
