@@ -14,6 +14,7 @@ import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.repository.CrudRepository;
@@ -39,6 +40,8 @@ public class ApplicationConfiguration {
   private final ChoiceRepository choiceRepository;
   private final ResponseRepository responseRepository;
   private final PasswordEncoder passwordEncoder;
+  @Value("${spring.profiles.active}")
+  private String activeProfile;
 
   public ApplicationConfiguration(UserRepository userRepository, QcmRepository qcmRepository, QuestionRepository questionRepository, ChoiceRepository choiceRepository, ResponseRepository responseRepository, PasswordEncoder passwordEncoder) {
     this.userRepository = userRepository;
@@ -56,7 +59,9 @@ public class ApplicationConfiguration {
 
   @PostConstruct
   public void initDatabase() {
-
+    if (!activeProfile.equals("local")) {
+      return;
+    }
     LOGGER.info("Clearing repositories...");
     Stream.of( // ORDER OF DELETE MATTERS!!!
       choiceRepository,
