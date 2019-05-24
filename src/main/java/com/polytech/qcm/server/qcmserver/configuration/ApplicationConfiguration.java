@@ -73,7 +73,7 @@ public class ApplicationConfiguration {
       .apis(RequestHandlerSelectors.any())
       .paths(PathSelectors.any())
       .build()
-      .apiInfo(info);
+    /*  .apiInfo(info)*/;
   }
 
   @Bean
