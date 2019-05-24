@@ -73,8 +73,8 @@ public class ResponseController {
       //checkCanAnswer(choice);
       String username = user.getName();
       Question question = choice.getQuestion();
-      Response existingAnswer = responseRepository.findByUser_UsernameAndChoice_Question_Id(username, question.getId());
-      if (existingAnswer != null) {
+      List<Response> existingAnswers = responseRepository.findAllByUser_UsernameAndChoice_Question_Id(username, question.getId());
+      if (existingAnswers.size() > 0) {
         throw new BadRequestException("User " + username + " has already answered question " + question);
       }
       responses.add(new Response(userRepository.findByUsername(user.getName()).get(), choice));
