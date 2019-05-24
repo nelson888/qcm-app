@@ -7,15 +7,15 @@
       "choices": [
         {
           "value": "anything",
-          "answer": true
+          "isAnswer": true
         },
         {
           "value": "thing",
-          "answer": false
+          "isAnswer": false
         },
         {
           "value": "some",
-          "answer": false
+          "isAnswer": false
         }
       ]
     },
@@ -24,15 +24,15 @@
       "choices": [
         {
           "value": "nothing without you",
-          "answer": false
+          "isAnswer": false
         },
         {
           "value": "everything",
-          "answer": true
+          "isAnswer": true
         },
         {
           "value": "life",
-          "answer": false
+          "isAnswer": false
         }
       ]
     }

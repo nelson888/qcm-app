@@ -1,20 +1,25 @@
 package com.polytech.qcm.server.qcmserver;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import com.google.gson.Gson;
 import com.polytech.qcm.server.qcmserver.controller.AuthController;
 import com.polytech.qcm.server.qcmserver.controller.QcmController;
+import com.polytech.qcm.server.qcmserver.controller.ResponseController;
+import com.polytech.qcm.server.qcmserver.data.Choice;
+import com.polytech.qcm.server.qcmserver.data.ChoiceIds;
 import com.polytech.qcm.server.qcmserver.data.PrincipalUser;
 import com.polytech.qcm.server.qcmserver.data.QCM;
+import com.polytech.qcm.server.qcmserver.data.Question;
 import com.polytech.qcm.server.qcmserver.data.Role;
 import com.polytech.qcm.server.qcmserver.data.User;
 import com.polytech.qcm.server.qcmserver.data.response.AuthResponse;
+import com.polytech.qcm.server.qcmserver.data.response.QcmResult;
+import com.polytech.qcm.server.qcmserver.data.response.QuestionResult;
+import com.polytech.qcm.server.qcmserver.exception.BadRequestException;
 import com.polytech.qcm.server.qcmserver.exception.NotFoundException;
 import com.polytech.qcm.server.qcmserver.repository.QcmRepository;
 import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +31,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -51,15 +64,19 @@ public class QcmServerApplicationTests {
 	@Autowired
 	private QcmController qcmController;
 	@Autowired
+	private ResponseController responseController;
+	@Autowired
 	private ResponseRepository responseRepository;
+
+	private QCM qcm;
 	private boolean initialized = false;
 
 	@Before
 	public void initData() throws IOException {
-		String password = passwordEncoder.encode(PASSWORD);
 		if (initialized) {
 			return;
 		}
+		String password = passwordEncoder.encode(PASSWORD);
 		responseRepository.deleteAll();
 		qcmRepository.deleteAll();
 		userRepository.deleteAll();
@@ -72,8 +89,13 @@ public class QcmServerApplicationTests {
 		QCM qcm = fromJson(QCM.class, "/qcm.json");
 		qcm.setAuthor(teacher);
 		qcm.updateReferences();
-		qcmRepository.saveAndFlush(qcm);
+		this.qcm = qcmRepository.saveAndFlush(qcm);
 		initialized = true;
+	}
+
+	@After
+	public void reInit() {
+		responseRepository.deleteAll();
 	}
 
 	private <T> T fromJson(Class<T> tClass, String path) throws IOException  {
@@ -125,5 +147,67 @@ public class QcmServerApplicationTests {
 		assertEquals("There should be one qcm in list" + qcms, 1, qcms.size());
 	}
 
-	//TODO make tests about answer
+
+	@Test
+	public void rightAnswerTest() {
+		ChoiceIds rightChoiceIds = new ChoiceIds();
+		List<Question> questions = qcm.getQuestions();
+		rightChoiceIds.setIds(
+			Stream.of(questions.get(0).getChoices().get(0), questions.get(1).getChoices().get(1))
+				.map(Choice::getId)
+				.collect(Collectors.toSet()));
+
+		responseController.postResponse(STUDENT_PRINCIPAL, rightChoiceIds);
+
+		QcmResult result = qcmController.qcmResult(STUDENT_PRINCIPAL, qcm.getId()).getBody();
+
+		assertNotNull(result);
+		assertEquals(Collections.singletonList(STUDENT_USERNAME), result.getParticipants());
+		assertEquals(2, result.getQuestionResults().size());
+
+		for (QuestionResult qr : result.getQuestionResults()) {
+			Map<String, Boolean> responsesMap = qr.getReponses();
+			assertEquals(1, responsesMap.size());
+			assertTrue(responsesMap.containsKey(STUDENT_USERNAME));
+			assertTrue(responsesMap.get(STUDENT_USERNAME));
+		}
+	}
+
+	@Test
+	public void wrongAnswerTest() {
+		ChoiceIds wrongAnswers = new ChoiceIds();
+		List<Question> questions = qcm.getQuestions();
+		wrongAnswers.setIds(
+			Stream.of(questions.get(0).getChoices().get(0),
+				questions.get(0).getChoices().get(1),
+				questions.get(1).getChoices().get(0))
+				.map(Choice::getId)
+				.collect(Collectors.toSet()));
+
+		responseController.postResponse(STUDENT_PRINCIPAL, wrongAnswers);
+
+		QcmResult result = qcmController.qcmResult(STUDENT_PRINCIPAL, qcm.getId()).getBody();
+
+		assertNotNull(result);
+		assertEquals(Collections.singletonList(STUDENT_USERNAME), result.getParticipants());
+		assertEquals(2, result.getQuestionResults().size());
+
+		for (QuestionResult qr : result.getQuestionResults()) {
+			Map<String, Boolean> responsesMap = qr.getReponses();
+			assertEquals(1, responsesMap.size());
+			assertTrue(responsesMap.containsKey(STUDENT_USERNAME));
+			assertFalse(responsesMap.get(STUDENT_USERNAME));
+		}
+	}
+
+	@Test(expected = BadRequestException.class)
+	public void answerTwiceTest() {
+		ChoiceIds choiceIds = new ChoiceIds();
+
+		choiceIds.setIds(Collections.singleton(qcm.getQuestions().get(0).getChoices().get(0).getId()));
+
+		responseController.postResponse(STUDENT_PRINCIPAL, choiceIds);
+		responseController.postResponse(STUDENT_PRINCIPAL, choiceIds);
+	}
+
 }
