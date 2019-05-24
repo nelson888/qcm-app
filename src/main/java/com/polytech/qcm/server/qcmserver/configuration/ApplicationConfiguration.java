@@ -1,5 +1,8 @@
 package com.polytech.qcm.server.qcmserver.configuration;
 
+import static com.polytech.qcm.server.qcmserver.data.Role.STUDENT;
+import static com.polytech.qcm.server.qcmserver.data.Role.TEACHER;
+
 import com.polytech.qcm.server.qcmserver.data.Choice;
 import com.polytech.qcm.server.qcmserver.data.QCM;
 import com.polytech.qcm.server.qcmserver.data.Question;
@@ -104,15 +107,12 @@ public class ApplicationConfiguration {
 
     LOGGER.info("Inserting fake data...");
 
-    String student = Role.STUDENT.roleName();
-    String teacher = Role.TEACHER.roleName();
-
-    User teacherUser = new User("teacher", passwordEncoder.encode("teacher"), teacher);
+    User teacherUser = new User("teacher", passwordEncoder.encode("teacher"), TEACHER);
     List<User> users = Arrays.asList(
-      new User("nelson", passwordEncoder.encode("nelson"), student),
-      new User("nicolas", passwordEncoder.encode("nicolas"), student),
-      new User("teacher2", passwordEncoder.encode("teacher2"), teacher),
-      new User("admin", passwordEncoder.encode("admin"), Role.ADMIN.roleName()),
+      new User("nelson", passwordEncoder.encode("nelson"), STUDENT),
+      new User("nicolas", passwordEncoder.encode("nicolas"), STUDENT),
+      new User("teacher2", passwordEncoder.encode("teacher2"), STUDENT),
+      new User("admin", passwordEncoder.encode("admin"), Role.ADMIN),
         teacherUser);
     users.forEach(userRepository::saveAndFlush);
 

@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/auth")
 @Api(value = "Controller to authenticate")
@@ -50,15 +48,16 @@ public class AuthController {
     @ApiResponse(code = 200, message = "The JWT"),
     @ApiResponse(code = 400, message = "The credentials supplied aren't correct"),
   })
-  public ResponseEntity login(@RequestBody User data) { // only needs username and password (not hashed)
+  public ResponseEntity<AuthResponse> login(@RequestBody User data) { // only needs username and password (not hashed)
     try {
       String username = data.getUsername();
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
       User user = this.userRepository.findByUsername(username)
         .orElseThrow(() -> new NotFoundException("Username " + username + "not found"));
-      String token = jwtTokenProvider.createToken(username, user.getRole());
+      String role = user.getRole().roleName();
+      String token = jwtTokenProvider.createToken(username, role);
       LOGGER.info("User {} authenticated successfully", username);
-      return ResponseEntity.ok(new AuthResponse(username, user.getRole(), token));
+      return ResponseEntity.ok(new AuthResponse(username, role, token));
     } catch (AuthenticationException e) {
       throw new BadCredentialsException("Invalid username/password supplied");
     }

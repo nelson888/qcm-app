@@ -12,6 +12,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -40,8 +42,8 @@ public class User implements UserDetails {
   private String password; //should be already hashed in database
 
   @NonNull
-  @NotBlank
-  private String role; //CAREFUL ROLES MUST START WITH THE PREFIX 'ROLE_' BUT NOT IN SECURITY CONFIGURATION
+  @Enumerated(EnumType.STRING)
+  private Role role; //CAREFUL ROLES MUST START WITH THE PREFIX 'ROLE_' BUT NOT IN SECURITY CONFIGURATION
 
   @Override
   @JsonIgnore
@@ -70,10 +72,7 @@ public class User implements UserDetails {
   @Override
   @JsonIgnore
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return Collections.singleton(new SimpleGrantedAuthority(role));
+    return Collections.singleton(new SimpleGrantedAuthority(role.roleName()));
   }
 
-  public String getRole() {
-    return role;
-  }
 }

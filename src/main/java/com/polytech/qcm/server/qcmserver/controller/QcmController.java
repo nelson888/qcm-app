@@ -303,8 +303,8 @@ public class QcmController {
   }
 
   private boolean isStudent(Principal principal) {
-    User usr = getUser(principal);
-    return usr.getRole().equals(Role.STUDENT.roleName());
+    User user = getUser(principal);
+    return Role.STUDENT.equals(user.getRole());
   }
 
   private void hideAnswers(QCM qcm) {
