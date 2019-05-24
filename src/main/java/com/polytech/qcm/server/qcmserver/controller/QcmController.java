@@ -241,7 +241,7 @@ public class QcmController {
     @ApiResponse(code = 403, message = "You are not authenticated"),
     @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
   })
-  public ResponseEntity qcmResult(Principal user, @PathVariable("id") int id) {
+  public ResponseEntity<QcmResult> qcmResult(Principal user, @PathVariable("id") int id) {
     QCM qcm = getQcm(id);
     String username = user.getName();
     QcmResult result = toResult(qcm);
@@ -259,7 +259,7 @@ public class QcmController {
   }
 
   private QcmResult toResult(QCM qcm) {
-    List<String> participants = userRepository.findAllByRole(Role.STUDENT.roleName())
+    List<String> participants = userRepository.findAllByRole(Role.STUDENT)
       .stream()
       .map(User::getUsername)
       .collect(Collectors.toList());

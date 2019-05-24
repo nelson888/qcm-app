@@ -12,18 +12,22 @@ import java.util.Objects;
 @Data
 @Table(name = "question")
 @Entity
-public class Question {
+public class Question implements Comparable<Question> {
 
     @Id
     @NonNull
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @JsonIgnore
+    private int qcmIndex;
+
     @NonNull
     @NotBlank
     private String question;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderBy("questionIndex")
     private List<Choice> choices;
 
     @NonNull
@@ -57,5 +61,10 @@ public class Question {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public int compareTo(Question question) {
+        return question.qcmIndex - qcmIndex;
     }
 }

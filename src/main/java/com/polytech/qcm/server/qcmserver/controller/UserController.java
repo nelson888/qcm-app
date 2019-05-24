@@ -33,7 +33,7 @@ public class UserController {
     @ApiResponse(code = 403, message = "You are not a teacher"),
   })
   public ResponseEntity getTeachers() {
-    return ResponseEntity.ok(toUsername(userRepository.findAllByRole(Role.TEACHER.roleName())));
+    return ResponseEntity.ok(toUsername(userRepository.findAllByRole(Role.TEACHER)));
   }
 
   @GetMapping("/students")
@@ -43,7 +43,7 @@ public class UserController {
     @ApiResponse(code = 403, message = "You are not a teacher"),
   })
   public ResponseEntity getStudents(){
-    return ResponseEntity.ok(toUsername(userRepository.findAllByRole(Role.STUDENT.roleName())));
+    return ResponseEntity.ok(toUsername(userRepository.findAllByRole(Role.STUDENT)));
   }
 
   @GetMapping("/all")

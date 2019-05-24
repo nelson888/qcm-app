@@ -35,6 +35,7 @@ public class QCM {
     private State state;
 
     @OneToMany(mappedBy = "qcm", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderBy("qcmIndex")
     private List<Question> questions;
 
     public QCM(@NonNull String name, @NonNull User author, @NonNull State state, List<Question> questions) {
@@ -59,10 +60,15 @@ public class QCM {
     }
 
     public void updateReferences() {
+        int qIndex = 0;
         for (Question question : questions) {
             question.setQcm(this);
-            question.getChoices()
-              .forEach(c -> c.setQuestion(question));
+            question.setQcmIndex(qIndex++);
+            int cIndex = 0;
+            for (Choice choice : question.getChoices()) {
+                choice.setQuestion(question);
+                choice.setQuestionIndex(cIndex++);
+            }
         }
     }
 

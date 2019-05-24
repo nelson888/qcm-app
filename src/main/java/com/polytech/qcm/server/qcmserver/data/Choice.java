@@ -25,6 +25,9 @@ public class Choice {
     @NonNull
     private boolean isAnswer;
 
+    @JsonIgnore
+    private int questionIndex;
+
     @NonNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "question_id", nullable = false)
