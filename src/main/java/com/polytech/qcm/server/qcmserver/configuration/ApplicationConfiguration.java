@@ -89,7 +89,7 @@ public class ApplicationConfiguration {
 
   @PostConstruct
   public void initDatabase() {
-    if (true || !activeProfile.equals("local")) {
+    if (!activeProfile.equals("local")) {
       //clean only if running on local mysql
       return;
     }
