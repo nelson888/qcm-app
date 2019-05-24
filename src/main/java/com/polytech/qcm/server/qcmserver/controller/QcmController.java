@@ -138,7 +138,7 @@ public class QcmController {
       question.setQcm(qcm);
       question.getChoices().forEach(c -> c.setQuestion(question));
     }
-    questions = questionRepository.saveAll(newQcm.getQuestions());
+    questions = newQcm.getQuestions();
     qcm.setQuestions(questions);
 
     return ResponseEntity.ok(qcmRepository.save(qcm));
