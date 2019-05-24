@@ -1,0 +1,40 @@
+{
+  "name": "Philosophy QCM",
+  "state": "COMPLETE",
+  "questions": [
+    {
+      "question": "What is something?",
+      "choices": [
+        {
+          "value": "anything",
+          "answer": true
+        },
+        {
+          "value": "thing",
+          "answer": false
+        },
+        {
+          "value": "some",
+          "answer": false
+        }
+      ]
+    },
+    {
+      "question": "What is love?",
+      "choices": [
+        {
+          "value": "nothing without you",
+          "answer": false
+        },
+        {
+          "value": "everything",
+          "answer": true
+        },
+        {
+          "value": "life",
+          "answer": false
+        }
+      ]
+    }
+  ]
+}

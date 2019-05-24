@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @NoArgsConstructor
 @Data
@@ -52,6 +53,18 @@ public class QCM {
         }
         return uniqueQuestions;
     }
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+        updateReferences();
+    }
+
+    public void updateReferences() {
+        for (Question question : questions) {
+            question.setQcm(this);
+            question.getChoices()
+              .forEach(c -> c.setQuestion(question));
+        }
+    }
 
     @Override
     public String toString() {
@@ -61,5 +74,18 @@ public class QCM {
           ", author=" + author +
           ", state=" + state +
           '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        QCM qcm = (QCM) o;
+        return Objects.equals(id, qcm.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

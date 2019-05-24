@@ -61,7 +61,7 @@ public class QcmController {
     @ApiResponse(code = 200, message = "Successfully retrieved list"),
     @ApiResponse(code = 403, message = "You are not authenticated"),
   })
-  public ResponseEntity getAll() {
+  public ResponseEntity<List<QCM>> getAll() {
     return ResponseEntity.ok(qcmRepository.findAll());
   }
 
@@ -83,7 +83,7 @@ public class QcmController {
     @ApiResponse(code = 403, message = "You are not authenticated"),
     @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
   })
-  public ResponseEntity getById(Principal principal, @PathVariable("id") int id) {
+  public ResponseEntity<QCM> getById(Principal principal, @PathVariable("id") int id) {
     QCM qcm = getQcm(id);
 
     if (isStudent(principal)) { //if is student, we have to hide answer choices
@@ -100,7 +100,7 @@ public class QcmController {
     @ApiResponse(code = 200, message = "Successfully created qcm"),
     @ApiResponse(code = 403, message = "You are not a teacher"),
   })
-  public ResponseEntity newQvm(Principal principal) {
+  public ResponseEntity<QCM> newQvm(Principal principal) {
     QCM qcm = new QCM("",
       getUser(principal), State.INCOMPLETE, Collections.emptyList());
     LOGGER.info("User {} created a new qcm", principal.getName());
@@ -115,7 +115,7 @@ public class QcmController {
     @ApiResponse(code = 403, message = "You are the owner of this qcm"),
     @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
   })
-  public ResponseEntity save(Principal principal, @RequestBody QCM newQcm, @PathVariable("id") int id) {
+  public ResponseEntity<QCM> update(Principal principal, @RequestBody QCM newQcm, @PathVariable("id") int id) {
     for(Question question: newQcm.getQuestions()){
       if (question.getChoices().stream().noneMatch(Choice::isAnswer)) {
         throw new BadRequestException("Question with id " + id + " has no good answer");
@@ -133,13 +133,7 @@ public class QcmController {
     questionRepository.deleteAll(qcm.getQuestions());
 
     //store new questions in jpa
-    List<Question> questions = newQcm.getQuestions();
-    for (Question question : questions) {
-      question.setQcm(qcm);
-      question.getChoices().forEach(c -> c.setQuestion(question));
-    }
-    questions = newQcm.getQuestions();
-    qcm.setQuestions(questions);
+    qcm.setQuestions(newQcm.getQuestions());
 
     return ResponseEntity.ok(qcmRepository.save(qcm));
   }
