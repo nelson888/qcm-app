@@ -76,7 +76,7 @@ public class ApplicationConfiguration {
       .apis(RequestHandlerSelectors.any())
       .paths(PathSelectors.any())
       .build()
-    /*  .apiInfo(info)*/;
+      .apiInfo(info);
   }
 
   @Bean
@@ -87,7 +87,7 @@ public class ApplicationConfiguration {
       "1.0",
       "Terms of service",
       new Contact("FONKOUA Tambue Nelson", "https://webiste-42a9e.firebaseapp.com/index.html", "tambapps@gmail.com"),
-      "MIT License", "TODO", Collections.emptyList());
+      "MIT License", "https://github.com/nelson888/qcm-server/blob/master/LICENSE", Collections.emptyList());
   }
 
   @PostConstruct
