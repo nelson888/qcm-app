@@ -1,0 +1,75 @@
+@import "./colors";
+.no-margin {
+  margin: 0;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.black-line {
+  width: 100%;
+  height: 2px;
+  background: $separatorColor;
+}
+
+.unselectable-text {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+  unselectable: on;
+}
+
+.screen-centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.input-disabled {
+  pointer-events: none;
+  user-select: none;
+}
+
+
+.inline {
+  display: inline-block;
+}
+
+.input-error {
+  color: #ff000b;
+}
+
+$black: #000000;
+$gray: #454545;
+
+.black-button {
+  color: #FFFFFF;
+  margin: 0.5em 1em;
+  font-family: 'Montserrat';
+  font-size: 1.1em;
+  background-color: $black;
+  border-color: $black;
+  padding: 0.2em 0.6em;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.black-button:hover {
+  background: $gray;
+  border-color: $gray;
+  text-decoration: none;
+}
+
+p, h1, h2, h3, h4, h5, h6, a, label, input {
+  font-family: 'Montserrat';
+}
+
+/*You */
+.center-horizontal {
+  margin:0 auto;
+  display:block;
+}

@@ -1,0 +1,18 @@
+@import './style/dimensions.scss';
+@import "./style/common.scss";
+
+.content {
+  width:100%;
+  padding-top: $barSize;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0 0;
+  padding: 5px 0 0 0;
+}
+
+li {
+  display:inline;
+  margin: 0 1rem;
+}

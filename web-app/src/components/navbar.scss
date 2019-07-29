@@ -1,0 +1,87 @@
+@import '../style/dimensions.scss';
+
+$textColor: white;
+$backgroundColor: #333;
+$zIndex: 1030;
+.nav {
+  background-color: $backgroundColor;
+  overflow: hidden;
+  height: $barSize;
+}
+
+.link {
+  color: $textColor;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.logout {
+  color: #ff000b;
+}
+
+.title {
+  font-size: 25px;
+  margin-right: 10px;
+  font-weight: initial;
+}
+
+.logo {
+  width: 36px;
+  height: auto;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.fixed-top {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: $zIndex;
+}
+
+.mobile-menu-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  height: $barSize;
+  width: $barSize;
+  background: $backgroundColor;
+}
+
+.mobile-menu-icon:hover {
+  background: #666666;
+}
+
+.mobile-menu {
+  background-color: $backgroundColor;
+  z-index: $zIndex - 1;
+  width: 100%;
+}
+
+.mobile-menu-item {
+  display: block;
+  width: 100%;
+  margin: 0 0;
+  padding: 0.5em 0;
+}
+
+.mobile-menu-item:hover {
+  background: #666666;
+}
+
+.mobile-menu-padding-top {
+  height: $barSize;
+  width: 100%;
+  background: $backgroundColor;
+}
+
+.mobile-menu-container {
+  position: fixed;
+  top: $barSize;
+  right: 0;
+  left: 0;
+  z-index: $zIndex;
+}
