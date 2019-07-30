@@ -27,20 +27,36 @@ class ApiClient implements QcmClient {
         jwt: ""
     };
 
-    private post(url: string, data: any): Promise<Response> {
-        return fetch(url,
+    private getHeaders = (): any => {
+        let headers: any = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        };
+        if (this.isLogged()) {
+            headers['Authorization'] = `Bearer ${this.user.jwt}`;
+        }
+        return headers;
+    };
+
+    private post(endpoint: string, data: any): Promise<Response> {
+        return fetch(API_URL + endpoint,
             {
-                //   credentials: 'same-origin', // MANDATORY TO SOLVE CORS PROBLEM, ALSO DON'T ADD HEADER CONTENT-TYPE JSON!!! IT WILL MAKE CORS A PAIN IN THE *SS
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
+                headers: this.getHeaders(),
                 body: JSON.stringify(data)
             });
     }
+
+    private get(endpoint: string): Promise<Response> {
+        return fetch(API_URL + endpoint,
+            {
+                method: 'GET',
+                headers: this.getHeaders(),
+            });
+    }
+
     logIn = async (username: string, password: string): Promise<LoginResponse> =>  {
-        let response: Response = await this.post(API_URL + '/auth/login',
+        let response: Response = await this.post('/auth/login',
             {
                 username,
                 password
@@ -69,13 +85,22 @@ class ApiClient implements QcmClient {
 
     getRole = (): Role => {
         return this.user.role;
+    };
+
+    async getQcms(): Promise<any[]> {
+        let response: Response = await this.get('/qcm/all');
+        let json = await response.json();
+        console.log(json);
+        return  [];
     }
+
 }
 
 export interface QcmClient {
     isLogged(): boolean,
     logIn(username: string, password: string): Promise<LoginResponse>
-    getRole(): Role
+    getRole(): Role,
+    getQcms(): Promise<any[]>
 }
 
 export { ApiClient };

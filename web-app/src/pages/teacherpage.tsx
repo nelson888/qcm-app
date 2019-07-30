@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import './teacherpage.scss';
 import {History} from "history";
+import {QcmClient} from "../services/apiClient";
 
 type State = {
 
@@ -8,9 +9,14 @@ type State = {
 
 type Props = {
     history: History,
+    apiClient: QcmClient
 }
 
 class TeacherPage extends Component<Props, State> {
+
+    componentDidMount(): void {
+        this.props.apiClient.getQcms();
+    }
 
     render(): React.ReactElement {
         return (
