@@ -1,3 +1,5 @@
+import {Qcm} from "../types";
+
 const API_URL = 'http://localhost:8080';
 
 export type Role = 'ROLE_TEACHER' | 'ROLE_STUDENT';
@@ -10,15 +12,37 @@ type login_response = {
     username: string
 };
 type String = string|null;
-type APIResponse<S, E> = {
+type User = login_response;
+
+export type LoginResponse = APIResponse<User, string>;
+export type QcmAllResponse = APIResponse<Qcm[], string>;
+
+type APIResponseConstructor<S, E> = {
     isSuccess: boolean,
     successData?: S,
     errorData?: E
 }
+class APIResponse<S, E> {
 
-type User = login_response;
+    public readonly isSuccess: boolean;
+    private _successData?: S;
+    private _errorData?: E;
 
-export type LoginResponse = APIResponse<User, Role>;
+    constructor({isSuccess, successData, errorData}: APIResponseConstructor<S, E>) {
+        this.isSuccess = isSuccess;
+        this._errorData = errorData;
+        this._successData = successData;
+    }
+
+    get errorData(): E {
+        return this._errorData as E;
+    }
+
+    get successData(): S {
+        return this._successData as S;
+    }
+}
+
 class ApiClient implements QcmClient {
 
     private user: User = {
@@ -55,6 +79,21 @@ class ApiClient implements QcmClient {
             });
     }
 
+    private async extractErrorMessage(response: Response): Promise<string> {
+        let errorResponse: any =  await response.json();
+        return errorResponse.message;
+    }
+
+    private isError(response: Response): boolean {
+        return response.status < 200 || response.status >= 300;
+    }
+
+    private async errorResponse<T>(response: Response): Promise<APIResponse<T, string>> {
+        return new APIResponse({
+            isSuccess: false,
+            errorData: await this.extractErrorMessage(response)
+        });
+    }
     logIn = async (username: string, password: string): Promise<LoginResponse> =>  {
         let response: Response = await this.post('/auth/login',
             {
@@ -62,21 +101,17 @@ class ApiClient implements QcmClient {
                 password
             });
 
-        if (!(response.status >= 200 && response.status < 300)) {
-            let errorResponse: any =  await response.json();
-            return {
-                isSuccess: false,
-                errorData: errorResponse.message
-            }
+        if (this.isError(response)) {
+            return this.errorResponse<User>(response);
         }
         let json: login_response = await response.json();
         console.log(json);
         this.user = {...json};
 
-        return {
+        return new APIResponse({
             isSuccess: true,
-            successData: this.user
-        };
+            successData: {...this.user}
+        });
     };
 
     isLogged = (): boolean => {
@@ -87,11 +122,16 @@ class ApiClient implements QcmClient {
         return this.user.role;
     };
 
-    async getQcms(): Promise<any[]> {
+    async getQcms(): Promise<QcmAllResponse> {
         let response: Response = await this.get('/qcm/all');
-        let json = await response.json();
-        console.log(json);
-        return  [];
+        if (this.isError(response)) {
+            return await this.errorResponse<Qcm[]>(response);
+        }
+        let jsonList: Qcm[] = await response.json();
+        return new APIResponse({
+            isSuccess: true,
+            successData: jsonList
+        });
     }
 
 }
@@ -100,7 +140,7 @@ export interface QcmClient {
     isLogged(): boolean,
     logIn(username: string, password: string): Promise<LoginResponse>
     getRole(): Role,
-    getQcms(): Promise<any[]>
+    getQcms(): Promise<QcmAllResponse>
 }
 
-export { ApiClient };
+export { ApiClient, APIResponse };
