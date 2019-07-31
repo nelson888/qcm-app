@@ -2,6 +2,7 @@ package com.polytech.qcm.server.qcmserver.controller;
 
 import com.polytech.qcm.server.qcmserver.data.Role;
 import com.polytech.qcm.server.qcmserver.data.User;
+import com.polytech.qcm.server.qcmserver.exception.NotFoundException;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,6 +56,18 @@ public class UserController {
   })
   public ResponseEntity getEveryone(){
     return ResponseEntity.ok(toUsername(userRepository.findAll()));
+  }
+
+  @GetMapping("/me")
+  @ApiOperation(value = "Get the current user", response = User.class)
+  @ApiResponses(value = {
+    @ApiResponse(code = 200, message = "Successfully get the user"),
+    @ApiResponse(code = 403, message = "You are not a teacher"),
+  })
+  public ResponseEntity getMe(Principal principal) {
+    return ResponseEntity.ok(
+      userRepository.findByUsername(principal.getName())
+        .orElseThrow(() -> new NotFoundException(String.format("User '%s' was not found", principal.getName()))));
   }
 
 
