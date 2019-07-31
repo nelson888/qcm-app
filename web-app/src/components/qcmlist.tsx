@@ -27,23 +27,35 @@ class QcmList extends Component<Props, {}> {
         return (
             <li key={qcm.id.toString()} className="no-margin no-padding"
                 style={{
-                    height: 40
+                    height: 50,
+                    width: '80%'
                 }}
             >
-                <h3
-                    className="no-padding no-margin inline"
-                >{qcm.name}</h3>
+                <div
+                    className="qcm-element"
+                >
+                    <h3
+                        className="no-padding no-margin inline vertical-middle"
+                    >{qcm.name}</h3>
 
-                <img
-                    className="inline"
-                    style={{
-                        width: 32,
-                        height: 32,
-                        verticalAlign: "middle"
-                    }}
-                    alt={qcm.state.toLowerCase()}
-                    src={this.getIcon(qcm.state)}
-                />
+                    <img
+                        className="inline vertical-middle"
+                        style={{
+                            width: 32,
+                            height: 32,
+                            marginLeft: 40
+                        }}
+                        alt={qcm.state.toLowerCase()}
+                        src={this.getIcon(qcm.state)}
+                    />
+
+                    <div
+                        className="black-line"
+                        style={{
+                            marginTop: 8
+                        }}
+                    />
+                </div>
             </li>
         );
     };
