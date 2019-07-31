@@ -102,7 +102,7 @@ class LoginPage extends FormComponent<Props, LoginForm> {
                 }
             })
             .catch((error: any) => {
-            this.setState({sending: false});
+            this.setState({loading: false});
             toast.error("An error occurred: " + error.toString());
         });
     };
