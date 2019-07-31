@@ -4,6 +4,7 @@ import {QcmAllResponse, QcmClient} from "../services/apiClient";
 import {Qcm} from "../types";
 import QcmList from "../components/qcmlist";
 import {toast} from "react-toastify";
+import './loggedpage.scss';
 
 type State = {
     qcms: Qcm[]
@@ -35,11 +36,18 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
     render(): React.ReactElement {
         const {qcms} = this.state;
         return (
-            <div>
-                {this.content()}
-
-                <QcmList qcms={qcms} />
-            </div>
+            <React.Fragment>
+                <div
+                    className="qcms-list"
+                >
+                    <QcmList qcms={qcms} />
+                </div>
+                <div
+                    className="logged-content"
+                >
+                    {this.content()}
+                </div>
+            </React.Fragment>
         );
     }
 }
