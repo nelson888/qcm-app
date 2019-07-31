@@ -6,10 +6,11 @@ import LoginPage from "./pages/loginpage";
 import NotFoundPage from "./pages/notfoundpage";
 import {ToastContainer} from "react-toastify";
 import NavBar from "./components/navbar";
-import {ApiClient, QcmClient, TEACHER} from "./services/apiClient";
+import {QcmClient, TEACHER} from "./services/qcmClient";
 import 'react-toastify/dist/ReactToastify.css';
 import TeacherPage from "./pages/teacherpage";
 import StudentPage from "./pages/studentpage";
+import ApiClient from "./services/apiClient";
 
 type AppState = {
 

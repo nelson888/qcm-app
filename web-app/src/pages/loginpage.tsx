@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import {History} from "history";
 import LoadingScreen from "../common/components/loadingscreen";
 import {isMobile} from "react-device-detect";
-import {LoginResponse, QcmClient} from "../services/apiClient";
+import {LoginResponse, QcmClient} from "../services/qcmClient";
 
 type LoginForm = {
     username: string,

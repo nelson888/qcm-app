@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {History} from "history";
-import {QcmAllResponse, QcmClient} from "../services/apiClient";
+import {QcmAllResponse, QcmClient} from "../services/qcmClient";
 import {Qcm} from "../types";
 import QcmList from "../components/qcmlist";
 import {toast} from "react-toastify";
