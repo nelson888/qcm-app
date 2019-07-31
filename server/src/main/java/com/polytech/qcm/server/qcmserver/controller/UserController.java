@@ -62,7 +62,7 @@ public class UserController {
   @ApiOperation(value = "Get the current user", response = User.class)
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Successfully get the user"),
-    @ApiResponse(code = 403, message = "You are not a teacher"),
+    @ApiResponse(code = 403, message = "You are not authenticated"),
   })
   public ResponseEntity getMe(Principal principal) {
     return ResponseEntity.ok(
