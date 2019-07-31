@@ -112,7 +112,7 @@ public class QcmController {
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Successfully updated qcm"),
     @ApiResponse(code = 400, message = "The qcm is malformed"),
-    @ApiResponse(code = 403, message = "You are the owner of this qcm"),
+    @ApiResponse(code = 403, message = "You are not the owner of this qcm"),
     @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
   })
   public ResponseEntity<QCM> update(Principal principal, @RequestBody QCM newQcm, @PathVariable("id") int id) {
