@@ -69,7 +69,7 @@ class ApiClient implements QcmClient {
             });
 
         if (this.isError(response)) {
-            return this.errorResponse<User>(response);
+            return this.errorResponse<login_response>(response);
         }
         let json: login_response = await response.json();
         console.log(json);
@@ -77,7 +77,7 @@ class ApiClient implements QcmClient {
 
         return new APIResponse({
             isSuccess: true,
-            successData: {...this.user}
+            successData: {...json}
         });
     };
 

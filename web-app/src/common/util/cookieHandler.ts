@@ -9,9 +9,9 @@ export function deleteCookie(cname: string) {
     document.cookie = `${cname}=; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/`;
 }
 
-export function setCookie(cname: string, cvalue: string, d:Date) {
+export function setCookie(cname: string, cvalue: any, d:Date) {
     var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    document.cookie = cname + "=" + cvalue.toString() + ";" + expires + ";path=/";
 }
 
 export function getCookie(cname: string) {

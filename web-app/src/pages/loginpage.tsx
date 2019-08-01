@@ -19,8 +19,9 @@ type LoginState = {
 }
 
 type Props = {
-    apiClient: QcmClient, //TODO
-    history: History
+    apiClient: QcmClient,
+    history: History,
+    onLogin(response: LoginResponse, history: History): void
 };
 
 class LoginPage extends FormComponent<Props, LoginForm> {
@@ -94,12 +95,7 @@ class LoginPage extends FormComponent<Props, LoginForm> {
         this.props.apiClient.logIn(username, password)
             .then((response: LoginResponse) => {
                 this.setState({loading: false});
-                if (response.isSuccess) {
-                    toast.success("Successfully logged in");
-                    this.props.history.replace('/home');
-                } else {
-                    toast.error(response.errorData);
-                }
+                this.props.onLogin(response, this.props.history);
             })
             .catch((error: any) => {
             this.setState({loading: false});

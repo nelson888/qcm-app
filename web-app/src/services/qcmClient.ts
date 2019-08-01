@@ -5,15 +5,17 @@ export type Role = 'ROLE_TEACHER' | 'ROLE_STUDENT';
 export const TEACHER: Role = 'ROLE_TEACHER';
 export const STUDENT: Role = 'ROLE_STUDENT';
 
-export type login_response = {
+export type login_response = User & {
+    expires: string
+};
+export type String = string|null;
+export type User = {
     jwt: string,
     role: Role,
     username: string
 };
-export type String = string|null;
-export type User = login_response;
 
-export type LoginResponse = APIResponse<User, string>;
+export type LoginResponse = APIResponse<login_response, string>;
 export type QcmAllResponse = APIResponse<Qcm[], string>;
 
 type APIResponseConstructor<S, E> = {
