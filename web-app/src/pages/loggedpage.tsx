@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {History} from "history";
-import {QcmAllResponse, QcmClient} from "../services/qcmClient";
+import {QcmAllResponse, QcmClient, TEACHER} from "../services/qcmClient";
 import {Qcm} from "../types";
 import QcmList from "../components/qcmlist";
 import {toast} from "react-toastify";
@@ -41,7 +41,20 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
                 <div
                     className="qcms-list"
                 >
-                    <QcmList qcms={qcms} />
+                    <QcmList qcms={qcms}
+                             onClick={(qcm: Qcm) => this.setState({current: qcm})}
+                    />
+                    {
+                        this.props.apiClient.getRole() === TEACHER &&
+                        <p
+                            className="qcm-element no-margin unselectable-text"
+                            style={{
+                                padding: 5,
+                                textAlign: 'center',
+                                verticalAlign: 'middle'
+                            }}
+                        >Create new mcq</p>
+                    }
                 </div>
                 <div
                     className="logged-content"
@@ -63,6 +76,8 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
             </React.Fragment>
         );
     }
+
+
 }
 
 export default LoggedPage;

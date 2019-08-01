@@ -7,3 +7,18 @@
   color: #9A9999;
   cursor: pointer;
 }
+
+.choices-view-grid {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  margin: 0;
+  padding: 0;
+}
+
+.answer-choice {
+  color: limegreen;
+}
+
+.normal-choice {
+
+}

@@ -8,7 +8,8 @@ const startedIcon = require('../images/icons/ongoing.png');
 const completeIcon = require('../images/icons/complete.png');
 
 type Props = {
-    qcms: Qcm[]
+    qcms: Qcm[],
+    onClick(qcm: Qcm): void
 };
 class QcmList extends Component<Props, {}> {
 
@@ -30,12 +31,13 @@ class QcmList extends Component<Props, {}> {
                     height: 50,
                     width: '80%'
                 }}
+                onClick={() => this.props.onClick(qcm)}
             >
                 <div
                     className="qcm-element"
                 >
                     <h3
-                        className="no-padding no-margin inline vertical-middle"
+                        className="no-padding no-margin inline vertical-middle unselectable-text"
                     >{qcm.name}</h3>
 
                     <img

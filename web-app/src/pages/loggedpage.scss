@@ -1,7 +1,6 @@
 $listHeight: 33%;
 .qcms-list {
   position: absolute;
-  height: 100%;
   width: $listHeight;
 }
 
@@ -9,5 +8,4 @@ $listHeight: 33%;
   position: absolute;
   left: $listHeight;
   width: 100% - $listHeight;
-  height: 100%;
 }
