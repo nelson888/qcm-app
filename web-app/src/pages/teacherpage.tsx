@@ -8,7 +8,8 @@ import {toast} from "react-toastify";
 import LoggedPage from "./loggedpage";
 
 type State = {
-    qcms: Qcm[]
+    qcms: Qcm[],
+    current: Qcm | null
 };
 
 type Props = {
@@ -19,13 +20,18 @@ type Props = {
 class TeacherPage extends LoggedPage<Props, State> {
 
     state: State = {
-        qcms: []
+        qcms: [],
+        current: null
     };
 
-    content(): React.ReactElement {
+    renderQcm(qcm: Qcm): React.ReactElement {
+        const {current} = this.state;
         return (
-            <div>
-                <h1>TEACHER PAGE</h1>
+            <div style={{
+                width: '100%',
+                height: '100%'
+            }}>
+
             </div>
         );
     }

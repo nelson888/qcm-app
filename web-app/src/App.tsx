@@ -45,7 +45,6 @@ class App extends Component<AppProps, AppState> {
                     this.setState({loading: false});
                 }).catch((error: any) => {
                 this.apiClient.setJwt("");
-                deleteCookie(AUTH_COOKIE);
                 this.setState({loading: false});
                 toast.error("An error occurred: " + error.toString());
             });

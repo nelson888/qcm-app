@@ -7,7 +7,8 @@ import {toast} from "react-toastify";
 import './loggedpage.scss';
 
 type State = {
-    qcms: Qcm[]
+    qcms: Qcm[],
+    current: Qcm | null
 };
 
 type Props = {
@@ -31,10 +32,10 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
             });
     }
 
-    abstract content(): React.ReactElement;
+    abstract renderQcm(qcm: Qcm): React.ReactElement;
 
     render(): React.ReactElement {
-        const {qcms} = this.state;
+        const {qcms, current} = this.state;
         return (
             <React.Fragment>
                 <div
@@ -45,7 +46,18 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
                 <div
                     className="logged-content"
                 >
-                    {this.content()}
+                    {
+                        !current && <h2
+                            style={{
+                                width: '50%',
+                                marginTop: '25%'
+                            }}
+                            className="center-fixed-width"
+                        >Select a MCQ</h2>
+                    }
+                    {
+                        current && this.renderQcm(current as Qcm)
+                    }
                 </div>
             </React.Fragment>
         );
