@@ -1,4 +1,5 @@
-@import "../style/common";
+@import "../style/common.scss";
+@import "../style/colors.scss";
 
 .qcm-element {
   background: #fffefe;
@@ -6,5 +7,9 @@
 
 
 .qcm-element:hover {
-  background: #9A9999;
+  background: #b6b5b5;
+}
+
+.qcm-element:active {
+  background: $separatorColor;
 }

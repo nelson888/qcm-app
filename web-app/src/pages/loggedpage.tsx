@@ -50,7 +50,8 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
                         !current && <h2
                             style={{
                                 width: '50%',
-                                marginTop: '25%'
+                                marginTop: '25%',
+                                textAlign: 'center'
                             }}
                             className="center-fixed-width"
                         >Select a MCQ</h2>
