@@ -2,7 +2,7 @@ import {Qcm} from "../types";
 import {
     APIResponse,
     login_response,
-    LoginResponse, QcmAllResponse,
+    LoginResponse, MeResponse, QcmAllResponse,
     QcmClient, Role,
     STUDENT,
     User
@@ -15,8 +15,8 @@ class ApiClient implements QcmClient {
     private user: User = {
         username: "",
         role: STUDENT,
-        jwt: ""
     };
+    private jwt: string = "";
 
     private getHeaders = (): any => {
         let headers: any = {
@@ -24,7 +24,7 @@ class ApiClient implements QcmClient {
             'Accept': 'application/json'
         };
         if (this.isLogged()) {
-            headers['Authorization'] = `Bearer ${this.user.jwt}`;
+            headers['Authorization'] = `Bearer ${this.jwt}`;
         }
         return headers;
     };
@@ -72,7 +72,7 @@ class ApiClient implements QcmClient {
             return this.errorResponse<login_response>(response);
         }
         let json: login_response = await response.json();
-        console.log(json);
+        this.jwt = json.jwt;
         this.user = {...json};
 
         return new APIResponse({
@@ -82,7 +82,7 @@ class ApiClient implements QcmClient {
     };
 
     isLogged = (): boolean => {
-        return !!this.user.jwt;
+        return !!this.jwt;
     };
 
     getRole = (): Role => {
@@ -101,6 +101,26 @@ class ApiClient implements QcmClient {
         });
     }
 
+    async getMe(): Promise<MeResponse> {
+        let response: Response = await this.get('/users/me');
+        if (this.isError(response)) {
+            return await this.errorResponse<User>(response);
+        }
+        let json: User = await response.json();
+        this.user = {...json};
+        return new APIResponse({
+            isSuccess: true,
+            successData: {...json}
+        });
+    }
+
+    setUser(user: User): void {
+        this.user = user;
+    }
+
+    setJwt(jwt: string): void {
+        this.jwt = jwt;
+    }
 }
 
 export default ApiClient;

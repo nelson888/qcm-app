@@ -6,17 +6,17 @@ import LoginPage from "./pages/loginpage";
 import NotFoundPage from "./pages/notfoundpage";
 import {toast, ToastContainer} from "react-toastify";
 import NavBar from "./components/navbar";
-import {LoginResponse, QcmClient, TEACHER} from "./services/qcmClient";
+import {LoginResponse, MeResponse, QcmClient, TEACHER} from "./services/qcmClient";
 import 'react-toastify/dist/ReactToastify.css';
 import TeacherPage from "./pages/teacherpage";
 import StudentPage from "./pages/studentpage";
 import ApiClient from "./services/apiClient";
 import {History} from "history";
-import {setCookie} from "./common/util/cookieHandler";
+import {deleteCookie, getCookie, setCookie} from "./common/util/cookieHandler";
 import {AUTH_COOKIE} from "./util/constants";
 
 type AppState = {
-
+    loading: boolean
 };
 
 type AppProps = {
@@ -24,14 +24,34 @@ type AppProps = {
 
 class App extends Component<AppProps, AppState> {
 
+    apiClient: QcmClient = new ApiClient();
+    state: AppState = {
+        loading: true
+    };
     componentDidMount(): void {
-        console.log(Date.parse("2019-08-31T03:23:47.039+0000"));
+        const jwt: string = getCookie(AUTH_COOKIE);
+        if (!jwt) {
+            this.setState({loading: false});
+        } else {
+            this.apiClient.setJwt(jwt);
+            this.apiClient.getMe()
+                .then((response: MeResponse) => {
+                    if (response.isSuccess) {
+                        this.apiClient.setUser(response.successData);
+                    } else {
+                        deleteCookie(AUTH_COOKIE);
+                    }
+                    this.setState({loading: false});
+                }).catch((error: any) => {
+                this.setState({loading: false});
+                toast.error("An error occurred: " + error.toString());
+            });
+        }
     }
 
-    apiClient: QcmClient = new ApiClient();
 
   render = () => {
-    const loaded = true;
+    const loaded = !this.state.loading;
     const logged = this.apiClient.isLogged();
     return (
         <React.Fragment>

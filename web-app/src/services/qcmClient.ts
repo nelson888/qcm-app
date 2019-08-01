@@ -1,22 +1,20 @@
 import {Qcm} from "../types";
 
+export type Role = 'TEACHER' | 'STUDENT';
+export const TEACHER: Role = 'TEACHER';
+export const STUDENT: Role = 'STUDENT';
 
-export type Role = 'ROLE_TEACHER' | 'ROLE_STUDENT';
-export const TEACHER: Role = 'ROLE_TEACHER';
-export const STUDENT: Role = 'ROLE_STUDENT';
-
-export type login_response = User & {
-    expires: string
-};
-export type String = string|null;
 export type User = {
-    jwt: string,
     role: Role,
     username: string
 };
-
+export type login_response = User & {
+    expires: string,
+    jwt: string,
+};
 export type LoginResponse = APIResponse<login_response, string>;
 export type QcmAllResponse = APIResponse<Qcm[], string>;
+export type MeResponse = APIResponse<User, string>;
 
 type APIResponseConstructor<S, E> = {
     isSuccess: boolean,
@@ -48,7 +46,10 @@ export interface QcmClient {
     isLogged(): boolean,
     logIn(username: string, password: string): Promise<LoginResponse>
     getRole(): Role,
-    getQcms(): Promise<QcmAllResponse>
+    getQcms(): Promise<QcmAllResponse>,
+    getMe(): Promise<MeResponse>,
+    setUser(user: User): void
+    setJwt(jwt: string): void
 }
 
 export { APIResponse };
