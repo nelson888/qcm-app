@@ -39,10 +39,13 @@ class App extends Component<AppProps, AppState> {
                     if (response.isSuccess) {
                         this.apiClient.setUser(response.successData);
                     } else {
+                        this.apiClient.setJwt("");
                         deleteCookie(AUTH_COOKIE);
                     }
                     this.setState({loading: false});
                 }).catch((error: any) => {
+                this.apiClient.setJwt("");
+                deleteCookie(AUTH_COOKIE);
                 this.setState({loading: false});
                 toast.error("An error occurred: " + error.toString());
             });
