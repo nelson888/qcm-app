@@ -8,6 +8,8 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Instant;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -34,20 +37,20 @@ public class JwtTokenProvider {
     this.userRepository = userRepository;
   }
 
-  public String createToken(String username, String role) {
-
+  public JwtToken createToken(String username, String role) {
     Claims claims = Jwts.claims().setSubject(username);
     claims.put("role", role);
 
     Date now = new Date();
     Date validity = new Date(now.getTime() + VALIDITY_IN_MILLISECONDS);
 
-    return Jwts.builder()
+    String token = Jwts.builder()
       .setClaims(claims)
       .setIssuedAt(now)
       .setExpiration(validity)
       .signWith(SignatureAlgorithm.HS256, secretKey)
       .compact();
+    return new JwtToken(token, validity);
   }
 
   public Authentication getAuthentication(String token) {
@@ -79,4 +82,10 @@ public class JwtTokenProvider {
     }
   }
 
+  @Getter
+  @AllArgsConstructor
+  public static class JwtToken {
+    private final String token;
+    private final Date expiration;
+  }
 }
