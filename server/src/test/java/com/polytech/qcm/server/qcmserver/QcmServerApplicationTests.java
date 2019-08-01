@@ -108,12 +108,12 @@ public class QcmServerApplicationTests {
 	public void logInTest() {
 		AuthResponse response = authController.login(new User(STUDENT_USERNAME, PASSWORD, Role.STUDENT)).getBody();
 		assertNotNull(response);
-		assertEquals(response.getRole(), Role.STUDENT.roleName());
+		assertEquals(response.getRole(), Role.STUDENT.name());
 		assertEquals(response.getUsername(), STUDENT_USERNAME);
 
 		response = authController.login(new User(TEACHER_USERNAME, PASSWORD, Role.TEACHER)).getBody();
 		assertNotNull(response);
-		assertEquals(response.getRole(), Role.TEACHER.roleName());
+		assertEquals(response.getRole(), Role.TEACHER.name());
 		assertEquals(response.getUsername(), TEACHER_USERNAME);
 	}
 
