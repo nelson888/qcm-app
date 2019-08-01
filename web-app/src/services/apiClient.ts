@@ -3,7 +3,7 @@ import {
     APIResponse,
     login_response,
     LoginResponse, MeResponse, QcmAllResponse,
-    QcmClient, Role,
+    QcmClient, QcmResponse, Role,
     STUDENT,
     User
 } from "./qcmClient";
@@ -29,19 +29,35 @@ class ApiClient implements QcmClient {
         return headers;
     };
 
-    private post(endpoint: string, data: any): Promise<Response> {
+    private dataRequest(method: string, endpoint: string, data: any): Promise<Response> {
         return fetch(API_URL + endpoint,
             {
-                method: 'POST',
+                method,
                 headers: this.getHeaders(),
                 body: JSON.stringify(data)
             });
+    }
+
+    private post(endpoint: string, data: any): Promise<Response> {
+        return this.dataRequest('POST', endpoint, data);
+    }
+
+    private put(endpoint: string, data: any): Promise<Response> {
+        return this.dataRequest('PUT', endpoint, data);
     }
 
     private get(endpoint: string): Promise<Response> {
         return fetch(API_URL + endpoint,
             {
                 method: 'GET',
+                headers: this.getHeaders(),
+            });
+    }
+
+    private delete(endpoint: string): Promise<Response> {
+        return fetch(API_URL + endpoint,
+            {
+                method: 'DELETE',
                 headers: this.getHeaders(),
             });
     }
@@ -111,6 +127,42 @@ class ApiClient implements QcmClient {
         return new APIResponse({
             isSuccess: true,
             successData: {...json}
+        });
+    }
+
+    async newQcm(): Promise<QcmResponse> {
+        let response: Response = await this.get('/qcm/new');
+        if (this.isError(response)) {
+            return await this.errorResponse<Qcm>(response);
+        }
+        let json: Qcm = await response.json();
+        return new APIResponse({
+            isSuccess: true,
+            successData: json
+        });
+    }
+
+    async updateQcm(qcm: Qcm): Promise<QcmResponse> {
+        let response: Response = await this.put(`/qcm/${qcm.id}`, qcm);
+        if (this.isError(response)) {
+            return await this.errorResponse<Qcm>(response);
+        }
+        let json: Qcm = await response.json();
+        return new APIResponse({
+            isSuccess: true,
+            successData: json
+        });
+    }
+
+    async deleteQcm(id: number): Promise<QcmResponse> {
+        let response: Response = await this.delete(`/qcm/${id}`);
+        if (this.isError(response)) {
+            return await this.errorResponse<Qcm>(response);
+        }
+        let json: Qcm = await response.json();
+        return new APIResponse({
+            isSuccess: true,
+            successData: json
         });
     }
 

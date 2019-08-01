@@ -15,6 +15,7 @@ export type login_response = User & {
 export type LoginResponse = APIResponse<login_response, string>;
 export type QcmAllResponse = APIResponse<Qcm[], string>;
 export type MeResponse = APIResponse<User, string>;
+export type QcmResponse = APIResponse<Qcm, string>;
 
 type APIResponseConstructor<S, E> = {
     isSuccess: boolean,
@@ -47,6 +48,9 @@ export interface QcmClient {
     logIn(username: string, password: string): Promise<LoginResponse>
     getRole(): Role,
     getQcms(): Promise<QcmAllResponse>,
+    newQcm(): Promise<QcmResponse>,
+    updateQcm(qcm: Qcm): Promise<QcmResponse>,
+    deleteQcm(id: number): Promise<QcmResponse>,
     getMe(): Promise<MeResponse>,
     setUser(user: User): void
     setJwt(jwt: string): void
