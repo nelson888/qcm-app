@@ -14,6 +14,7 @@ import ApiClient from "./services/apiClient";
 import {History} from "history";
 import {deleteCookie, getCookie, setCookie} from "./common/util/cookieHandler";
 import {AUTH_COOKIE} from "./util/constants";
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 type AppState = {
     loading: boolean

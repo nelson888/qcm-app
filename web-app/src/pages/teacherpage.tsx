@@ -3,8 +3,7 @@ import './teacherpage.scss';
 import {History} from "history";
 import {QcmAllResponse, QcmClient} from "../services/qcmClient";
 import {Choice, Qcm, Question} from "../types";
-import QcmList from "../components/qcmlist";
-import {toast} from "react-toastify";
+import {confirmAlert} from "react-confirm-alert";
 import LoggedPage from "./loggedpage";
 
 type State = {
@@ -48,11 +47,20 @@ class TeacherPage extends LoggedPage<Props, State> {
 
                             <button
                                 className="inline"
+                                onClick={() => this.onDeleteQcm(qcm)}
                             >Delete</button>
                         </div>
                     </div>
                 );
+                case "INCOMPLETE":
+                    return (
+                        <div style={{
+                            width: '100%',
+                            height: '100%'
+                        }}>
 
+                        </div>
+                    );
             default:
                 return (
                     <div style={{
@@ -100,6 +108,26 @@ class TeacherPage extends LoggedPage<Props, State> {
 
             </div>
         )
+    }
+
+    private onDeleteQcm(qcm: Qcm) {
+        confirmAlert({
+            title: `Do you want to delete '${qcm.name}'?`,
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => this.deleteQcm(qcm)
+                },
+                {
+                    label: 'Cancel',
+                    onClick: () => null
+                }
+            ]
+        });
+    }
+
+    private deleteQcm(qcm: Qcm): void {
+        //TODO
     }
 }
 
