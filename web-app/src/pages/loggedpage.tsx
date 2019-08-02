@@ -26,11 +26,11 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
         this.props.apiClient.getQcms()
             .then((response: QcmAllResponse) => {
                 if (response.isSuccess) {
-                    this.setState({qcms: response.successData });
+                    this.setState({qcms: response.successData});
                 } else {
                     toast.error(`error while fetching QMCs: ${response.errorData}`);
                 }
-        })
+            })
             .catch((error) => {
                 toast.error("An error occurred: " + error.toString());
             });
@@ -49,7 +49,7 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
                     className="qcms-list"
                 >
                     <QcmList qcms={qcms}
-                             onClick={(qcm: Qcm) => this.setState({current: qcm})}
+                             onClick={this.onQcmClick}
                     />
                     {
                         this.props.apiClient.getRole() === TEACHER &&
@@ -105,7 +105,10 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
                 this.setState({loading: false});
                 toast.error("An error occurred: " + error.toString());
             })
-    }
+    };
+
+    protected onQcmClick = (qcm: Qcm) => this.setState({current: qcm});
+
 }
 
 export default LoggedPage;

@@ -1,11 +1,12 @@
-import React, {Component} from "react";
+import React from "react";
 import './teacherpage.scss';
 import {History} from "history";
-import {QcmAllResponse, QcmClient} from "../services/qcmClient";
+import { QcmClient, QcmResponse} from "../services/qcmClient";
 import {Choice, Qcm, Question} from "../types";
 import {confirmAlert} from "react-confirm-alert";
 import LoggedPage from "./loggedpage";
 import QcmForm from "../components/qcmform";
+import {toast} from "react-toastify";
 
 type State = {
     qcms: Qcm[],
@@ -38,7 +39,7 @@ class TeacherPage extends LoggedPage<Props, State> {
                         >
                             <QcmForm
                                 qcm={qcm}
-                                onSubmit={(qcmForm) => console.log(qcmForm)}/>
+                                onSubmit={this.updateQcm}/>
                         </div>
                     );
                 }
@@ -47,7 +48,7 @@ class TeacherPage extends LoggedPage<Props, State> {
                         className="full-width"
                     >
                         <h1>{qcm.name}</h1>
-                        <p>Status: completed (not started yet)</p>
+                        <p>Status: complete MCQ (not started yet)</p>
                         {this.renderQuestions(qcm.questions)}
 
                         <div
@@ -79,7 +80,7 @@ class TeacherPage extends LoggedPage<Props, State> {
                         >
                             <QcmForm
                                 qcm={qcm}
-                                onSubmit={(qcmForm) => console.log(qcmForm)}/>
+                                onSubmit={this.updateQcm}/>
                         </div>
                     );
             default:
@@ -111,6 +112,27 @@ class TeacherPage extends LoggedPage<Props, State> {
         );
     }
 
+    private updateQcm = (qcm: Qcm): void => {
+        this.loadingMessage = "Updating MCQ...";
+        this.setState({loading: true});
+        this.props.apiClient.updateQcm(qcm)
+            .then((response:QcmResponse) => {
+                this.setState({loading: false, modifying: false});
+                if (response.isSuccess) {
+                    let qcms: Qcm[] = [...this.state.qcms];
+                    let index:number =qcms.findIndex(q => q.id === response.successData.id);
+                    qcms[index] = response.successData;
+                    this.setState({qcms});
+                    toast.success(`Successfully updated ${response.successData.name}`);
+                } else {
+                    toast.error(`Couldn't update qcm: ${response.errorData}`)
+                }
+            })
+            .catch((error: any) => {
+                this.setState({loading: false});
+                toast.error("An error occurred: " + error.toString());
+            })
+    };
     private renderChoices(choices: Choice[]): React.ReactElement {
         return (
             <div
@@ -146,8 +168,27 @@ class TeacherPage extends LoggedPage<Props, State> {
         });
     }
 
-    private deleteQcm(qcm: Qcm): void {
-        //TODO
+    private deleteQcm(qcm: Qcm): void { //TODO seems to throw error (unexpected output end)
+        this.setState({loading: true});
+        this.props.apiClient.deleteQcm(qcm.id)
+            .then((response: QcmResponse) => {
+                this.setState({loading: false});
+                if (response.isSuccess) {
+                    let qcms: Qcm[] = [...this.state.qcms].filter(qu => qu.id !== response.successData.id);
+                    this.setState({ qcms });
+                    toast.success(`Successfully deleted ${response.successData.name}`)
+                } else {
+                    toast.error(`Couldn't delete qcm: ${response.errorData}`)
+                }
+            })
+            .catch((error: any) => {
+                this.setState({loading: false});
+                toast.error("An error occurred: " + error.toString());
+            });
+    }
+
+    onQcmClick = (qcm: Qcm) => {
+        this.setState({current: qcm, modifying: false});
     }
 }
 

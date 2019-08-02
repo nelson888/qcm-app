@@ -3,13 +3,14 @@ import './checkbox.scss';
 type Props = {
     checked: boolean,
     onValueChange(): void,
-    size?: number
+    size?: number,
+    className?: string
 }
 const checkedImage = require('./checked.png');
-const Checkbox = ({checked, onValueChange, size=20}: Props) => {
+const Checkbox = ({checked, onValueChange, size=20, className=""}: Props) => {
     const checkedSize: number = size * 0.8;
     return (
-        <div className="simple-checkbox"
+        <div className={"simple-checkbox " + className}
              style={{
                  width: size,
                  height: size

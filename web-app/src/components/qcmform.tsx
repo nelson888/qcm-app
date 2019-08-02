@@ -3,7 +3,6 @@ import FormComponent from "../common/form/formComponent";
 import {Choice, Qcm, Question} from "../types";
 import {toast} from "react-toastify";
 import {isEmpty} from "../common/util/functions";
-import newCheckboxRenderer from "../common/factory/checkboxrendererfactory";
 import Checkbox from "./checkbox";
 
 type State = {
@@ -97,7 +96,6 @@ class QcmForm extends FormComponent<Props, Qcm> {
 
     onSubmit = (): void => {
         const {form} = this.state;
-        console.log(form);
         const errors = this.validate(form);
         this.setState({errors});
         if (isEmpty(errors)) {
@@ -121,9 +119,12 @@ class QcmForm extends FormComponent<Props, Qcm> {
             }
             if (!q.choices.length) {
                 toast.error(`Question n°${i + 1} don't have any choices`);
-            } else if (!q.choices.filter(q => q.answer).length) {
-                toast.error(`Question n°${i + 1} don't have right answers`);
+                errors.hasError = true;
             } else {
+                if (!q.choices.filter(q => q.answer).length) {
+                    toast.error(`Question n°${i + 1} don't have right answers`);
+                    errors.hasError = true;
+                }
                 for (let j=0; j< q.choices.length; j++) {
                     if (!q.choices[j].value) {
                         errors[`q${i}Choice${j}`] = 'You should provide a name';
@@ -151,6 +152,7 @@ class QcmForm extends FormComponent<Props, Qcm> {
             }}
         >
             {this.renderInput({placeholder: "Enter the title of the question", type: "", label: `Question ${i + 1}`, name: `qName${i}`,
+                valueLoader:() => q.question,
                 width: '80%',
                 onChange: (event: any): any => {
                 let qcm: Qcm = {...this.state.form};
@@ -200,6 +202,7 @@ class QcmForm extends FormComponent<Props, Qcm> {
             >
                 {this.renderInput({placeholder: "Enter the name of the choice", type: "", label: `Choice ${j + 1}`, name: `q${i}Choice${j}`,
                     width: '80%',
+                    valueLoader: () => c.value,
                     onChange: (event: any): any => {
                         let qcm: Qcm = {...this.state.form};
                         let question: Question = qcm.questions.filter(que => q.id  === que.id)[0];
@@ -210,15 +213,22 @@ class QcmForm extends FormComponent<Props, Qcm> {
                         });
                     }})}
 
-                <Checkbox checked={c.answer} onValueChange={() => {
-                    let qcm: Qcm = {...this.state.form};
-                    let question: Question = qcm.questions.filter(que => q.id  === que.id)[0];
-                    let choice: Choice = question.choices.filter(ch => c.id === ch.id)[0];
-                    choice.answer = !choice.answer;
-                    this.setState({
-                        form: qcm
-                    });
-                }} />
+                <div>
+                    <p
+                        className="inline"
+                    >Right answer: </p>
+                    <Checkbox
+                        className="inline"
+                        checked={c.answer} onValueChange={() => {
+                        let qcm: Qcm = {...this.state.form};
+                        let question: Question = qcm.questions.filter(que => q.id  === que.id)[0];
+                        let choice: Choice = question.choices.filter(ch => c.id === ch.id)[0];
+                        choice.answer = !choice.answer;
+                        this.setState({
+                            form: qcm
+                        });
+                    }} />
+                </div>
             </div>
         )
     }

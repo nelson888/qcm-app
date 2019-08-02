@@ -38,7 +38,7 @@ class QcmList extends Component<Props, {}> {
                 >
                     <h3
                         className="no-padding no-margin inline vertical-middle unselectable"
-                    >{qcm.name}</h3>
+                    >{qcm.name ? qcm.name : 'New MCQ (no name)'}</h3>
 
                     <img
                         className="inline vertical-middle unselectable"
