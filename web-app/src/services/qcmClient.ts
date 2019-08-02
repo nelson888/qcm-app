@@ -1,4 +1,4 @@
-import {Qcm} from "../types";
+import {Qcm, QcmResult, Question} from "../types";
 
 export type Role = 'TEACHER' | 'STUDENT';
 export const TEACHER: Role = 'TEACHER';
@@ -16,6 +16,10 @@ export type LoginResponse = APIResponse<login_response, string>;
 export type QcmAllResponse = APIResponse<Qcm[], string>;
 export type MeResponse = APIResponse<User, string>;
 export type QcmResponse = APIResponse<Qcm, string>;
+export type VoidResponse = APIResponse<{}, string>;
+export type QuestionResponse = APIResponse<Question, string>;
+export type ResultResponse = APIResponse<QcmResult, string>;
+
 
 type APIResponseConstructor<S, E> = {
     isSuccess: boolean,
@@ -52,8 +56,12 @@ export interface QcmClient {
     updateQcm(qcm: Qcm): Promise<QcmResponse>,
     deleteQcm(id: number): Promise<QcmResponse>,
     getMe(): Promise<MeResponse>,
+    launchQcm(id: number): Promise<VoidResponse>,
+    finishQcm(id: number): Promise<VoidResponse>,
+    nextQuestion(id: number): Promise<QuestionResponse>,
     setUser(user: User): void
-    setJwt(jwt: string): void
+    setJwt(jwt: string): void,
+    getResult(id: number): Promise<ResultResponse>
 }
 
 export { APIResponse };

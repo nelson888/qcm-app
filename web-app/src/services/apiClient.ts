@@ -1,11 +1,11 @@
-import {Qcm} from "../types";
+import {Qcm, QcmResult, Question} from "../types";
 import {
     APIResponse,
     login_response,
     LoginResponse, MeResponse, QcmAllResponse,
-    QcmClient, QcmResponse, Role,
+    QcmClient, QcmResponse, QuestionResponse, ResultResponse, Role,
     STUDENT,
-    User
+    User, VoidResponse
 } from "./qcmClient";
 
 const API_URL = 'http://localhost:8080';
@@ -106,7 +106,7 @@ class ApiClient implements QcmClient {
     };
 
     async getQcms(): Promise<QcmAllResponse> {
-        let response: Response = await this.get('/qcm/all');
+        let response: Response = await this.get('/qcm/mines');
         if (this.isError(response)) {
             return await this.errorResponse<Qcm[]>(response);
         }
@@ -136,6 +136,53 @@ class ApiClient implements QcmClient {
             return await this.errorResponse<Qcm>(response);
         }
         let json: Qcm = await response.json();
+        return new APIResponse({
+            isSuccess: true,
+            successData: json
+        });
+    }
+
+    async launchQcm(id: number): Promise<VoidResponse> {
+        let response: Response = await this.get(`/qcm/${id}/launch`);
+        if (this.isError(response)) {
+            return await this.errorResponse<{}>(response);
+        }
+        return new APIResponse({
+            isSuccess: true,
+            successData: {}
+        });
+    }
+
+    async getResult(id: number): Promise<ResultResponse> {
+        let response: Response = await this.get(`/qcm/${id}/result`);
+        if (this.isError(response)) {
+            return await this.errorResponse<QcmResult>(response);
+        }
+        let json: QcmResult = await response.json();
+        return new APIResponse({
+            isSuccess: true,
+            successData: json
+        });
+    }
+
+
+    async finishQcm(id: number): Promise<VoidResponse> {
+        let response: Response = await this.get(`/qcm/${id}/finish`);
+        if (this.isError(response)) {
+            return await this.errorResponse<{}>(response);
+        }
+        return new APIResponse({
+            isSuccess: true,
+            successData: {}
+        });
+    }
+
+    async nextQuestion(id: number): Promise<QuestionResponse> {
+        let response: Response = await this.get(`/qcm/${id}/launch`);
+        if (this.isError(response)) {
+            return await this.errorResponse<Question>(response);
+        }
+        let json: Question = await response.json();
         return new APIResponse({
             isSuccess: true,
             successData: json

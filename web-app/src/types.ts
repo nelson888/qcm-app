@@ -18,3 +18,13 @@ export type Qcm = {
     state: QcmState,
     questions: Question[]
 };
+
+export type QuestionResult = {
+    question: Question,
+    responses: { [username:string]: boolean }
+};
+
+export type QcmResult = {
+    participants: string[],
+    questionResults: QuestionResult[]
+};
