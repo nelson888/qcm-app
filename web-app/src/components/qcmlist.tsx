@@ -37,11 +37,11 @@ class QcmList extends Component<Props, {}> {
                     className="qcm-element"
                 >
                     <h3
-                        className="no-padding no-margin inline vertical-middle unselectable-text"
+                        className="no-padding no-margin inline vertical-middle unselectable"
                     >{qcm.name}</h3>
 
                     <img
-                        className="inline vertical-middle"
+                        className="inline vertical-middle unselectable"
                         style={{
                             width: 32,
                             height: 32,

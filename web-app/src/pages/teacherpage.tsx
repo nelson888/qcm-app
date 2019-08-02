@@ -5,10 +5,13 @@ import {QcmAllResponse, QcmClient} from "../services/qcmClient";
 import {Choice, Qcm, Question} from "../types";
 import {confirmAlert} from "react-confirm-alert";
 import LoggedPage from "./loggedpage";
+import QcmForm from "../components/qcmform";
 
 type State = {
     qcms: Qcm[],
-    current: Qcm | null
+    current: Qcm | null,
+    modifying: boolean,
+    loading: boolean
 };
 
 type Props = {
@@ -20,17 +23,29 @@ class TeacherPage extends LoggedPage<Props, State> {
 
     state: State = {
         qcms: [],
-        current: null
+        current: null,
+        modifying: false,
+        loading: false
     };
 
     renderQcm(qcm: Qcm): React.ReactElement {
         switch (qcm.state) {
             case "COMPLETE":
+                if (this.state.modifying) {
+                    return (
+                        <div
+                            className="full-width"
+                        >
+                            <QcmForm
+                                qcm={qcm}
+                                onSubmit={(qcmForm) => console.log(qcmForm)}/>
+                        </div>
+                    );
+                }
                 return (
-                    <div style={{
-                        width: '100%',
-                        height: '100%'
-                    }}>
+                    <div
+                        className="full-width"
+                    >
                         <h1>{qcm.name}</h1>
                         <p>Status: completed (not started yet)</p>
                         {this.renderQuestions(qcm.questions)}
@@ -47,6 +62,11 @@ class TeacherPage extends LoggedPage<Props, State> {
 
                             <button
                                 className="inline"
+                                onClick={() => this.setState({modifying: true })}
+                            >Modify</button>
+
+                            <button
+                                className="inline"
                                 onClick={() => this.onDeleteQcm(qcm)}
                             >Delete</button>
                         </div>
@@ -54,19 +74,19 @@ class TeacherPage extends LoggedPage<Props, State> {
                 );
                 case "INCOMPLETE":
                     return (
-                        <div style={{
-                            width: '100%',
-                            height: '100%'
-                        }}>
-
+                        <div
+                            className="full-width"
+                        >
+                            <QcmForm
+                                qcm={qcm}
+                                onSubmit={(qcmForm) => console.log(qcmForm)}/>
                         </div>
                     );
             default:
                 return (
-                    <div style={{
-                        width: '100%',
-                        height: '100%'
-                    }}>
+                    <div
+                        className="full-width"
+                    >
 
                     </div>
                 );

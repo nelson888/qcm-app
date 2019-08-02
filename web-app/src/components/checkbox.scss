@@ -1,0 +1,22 @@
+/** https://paulund.co.uk/how-to-style-a-checkbox-with-css
+ * Checkbox Five
+ */
+.simple-checkbox {
+  background: #eee;
+  border:1px solid #ddd;
+  opacity: 1;
+}
+
+.simple-checkbox:active {
+  opacity: 0.6;
+}
+
+.simple-checkbox:hover {
+  background: #c0c0c0;
+}
+
+.simple-checkbox-checked {
+  margin: 0 auto;
+  padding: 0;
+  vertical-align: bottom;
+}
