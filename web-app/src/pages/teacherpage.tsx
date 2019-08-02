@@ -39,6 +39,7 @@ class TeacherPage extends LoggedPage<Props, State> {
                         >
                             <QcmForm
                                 qcm={qcm}
+                                onCancel={() => this.setState({modifying: false})}
                                 onSubmit={this.updateQcm}/>
                         </div>
                     );
@@ -80,6 +81,7 @@ class TeacherPage extends LoggedPage<Props, State> {
                         >
                             <QcmForm
                                 qcm={qcm}
+                                onCancel={() => this.setState({modifying: false})}
                                 onSubmit={this.updateQcm}/>
                         </div>
                     );

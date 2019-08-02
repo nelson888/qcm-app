@@ -11,6 +11,7 @@ type State = {
 };
 type Props = {
     onSubmit(qcm: Qcm): void,
+    onCancel(): void,
     qcm: Qcm // initial qcm
 };
 
@@ -83,13 +84,20 @@ class QcmForm extends FormComponent<Props, Qcm> {
                 >Add question</button>
 
 
-                <button
+                <div
                     style={{
                         margin: 40
                     }}
-                    className="center-horizontal"
-                    onClick={this.onSubmit}
-                >Save</button>
+                >
+                    <button
+                        onClick={this.props.onCancel}
+                    >Cancel</button>
+
+                    <button
+                        className="center-horizontal"
+                        onClick={this.onSubmit}
+                    >Save</button>
+                </div>
             </React.Fragment>
         );
     }
