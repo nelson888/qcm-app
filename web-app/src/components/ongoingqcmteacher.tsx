@@ -16,16 +16,11 @@ type State = {
 
 class OnGoingQCMTeacher extends OnGoingQCM<Props, State> {
 
-    state: State;
+    state: State = {
+        loading: true,
+        question: null
+    };
     loadingMessage = "Loading next question...";
-
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            loading: true,
-            question: null
-        };
-    }
 
     renderContent(q: Question, qcm: Qcm, index: number, isLast: boolean): React.ReactElement {
         return (

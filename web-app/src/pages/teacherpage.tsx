@@ -1,7 +1,7 @@
 import React from "react";
 import './teacherpage.scss';
 import {History} from "history";
-import {QcmClient, QcmResponse, VoidResponse} from "../services/qcmClient";
+import {QcmAllResponse, QcmClient, QcmResponse, VoidResponse} from "../services/qcmClient";
 import {Choice, Qcm, Question} from "../types";
 import {confirmAlert} from "react-confirm-alert";
 import LoggedPage from "./loggedpage";
@@ -214,6 +214,10 @@ class TeacherPage extends LoggedPage<Props, State> {
             this.setState({loading: false});
             toast.error("An error occurred: " + error.toString());
         });
+    }
+
+    fetchQcms(apiClient: QcmClient): Promise<QcmAllResponse> {
+        return this.props.apiClient.getMyQcms();
     }
 }
 

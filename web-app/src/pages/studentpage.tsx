@@ -2,14 +2,14 @@ import React from "react";
 import './studentpage.scss';
 import {History} from "history";
 import {Qcm} from "../types";
-import {QcmClient} from "../services/qcmClient";
+import {QcmAllResponse, QcmClient} from "../services/qcmClient";
 import LoggedPage from "./loggedpage";
+import OngoingQCMStudent from "../components/ongoingqcmstudent";
 
 
 type State = {
     qcms: Qcm[],
     current: Qcm | null,
-    modifying: boolean,
     loading: boolean
 };
 
@@ -20,10 +20,16 @@ type Props = {
 
 class StudentPage extends LoggedPage<Props, State> {
 
+    state: State = {
+        qcms: [],
+        current: null,
+        loading: false
+    };
+
     renderQcm(qcm: Qcm): React.ReactElement {
-
         switch (qcm.state) {
-
+            case "STARTED":
+                return <OngoingQCMStudent qcm={qcm} apiClient={this.props.apiClient}/>;
             default:
                 return (
                     <div>
@@ -31,6 +37,10 @@ class StudentPage extends LoggedPage<Props, State> {
                     </div>
                 );
         }
+    }
+
+    fetchQcms(apiClient: QcmClient): Promise<QcmAllResponse> {
+        return this.props.apiClient.getQcms();
     }
 }
 

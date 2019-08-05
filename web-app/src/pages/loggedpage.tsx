@@ -23,7 +23,7 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
     loadingMessage: string = "Loading";
 
     componentDidMount(): void {
-        this.props.apiClient.getQcms()
+        this.fetchQcms(this.props.apiClient)
             .then((response: QcmAllResponse) => {
                 if (response.isSuccess) {
                     this.setState({qcms: response.successData});
@@ -36,6 +36,7 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
             });
     }
 
+    abstract fetchQcms(apiClient: QcmClient): Promise<QcmAllResponse>;
     abstract renderQcm(qcm: Qcm): React.ReactElement;
 
     render(): React.ReactElement {
