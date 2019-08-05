@@ -1,7 +1,7 @@
 import React from "react";
 import './teacherpage.scss';
 import {History} from "history";
-import { QcmClient, QcmResponse} from "../services/qcmClient";
+import {QcmClient, QcmResponse, VoidResponse} from "../services/qcmClient";
 import {Choice, Qcm, Question} from "../types";
 import {confirmAlert} from "react-confirm-alert";
 import LoggedPage from "./loggedpage";
@@ -61,6 +61,7 @@ class TeacherPage extends LoggedPage<Props, State> {
                         >
                             <button
                                 className="inline"
+                                onClick={() => this.startQcm(qcm)}
                             >Start</button>
 
                             <button
@@ -194,6 +195,25 @@ class TeacherPage extends LoggedPage<Props, State> {
 
     onQcmClick = (qcm: Qcm) => {
         this.setState({current: qcm, modifying: false});
+    };
+
+    startQcm = (qcm: Qcm) => {
+        this.loadingMessage = "Starting qcm...";
+        this.setState({loading: true});
+        this.props.apiClient.launchQcm(qcm.id)
+            .then((response: VoidResponse) => {
+                this.setState({loading: false});
+                if (response.isSuccess) {
+                    let qcms = [...this.state.qcms];
+                    qcms.filter(q => q.id === qcm.id)[0].state = "STARTED";
+                    this.setState({qcms});
+                } else {
+                    toast.error("Couldn't start the MCQ: " + response.errorData);
+                }
+            }).catch((error: any) => {
+            this.setState({loading: false});
+            toast.error("An error occurred: " + error.toString());
+        });
     }
 }
 
