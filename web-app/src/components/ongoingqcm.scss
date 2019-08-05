@@ -8,10 +8,19 @@
   padding: 0;
 }
 
-.ongoing-answer-choice {
+.ongoing-choice-answer {
   color: $answerChoiceColor;
 }
 
-.ongoing-normal-choice {
-
+.ongoing-choice {
+  opacity: 1;
 }
+
+.ongoing-choice:active {
+  color: #333333;
+}
+
+.ongoing-choice:hover {
+  opacity: 0.7;
+}
+

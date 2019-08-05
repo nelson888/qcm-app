@@ -75,7 +75,7 @@ class App extends Component<AppProps, AppState> {
                           <Redirect to="/login"/>
                       )
                   )}/>
-                  <Route path="/home" exact render={(props)=> !this.apiClient.isLogged() ? <Redirect to="/login"/> : (this.apiClient.getRole() === TEACHER ? <TeacherPage apiClient={this.apiClient} {...props} /> : <StudentPage {...props} />)} />
+                  <Route path="/home" exact render={(props)=> !this.apiClient.isLogged() ? <Redirect to="/login"/> : (this.apiClient.getRole() === TEACHER ? <TeacherPage apiClient={this.apiClient} {...props} /> : <StudentPage  apiClient={this.apiClient} {...props} />)} />
                   <Route path="/login" exact render={(props) => this.apiClient.isLogged()? <Redirect to="/home"/>  :  <LoginPage apiClient={this.apiClient} onLogin={this.onLogin} {...props} /> } />
                   <Route component={NotFoundPage} />
                 </Switch>

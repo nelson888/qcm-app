@@ -7,7 +7,7 @@ import {confirmAlert} from "react-confirm-alert";
 import LoggedPage from "./loggedpage";
 import QcmForm from "../components/qcmform";
 import {toast} from "react-toastify";
-import OnGoingQCM from "../components/ongoingqcm";
+import OnGoingQCMTeacher from "../components/ongoingqcmteacher";
 
 type State = {
     qcms: Qcm[],
@@ -88,7 +88,7 @@ class TeacherPage extends LoggedPage<Props, State> {
                     </div>
                 );
             case "STARTED":
-                return <OnGoingQCM qcm={qcm} apiClient={this.props.apiClient} />;
+                return <OnGoingQCMTeacher qcm={qcm} apiClient={this.props.apiClient} />;
             default:
                 return (
                     <div
