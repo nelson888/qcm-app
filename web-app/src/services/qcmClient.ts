@@ -59,6 +59,7 @@ export interface QcmClient {
     launchQcm(id: number): Promise<VoidResponse>,
     finishQcm(id: number): Promise<VoidResponse>,
     nextQuestion(id: number): Promise<QuestionResponse>,
+    currentQuestion(qcmId: number): Promise<QuestionResponse>,
     setUser(user: User): void
     setJwt(jwt: string): void,
     getResult(id: number): Promise<ResultResponse>

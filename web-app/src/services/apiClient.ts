@@ -189,6 +189,18 @@ class ApiClient implements QcmClient {
         });
     }
 
+    async currentQuestion(qcmId: number): Promise<QuestionResponse> {
+        let response: Response = await this.get(`/qcm/${qcmId}/currentQuestion`);
+        if (this.isError(response)) {
+            return await this.errorResponse<Question>(response);
+        }
+        let json: Question = await response.json();
+        return new APIResponse({
+            isSuccess: true,
+            successData: json
+        });
+    }
+
     async updateQcm(qcm: Qcm): Promise<QcmResponse> {
         let response: Response = await this.put(`/qcm/${qcm.id}`, qcm);
         if (this.isError(response)) {
