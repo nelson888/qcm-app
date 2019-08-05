@@ -28,7 +28,28 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
                 if (response.isSuccess) {
                     this.setState({qcms: response.successData});
                 } else {
-                    toast.error(`error while fetching QMCs: ${response.errorData}`);
+                    toast.error(`error while fetching MCQs: ${response.errorData}`);
+                }
+            })
+            .catch((error) => {
+                toast.error("An error occurred: " + error.toString());
+            });
+    }
+
+    refresh = () => {
+        const currentId: number = this.state.current ? this.state.current.id : -1;
+        this.fetchQcms(this.props.apiClient)
+            .then((response: QcmAllResponse) => {
+                if (response.isSuccess) {
+                    let current: Qcm | null = null;
+                    let idQcm: Qcm[] = response.successData.filter(q => q.id === currentId);
+                    if (idQcm.length) {
+                        current = idQcm[0];
+                    }
+                    this.setState({qcms: response.successData, current });
+
+                } else {
+                    toast.error(`error while fetching MCQs: ${response.errorData}`);
                 }
             })
             .catch((error) => {

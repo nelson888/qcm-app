@@ -1,17 +1,19 @@
 import React from "react";
 import {Choice, Qcm, Question} from "../types";
-import {QcmClient} from "../services/qcmClient";
+import {QcmClient, QuestionResponse} from "../services/qcmClient";
 import OnGoingQCM from "./ongoingqcm";
+import {clearInterval} from "timers";
 
 type Props = {
     qcm: Qcm,
-    apiClient: QcmClient
+    apiClient: QcmClient,
+    onRefresh(): void
 };
 
 type State = {
     loading: boolean,
     question: Question|null,
-    choices: number[]
+    choices: number[],
 };
 
 
@@ -23,7 +25,18 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
         choices: []
     };
     loadingMessage = "Waiting for next question...";
+    intId: any| null = null;
 
+    componentDidMount(): void {
+        super.componentDidMount();
+        this.intId = setInterval(this.checkNewQuestion, 800);
+    }
+
+    componentWillUnmount(): void {
+        if (this.intId != null) {
+            clearInterval(this.intId);
+        }
+    }
 
     renderContent(q: Question, qcm: Qcm, index: number, isLast: boolean): React.ReactElement {
         return (
@@ -57,7 +70,27 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
         const choices: number[] = [...this.state.choices];
         this.setState({loading: true, choices: [] });
         //TODO api call
-    }
+    };
+
+    checkNewQuestion = () => {
+        const {qcm, apiClient} = this.props;
+        apiClient.currentQuestion(qcm.id)
+            .then((response: QuestionResponse) => {
+                if (response.isSuccess) {
+                    const question = response.successData;
+                    if (this.state.question !== null && question.id !== this.state.question.id) {
+                        this.setState({
+                           choices: [],
+                            question: question
+                        });
+                    }
+                } else {
+                    if (response.code === 404) { //not found = no other questions
+                        this.props.onRefresh();
+                    }
+                }
+            })
+    };
 }
 
 export default OngoingQCMStudent;

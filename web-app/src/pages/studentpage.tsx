@@ -29,7 +29,10 @@ class StudentPage extends LoggedPage<Props, State> {
     renderQcm(qcm: Qcm): React.ReactElement {
         switch (qcm.state) {
             case "STARTED":
-                return <OngoingQCMStudent qcm={qcm} apiClient={this.props.apiClient}/>;
+                return <OngoingQCMStudent qcm={qcm}
+                                          apiClient={this.props.apiClient}
+                                          onRefresh={this.refresh}
+                />;
             default:
                 return (
                     <div>
