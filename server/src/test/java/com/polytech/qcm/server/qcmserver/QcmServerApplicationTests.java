@@ -120,7 +120,7 @@ public class QcmServerApplicationTests {
 
 	@Test
 	public void getQcmTest() {
-		List<QCM> qcms = qcmController.getAll().getBody();
+		List<QCM> qcms = qcmController.getAll(TEACHER_PRINCIPAL).getBody();
 		assertNotNull(qcms);
 		assertEquals("There should be one qcm in list" + qcms, 1, qcms.size());
 		assertEquals(qcms.get(0), qcmController.getById(TEACHER_PRINCIPAL, qcms.get(0).getId()).getBody());
@@ -143,7 +143,7 @@ public class QcmServerApplicationTests {
 
 		qcmController.delete(STUDENT_PRINCIPAL, qcm.getId());
 
-		List<QCM> qcms = qcmController.getAll().getBody();
+		List<QCM> qcms = qcmController.getAll(STUDENT_PRINCIPAL).getBody();
 		assertEquals("There should be one qcm in list" + qcms, 1, qcms.size());
 	}
 
