@@ -61,7 +61,12 @@ public class QcmController {
     @ApiResponse(code = 200, message = "Successfully retrieved list"),
     @ApiResponse(code = 403, message = "You are not authenticated"),
   })
-  public ResponseEntity<List<QCM>> getAll() {
+  public ResponseEntity<List<QCM>> getAll(Principal user) {
+    List<QCM> qcms = qcmRepository.findAll()
+      .stream()
+      .filter(qcm -> qcm.getState() != State.INCOMPLETE || isOwner(qcm, user))
+      .collect(Collectors.toList());
+    qcms.forEach(q -> checkOwner(q, user));
     return ResponseEntity.ok(qcmRepository.findAll());
   }
 
@@ -85,10 +90,10 @@ public class QcmController {
   })
   public ResponseEntity<QCM> getById(Principal principal, @PathVariable("id") int id) {
     QCM qcm = getQcm(id);
-
-    if (!qcm.getAuthor().getUsername().equals(principal.getName())) { //if not owner, we have to hide the questions
-      qcm.getQuestions().clear();
+    if (!isOwner(qcm, principal) && qcm.getState() == State.INCOMPLETE) {
+      throw new NotFoundException("Qcm with id " + id + " was not found");
     }
+    checkOwner(qcm, principal);
     return ResponseEntity.ok(qcm);
   }
 
@@ -116,14 +121,15 @@ public class QcmController {
     @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found")
   })
   public ResponseEntity<QCM> update(Principal principal, @RequestBody QCM newQcm, @PathVariable("id") int id) {
-    for(Question question: newQcm.getQuestions()){
+    QCM qcm = getQcm(id);
+    checkRights(principal, qcm);
+    for(Question question: newQcm.getQuestions()) {
       if (question.getChoices().stream().noneMatch(Choice::isAnswer)) {
         throw new BadRequestException("Question with id " + id + " has no good answer");
       }
     }
 
     User user = getUser(principal);
-    QCM qcm = getQcm(id);
     qcm.setAuthor(user);
     qcm.setState(State.COMPLETE);
     if (newQcm.getName() != null) {
@@ -204,9 +210,7 @@ public class QcmController {
     if (questionIndex == null){
       throw new BadRequestException("The qcm has not started");
     }
-    if (!qcm.getAuthor().getUsername().equals(user.getName())) {
-      qcm.getQuestions().clear();
-    }
+    checkOwner(qcm, user);
     return ResponseEntity.ok(qcm.getQuestions().get(questionIndex));
   }
 
@@ -298,6 +302,16 @@ public class QcmController {
   private boolean isStudent(Principal principal) {
     User user = getUser(principal);
     return Role.STUDENT.equals(user.getRole());
+  }
+
+  private boolean isOwner(QCM qcm, Principal principal) {
+    return qcm.getAuthor().getUsername().equals(principal.getName());
+  }
+
+  private void checkOwner(QCM qcm, Principal principal) {
+    if (!isOwner(qcm, principal)) { //if not owner, we have to hide the questions
+      qcm.getQuestions().clear();
+    }
   }
 
   private QCM getQcm(int id) {
