@@ -1,0 +1,21 @@
+.student-choice-selected {
+  color: black;
+  opacity: 1;
+}
+
+.student-choice {
+  color: #9A9999;
+}
+.student-choice:hover {
+  color: #585757;
+}
+
+.student-choice-selected:hover {
+  color: black;
+  opacity: 0.6;
+}
+
+.ongoing-choice:active {
+  color: black;
+  opacity: 1;
+}

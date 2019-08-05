@@ -3,6 +3,7 @@ import {Qcm, Question} from "../types";
 import {QcmClient, QuestionResponse} from "../services/qcmClient";
 import {toast} from "react-toastify";
 import OnGoingQCM from "./ongoingqcm";
+import './ongoingqcmstudent.scss';
 
 type Props = {
     qcm: Qcm,
