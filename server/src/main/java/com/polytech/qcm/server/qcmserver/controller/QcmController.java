@@ -210,8 +210,11 @@ public class QcmController {
     if (questionIndex == null){
       throw new BadRequestException("The qcm has not started");
     }
-    checkOwner(qcm, user);
-    return ResponseEntity.ok(qcm.getQuestions().get(questionIndex));
+    Question question = qcm.getQuestions().get(questionIndex);
+    if (!isOwner(qcm, user)) {
+      question.getChoices().forEach(c -> c.setAnswer(false));
+    }
+    return ResponseEntity.ok(question);
   }
 
   @GetMapping("/{id}/nextQuestion")
