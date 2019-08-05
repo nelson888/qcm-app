@@ -54,6 +54,7 @@ export interface QcmClient {
     isLogged(): boolean,
     logIn(username: string, password: string): Promise<LoginResponse>
     getRole(): Role,
+    getMyQcms(): Promise<QcmAllResponse>,
     getQcms(): Promise<QcmAllResponse>,
     newQcm(): Promise<QcmResponse>,
     updateQcm(qcm: Qcm): Promise<QcmResponse>,
