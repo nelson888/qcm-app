@@ -257,6 +257,20 @@ class ApiClient implements QcmClient {
     setJwt(jwt: string): void {
         this.jwt = jwt;
     }
+
+    postChoices = async (ids: number[]): Promise<VoidResponse> => {
+        let response: Response = await this.post('/response',
+            {
+                ids
+            });
+        if (this.isError(response)) {
+            return await this.errorResponse<{}>(response);
+        }
+        return new APIResponse({
+            isSuccess: true,
+            code: response.status
+        });
+    }
 }
 
 export default ApiClient;
