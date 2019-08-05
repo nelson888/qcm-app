@@ -74,7 +74,8 @@ class ApiClient implements QcmClient {
     private async errorResponse<T>(response: Response): Promise<APIResponse<T, string>> {
         return new APIResponse({
             isSuccess: false,
-            errorData: await this.extractErrorMessage(response)
+            errorData: await this.extractErrorMessage(response),
+            code: response.status
         });
     }
     logIn = async (username: string, password: string): Promise<LoginResponse> =>  {
@@ -93,7 +94,8 @@ class ApiClient implements QcmClient {
 
         return new APIResponse({
             isSuccess: true,
-            successData: {...json}
+            successData: {...json},
+            code: response.status
         });
     };
 
@@ -113,7 +115,8 @@ class ApiClient implements QcmClient {
         let jsonList: Qcm[] = await response.json();
         return new APIResponse({
             isSuccess: true,
-            successData: jsonList
+            successData: jsonList,
+            code: response.status
         });
     }
 
@@ -126,7 +129,8 @@ class ApiClient implements QcmClient {
         this.user = {...json};
         return new APIResponse({
             isSuccess: true,
-            successData: {...json}
+            successData: {...json},
+            code: response.status
         });
     }
 
@@ -138,7 +142,8 @@ class ApiClient implements QcmClient {
         let json: Qcm = await response.json();
         return new APIResponse({
             isSuccess: true,
-            successData: json
+            successData: json,
+            code: response.status
         });
     }
 
@@ -149,7 +154,8 @@ class ApiClient implements QcmClient {
         }
         return new APIResponse({
             isSuccess: true,
-            successData: {}
+            successData: {},
+            code: response.status
         });
     }
 
@@ -161,7 +167,8 @@ class ApiClient implements QcmClient {
         let json: QcmResult = await response.json();
         return new APIResponse({
             isSuccess: true,
-            successData: json
+            successData: json,
+            code: response.status
         });
     }
 
@@ -173,19 +180,21 @@ class ApiClient implements QcmClient {
         }
         return new APIResponse({
             isSuccess: true,
-            successData: {}
+            successData: {},
+            code: response.status
         });
     }
 
     async nextQuestion(id: number): Promise<QuestionResponse> {
-        let response: Response = await this.get(`/qcm/${id}/launch`);
+        let response: Response = await this.get(`/qcm/${id}/nextQuestion`);
         if (this.isError(response)) {
             return await this.errorResponse<Question>(response);
         }
         let json: Question = await response.json();
         return new APIResponse({
             isSuccess: true,
-            successData: json
+            successData: json,
+            code: response.status
         });
     }
 
@@ -197,7 +206,8 @@ class ApiClient implements QcmClient {
         let json: Question = await response.json();
         return new APIResponse({
             isSuccess: true,
-            successData: json
+            successData: json,
+            code: response.status
         });
     }
 
@@ -209,7 +219,8 @@ class ApiClient implements QcmClient {
         let json: Qcm = await response.json();
         return new APIResponse({
             isSuccess: true,
-            successData: json
+            successData: json,
+            code: response.status
         });
     }
 
@@ -221,7 +232,8 @@ class ApiClient implements QcmClient {
         let json: Qcm = await response.json();
         return new APIResponse({
             isSuccess: true,
-            successData: json
+            successData: json,
+            code: response.status
         });
     }
 

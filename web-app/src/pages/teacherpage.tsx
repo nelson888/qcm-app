@@ -88,7 +88,7 @@ class TeacherPage extends LoggedPage<Props, State> {
                     </div>
                 );
             case "STARTED":
-                return <OnGoingQCM qcm={qcm}/>;
+                return <OnGoingQCM qcm={qcm} apiClient={this.props.apiClient} />;
             default:
                 return (
                     <div

@@ -23,17 +23,20 @@ export type ResultResponse = APIResponse<QcmResult, string>;
 
 type APIResponseConstructor<S, E> = {
     isSuccess: boolean,
+    code: number,
     successData?: S,
     errorData?: E
 }
 class APIResponse<S, E> {
 
     public readonly isSuccess: boolean;
+    public readonly code: number;
     private _successData?: S;
     private _errorData?: E;
 
-    constructor({isSuccess, successData, errorData}: APIResponseConstructor<S, E>) {
+    constructor({isSuccess, successData, errorData, code}: APIResponseConstructor<S, E>) {
         this.isSuccess = isSuccess;
+        this.code = code;
         this._errorData = errorData;
         this._successData = successData;
     }
