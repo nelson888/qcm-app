@@ -7,6 +7,7 @@ import {confirmAlert} from "react-confirm-alert";
 import LoggedPage from "./loggedpage";
 import QcmForm from "../components/qcmform";
 import {toast} from "react-toastify";
+import OnGoingQCM from "../components/ongoingqcm";
 
 type State = {
     qcms: Qcm[],
@@ -74,17 +75,19 @@ class TeacherPage extends LoggedPage<Props, State> {
                         </div>
                     </div>
                 );
-                case "INCOMPLETE":
-                    return (
-                        <div
-                            className="full-width"
-                        >
-                            <QcmForm
-                                qcm={qcm}
-                                onCancel={() => this.setState({modifying: false})}
-                                onSubmit={this.updateQcm}/>
-                        </div>
-                    );
+            case "INCOMPLETE":
+                return (
+                    <div
+                        className="full-width"
+                    >
+                        <QcmForm
+                            qcm={qcm}
+                            onCancel={() => this.setState({modifying: false})}
+                            onSubmit={this.updateQcm}/>
+                    </div>
+                );
+            case "STARTED":
+                return <OnGoingQCM qcm={qcm}/>;
             default:
                 return (
                     <div
@@ -145,7 +148,7 @@ class TeacherPage extends LoggedPage<Props, State> {
                         key={c.id}
                     >
                         <p
-                            className={c.answer ? "answer-choice" : "normal-choice"}
+                            className={c.answer ? "teacher-answer-choice" : "teacher-normal-choice"}
                         >{c.value}</p>
                     </div>
                 ))}

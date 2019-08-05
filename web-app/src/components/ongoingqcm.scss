@@ -1,26 +1,17 @@
 @import "../style/common.scss";
 @import "../style/colors.scss";
 
-.hlink {
-  color: #000;
-}
-
-.hlink:hover {
-  color: #9A9999;
-  cursor: pointer;
-}
-
-.choices-view-grid {
+.ongoing-choice-view-grid {
   display: grid;
   grid-template-columns: 33% 33% 33%;
   margin: 0;
   padding: 0;
 }
 
-.teacher-answer-choice {
+.ongoing-answer-choice {
   color: $answerChoiceColor;
 }
 
-.teacher-normal-choice {
+.ongoing-normal-choice {
 
 }
