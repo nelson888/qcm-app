@@ -1,8 +1,9 @@
 import React from "react";
 import {Choice, Qcm, Question} from "../types";
-import {QcmClient, QuestionResponse} from "../services/qcmClient";
+import {QcmClient, QuestionResponse, VoidResponse} from "../services/qcmClient";
 import OnGoingQCM from "./ongoingqcm";
 import {clearInterval} from "timers";
+import {toast} from "react-toastify";
 
 type Props = {
     qcm: Qcm,
@@ -68,7 +69,22 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
 
     onSubmit = () => {
         const choices: number[] = [...this.state.choices];
+        this.loadingMessage = "Posting choices...";
         this.setState({loading: true, choices: [] });
+        this.props.apiClient
+            .postChoices(choices)
+            .then((response: VoidResponse) => {
+                if (response.isSuccess) {
+                    this.loadingMessage = "Waiting for next question...";
+                } else {
+                    toast.error(response.errorData);
+                    this.props.onRefresh();
+                    this.setState({loading: false});
+                }
+            })
+            .catch((error) => {
+                toast.error("An error occurred: " + error.toString());
+            });
         //TODO api call
     };
 
@@ -81,7 +97,8 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
                     if (this.state.question !== null && question.id !== this.state.question.id) {
                         this.setState({
                            choices: [],
-                            question: question
+                            question: question,
+                            loading: false
                         });
                     }
                 } else {
