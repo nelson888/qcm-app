@@ -215,7 +215,6 @@ public class QcmController {
   @ApiResponses(value = {
     @ApiResponse(code = 200, message = "Successfully passed to the next question"),
     @ApiResponse(code = 403, message = "You are not the owner of this qcm"),
-    @ApiResponse(code = 404, message = "The qcm you were trying to reach is not found or there is no next question")
   })
     public ResponseEntity nextQuestion(Principal user, @PathVariable("id") int id){
       QCM qcm = getQcm(id);
@@ -225,8 +224,8 @@ public class QcmController {
     if (questionIndex >= questions.size() - 1) {
       qcm.setState(State.FINISHED);
       qcmRepository.saveAndFlush(qcm);
-      currentQuestionMap.remove(id);
-      throw new NotFoundException("There is no next question");
+      Question question = questions.get(currentQuestionMap.remove(id));
+      return ResponseEntity.ok(question);
     } else {
       currentQuestionMap.put(id, questionIndex + 1);
       Question question = questions.get(currentQuestionMap.get(id));
