@@ -86,8 +86,8 @@ public class QcmController {
   public ResponseEntity<QCM> getById(Principal principal, @PathVariable("id") int id) {
     QCM qcm = getQcm(id);
 
-    if (isStudent(principal)) { //if is student, we have to hide answer choices
-      hideAnswers(qcm);
+    if (!qcm.getAuthor().getUsername().equals(principal.getName())) { //if not owner, we have to hide the questions
+      qcm.getQuestions().clear();
     }
     return ResponseEntity.ok(qcm);
   }
@@ -204,8 +204,8 @@ public class QcmController {
     if (questionIndex == null){
       throw new BadRequestException("The qcm has not started");
     }
-    if (isStudent(user)) {
-      hideAnswers(qcm);
+    if (!qcm.getAuthor().getUsername().equals(user.getName())) {
+      qcm.getQuestions().clear();
     }
     return ResponseEntity.ok(qcm.getQuestions().get(questionIndex));
   }
@@ -298,14 +298,6 @@ public class QcmController {
   private boolean isStudent(Principal principal) {
     User user = getUser(principal);
     return Role.STUDENT.equals(user.getRole());
-  }
-
-  private void hideAnswers(QCM qcm) {
-    for(Question question:qcm.getQuestions()){
-      for (Choice choice:question.getChoices()){
-        choice.setAnswer(false);
-      }
-    }
   }
 
   private QCM getQcm(int id) {
