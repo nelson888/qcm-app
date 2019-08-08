@@ -66,6 +66,7 @@ export interface QcmClient {
     currentQuestion(qcmId: number): Promise<QuestionResponse>,
     setUser(user: User): void
     setJwt(jwt: string): void,
+    logOut(): void,
     getResult(id: number): Promise<ResultResponse>
     postChoices(ids: number[]): Promise<VoidResponse>
 }

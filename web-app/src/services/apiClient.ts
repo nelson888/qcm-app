@@ -258,6 +258,14 @@ class ApiClient implements QcmClient {
         this.jwt = jwt;
     }
 
+    logOut(): void {
+        this.jwt = "";
+        this.user = {
+          username: "",
+          role: "STUDENT"
+        };
+    }
+
     postChoices = async (ids: number[]): Promise<VoidResponse> => {
         let response: Response = await this.post('/response',
             {

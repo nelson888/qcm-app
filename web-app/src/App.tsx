@@ -58,7 +58,7 @@ class App extends Component<AppProps, AppState> {
     const logged = this.apiClient.isLogged();
     return (
         <React.Fragment>
-          <NavBar logged={logged} onLogOut={() => null} loading={!loaded} />
+          <NavBar logged={logged} onLogOut={this.logOut} loading={!loaded} />
           <div className="content">
             <ToastContainer/>
             {
@@ -94,6 +94,12 @@ class App extends Component<AppProps, AppState> {
       } else {
           toast.error(response.errorData);
       }
+  };
+
+  logOut = () => {
+      deleteCookie(AUTH_COOKIE);
+      this.apiClient.logOut();
+      window.location.reload();
   }
 }
 
