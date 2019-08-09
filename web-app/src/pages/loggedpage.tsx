@@ -68,8 +68,11 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
                 message={this.loadingMessage}
             >
                 <div
-                    className="qcms-list"
+                    className="qcms-list-container"
                 >
+                    <div
+                        className="qcm-list-padding-div"
+                    />
                     <QcmList qcms={qcms}
                              onClick={this.onQcmClick}
                              currentId={current ? current.id : -1}
@@ -97,7 +100,7 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
                                 marginTop: '25%',
                                 textAlign: 'center'
                             }}
-                            className="center-fixed-width"
+                            className="center-fixed-width unselectable"
                         >Select a MCQ</h2>
                     }
                     {

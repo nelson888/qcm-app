@@ -1,7 +1,18 @@
+@import '../style/colors.scss';
+@import '../style/dimensions.scss';
+
 $listHeight: 33%;
-.qcms-list {
+
+.qcm-list-padding-div {
+  height: $barSize;
+  width: 1%;
+}
+.qcms-list-container {
+  top: 0;
   position: absolute;
   width: $listHeight;
+  background: $gradButtonColor2;
+  height: 100%;
 }
 
 .logged-content {
