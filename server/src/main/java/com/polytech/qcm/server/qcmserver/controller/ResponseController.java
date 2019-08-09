@@ -70,7 +70,7 @@ public class ResponseController {
     List<Response> responses = new ArrayList<>();
     for (int id : cIds.getIds()) {
       Choice choice = choiceRepository.findById(id).orElseThrow(() -> new NotFoundException("Choice with id " + id + " doesn't exists"));
-      //checkCanAnswer(choice);
+      checkCanAnswer(choice);
       String username = user.getName();
       Question question = choice.getQuestion();
       List<Response> existingAnswers = responseRepository.findAllByUser_UsernameAndChoice_Question_Id(username, question.getId());

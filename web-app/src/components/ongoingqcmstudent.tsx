@@ -30,7 +30,7 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
 
     componentDidMount(): void {
         super.componentDidMount();
-        this.intId = setInterval(this.checkNewQuestion, 800);
+       // this.intId = setInterval(this.checkNewQuestion, 800);
     }
 
     componentWillUnmount(): void {

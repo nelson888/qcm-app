@@ -267,7 +267,7 @@ class ApiClient implements QcmClient {
     }
 
     postChoices = async (ids: number[]): Promise<VoidResponse> => {
-        let response: Response = await this.post('/response',
+        let response: Response = await this.post('/response/',
             {
                 ids
             });
