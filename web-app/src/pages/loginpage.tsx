@@ -71,16 +71,8 @@ class LoginPage extends FormComponent<Props, LoginForm> {
                     </div>
 
                     <button
-                        className="black-button"
-                        style={isMobile ? {
-                            fontSize: 26,
-                            marginTop: 40,
-                            display: isMobile ? 'block': undefined,
-                            marginRight: isMobile ? 'auto' : undefined,
-                            marginLeft: isMobile ? 'auto' : undefined,
-                            bottom: '15%',
-                            textAlign: 'center'
-                        } : undefined}
+                        className="btn-grad"
+
                     >Log In</button>
 
                 </Form>

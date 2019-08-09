@@ -49,25 +49,6 @@
 $black: #000000;
 $gray: #454545;
 
-.black-button {
-  color: #FFFFFF;
-  margin: 0.5em 1em;
-  font-family: 'Montserrat';
-  font-size: 1.1em;
-  background-color: $black;
-  border-color: $black;
-  padding: 0.2em 0.6em;
-  text-decoration: none;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.black-button:hover {
-  background: $gray;
-  border-color: $gray;
-  text-decoration: none;
-}
-
 p, h1, h2, h3, h4, h5, h6, a, label, input {
   //font-family: 'Montserrat';
 }
@@ -89,4 +70,28 @@ p, h1, h2, h3, h4, h5, h6, a, label, input {
 
 .full-height {
   height: 100%;
+}
+$gradAnimDuration: 0.6s;
+
+.btn-grad {
+  padding: 0.5em 1em;
+  border: none;
+  font-size: 1em;
+  background: linear-gradient(to right, $gradButtonColor1 0%, $gradButtonColor2 51%, $gradButtonColor3 100%);
+  border-radius: 8px;
+  background-size: 400% 400%;
+  opacity: 1;
+
+  -webkit-transition: background $gradAnimDuration ease-out;
+  -moz-transition: background $gradAnimDuration ease-out;
+  -o-transition: background $gradAnimDuration ease-out;
+  transition: background $gradAnimDuration ease-out;
+}
+
+.btn-grad:hover {
+  background-position:100%;
+}
+
+.btn-grad:active {
+  opacity: 0.8;
 }
