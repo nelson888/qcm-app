@@ -194,7 +194,23 @@ class TeacherPage extends LoggedPage<Props, State> {
     }
 
     onQcmClick = (qcm: Qcm) => {
-        this.setState({current: qcm, modifying: false});
+        if (this.state.current && this.state.current.state === "INCOMPLETE") {
+            confirmAlert({
+                title: `Attention, by changing MCQ you will loose all the data that hasn't been saved`,
+                buttons: [
+                    {
+                        label: 'Ok',
+                        onClick: () => this.setState({current: qcm, modifying: false})
+                    },
+                    {
+                        label: 'Cancel',
+                        onClick: () => null
+                    }
+                ]
+            });
+        } else {
+            this.setState({current: qcm, modifying: false});
+        }
     };
 
     startQcm = (qcm: Qcm) => {
@@ -214,7 +230,7 @@ class TeacherPage extends LoggedPage<Props, State> {
             this.setState({loading: false});
             toast.error("An error occurred: " + error.toString());
         });
-    }
+    };
 
     fetchQcms(apiClient: QcmClient): Promise<QcmAllResponse> {
         return this.props.apiClient.getMyQcms();

@@ -9,16 +9,11 @@ const completeIcon = require('../images/icons/complete.png');
 
 type Props = {
     qcms: Qcm[],
-    onClick(qcm: Qcm): void
+    onClick(qcm: Qcm): void,
+    currentId: number
 };
-type State = {
-    selectedId: number
-}
-class QcmList extends Component<Props, State> {
 
-    state: State = {
-        selectedId: -1
-    };
+class QcmList extends Component<Props, {}> {
 
     render(): React.ReactElement {
         const {qcms} = this.props;
@@ -43,7 +38,7 @@ class QcmList extends Component<Props, State> {
                 onClick={() => {this.setState({selectedId: qcm.id}); this.props.onClick(qcm);}}
             >
                 <div
-                    className={"qcm-element" + (qcm.id === this.state.selectedId ? " qcm-element-selected": "")}
+                    className={"qcm-element" + (qcm.id === this.props.currentId ? " qcm-element-selected": "")}
                 >
                     <div
                         style={{

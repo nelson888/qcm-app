@@ -55,7 +55,7 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
             .catch((error) => {
                 toast.error("An error occurred: " + error.toString());
             });
-    }
+    };
 
     abstract fetchQcms(apiClient: QcmClient): Promise<QcmAllResponse>;
     abstract renderQcm(qcm: Qcm): React.ReactElement;
@@ -72,6 +72,7 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
                 >
                     <QcmList qcms={qcms}
                              onClick={this.onQcmClick}
+                             currentId={current ? current.id : -1}
                     />
                     {
                         this.props.apiClient.getRole() === TEACHER &&
@@ -100,7 +101,15 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
                         >Select a MCQ</h2>
                     }
                     {
-                        current && this.renderQcm(current as Qcm)
+                        current &&
+                        <div
+                            className="no-margin no-padding"
+                            style={{
+                                margin: 16
+                            }}
+                        >
+                            {this.renderQcm(current as Qcm)}
+                        </div>
                     }
                 </div>
             </LoadingScreen>

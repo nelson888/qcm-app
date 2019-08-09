@@ -7,7 +7,8 @@ import Checkbox from "./checkbox";
 
 type State = {
     form: Qcm,
-    errors: any
+    errors: any,
+    currentQcmId: number //to reset form when changing qcm
 };
 type Props = {
     onSubmit(qcm: Qcm): void,
@@ -22,7 +23,10 @@ class QcmForm extends FormComponent<Props, Qcm> {
 
     constructor(props: Props) {
         super(props);
+        this.state = this.getInitialState();
+    }
 
+    getInitialState = ():State => {
         let form: Qcm = {...this.props.qcm};
         if (!form.questions.length) {
             form.questions.push({
@@ -40,13 +44,19 @@ class QcmForm extends FormComponent<Props, Qcm> {
                 })
             }
         }
-        this.state = {
+        return {
             form,
             errors: {
 
-            }
+            },
+            currentQcmId: form.id
         };
+    };
 
+    componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<any>, snapshot?: any): void {
+        if (this.props.qcm.id !== this.state.currentQcmId) {
+            this.setState(this.getInitialState());
+        }
     }
 
     render(): React.ReactElement {
