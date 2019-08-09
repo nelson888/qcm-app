@@ -1,10 +1,11 @@
 @import '../style/dimensions.scss';
+@import '../style/colors';
 
-$textColor: white;
+$textColor: black;
 $backgroundColor: #333;
 $zIndex: 1030;
 .nav {
-  background-color: $backgroundColor;
+  background: linear-gradient(to right, $gradButtonColor2 51%, $gradButtonColor3 100%);
   overflow: hidden;
   height: $barSize;
 }
