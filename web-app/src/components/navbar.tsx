@@ -13,13 +13,6 @@ const activeStyle = {
 type State = {
 };
 
-type NavLinkProps = {
-    name: string,
-    path?: string,
-    onClick?(): void,
-    logout?: boolean
-};
-
 class NavBar extends Component<NavbarProps, State> {
 
     render() {
@@ -36,7 +29,9 @@ class NavBar extends Component<NavbarProps, State> {
                         </li>
                         {
                             !loading && logged &&
-                            <li>
+                            <li
+                                style={{float: 'right'}}
+                            >
                                 <NavLink className="link logout"
                                          to="/login"
                                          onClick={onLogOut}
