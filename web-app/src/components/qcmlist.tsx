@@ -11,12 +11,21 @@ type Props = {
     qcms: Qcm[],
     onClick(qcm: Qcm): void
 };
-class QcmList extends Component<Props, {}> {
+type State = {
+    selectedId: number
+}
+class QcmList extends Component<Props, State> {
+
+    state: State = {
+        selectedId: -1
+    };
 
     render(): React.ReactElement {
         const {qcms} = this.props;
         return (
-            <ul>
+            <ul
+                className="no-padding no-margin"
+            >
                 {
                     qcms.map(this.toComponent)
                 }
@@ -31,11 +40,17 @@ class QcmList extends Component<Props, {}> {
                     height: 50,
                     width: '80%'
                 }}
-                onClick={() => this.props.onClick(qcm)}
+                onClick={() => {this.setState({selectedId: qcm.id}); this.props.onClick(qcm);}}
             >
                 <div
-                    className="qcm-element"
+                    className={"qcm-element" + (qcm.id === this.state.selectedId ? " qcm-element-selected": "")}
                 >
+                    <div
+                        style={{
+                            marginLeft: 8,
+                            paddingTop: 10,
+                        }}
+                    >
                     <h3
                         className="no-padding no-margin inline vertical-middle unselectable"
                     >{qcm.name ? qcm.name : 'New MCQ (no name)'}</h3>
@@ -50,13 +65,14 @@ class QcmList extends Component<Props, {}> {
                         alt={qcm.state.toLowerCase()}
                         src={this.getIcon(qcm.state)}
                     />
-
+                    </div>
                     <div
                         className="black-line"
                         style={{
                             marginTop: 8
                         }}
                     />
+
                 </div>
             </li>
         );

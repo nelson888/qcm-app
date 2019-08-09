@@ -2,13 +2,23 @@
 @import "../style/colors.scss";
 
 .qcm-element {
-  background: #fffefe;
+  background: linear-gradient(to right, $gradButtonColor2 51%, $gradButtonColor3 100%);
+  background-size: 400% 100%;
+
+  -webkit-transition: background $gradAnimDuration ease-out;
+  -moz-transition: background $gradAnimDuration ease-out;
+  -o-transition: background $gradAnimDuration ease-out;
+  transition: background $gradAnimDuration ease-out;
 }
 
 .qcm-element:hover {
-  background: #b6b5b5;
+  background-position:100%;
+}
+
+.qcm-element-selected {
+  background-position:100%;
 }
 
 .qcm-element:active {
-  background: $separatorColor;
+  opacity: 0.8;
 }
