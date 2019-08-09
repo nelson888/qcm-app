@@ -196,7 +196,7 @@ class TeacherPage extends LoggedPage<Props, State> {
     onQcmClick = (qcm: Qcm) => {
         if (this.state.current && this.state.current.state === "INCOMPLETE") {
             confirmAlert({
-                title: `Attention, by changing MCQ you will loose all the data that hasn't been saved`,
+                title: `Attention, by changing MCQ you will loose all the data of this MCQ that hasn't been saved`,
                 buttons: [
                     {
                         label: 'Ok',
