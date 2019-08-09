@@ -17,7 +17,8 @@ import {AUTH_COOKIE} from "./util/constants";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 type AppState = {
-    loading: boolean
+    loading: boolean,
+    logged: boolean
 };
 
 type AppProps = {
@@ -27,7 +28,8 @@ class App extends Component<AppProps, AppState> {
 
     apiClient: QcmClient = new ApiClient();
     state: AppState = {
-        loading: true
+        loading: true,
+        logged: false
     };
     componentDidMount(): void {
         const jwt: string = getCookie(AUTH_COOKIE);
@@ -39,6 +41,7 @@ class App extends Component<AppProps, AppState> {
                 .then((response: MeResponse) => {
                     if (response.isSuccess) {
                         this.apiClient.setUser(response.successData);
+                        this.setState({logged: true});
                     } else {
                         this.apiClient.setJwt("");
                         deleteCookie(AUTH_COOKIE);
@@ -55,7 +58,7 @@ class App extends Component<AppProps, AppState> {
 
   render = () => {
     const loaded = !this.state.loading;
-    const logged = this.apiClient.isLogged();
+    const {logged} = this.state;
     return (
         <React.Fragment>
           <NavBar logged={logged} onLogOut={this.logOut} loading={!loaded} />
@@ -90,7 +93,8 @@ class App extends Component<AppProps, AppState> {
       if (response.isSuccess) {
           toast.success("Successfully logged in");
           history.replace('/home');
-          setCookie(AUTH_COOKIE, response.successData.jwt, new Date(response.successData.expires))
+          setCookie(AUTH_COOKIE, response.successData.jwt, new Date(response.successData.expires));
+          this.setState({logged: true });
       } else {
           toast.error(response.errorData);
       }
@@ -99,7 +103,7 @@ class App extends Component<AppProps, AppState> {
   logOut = () => {
       deleteCookie(AUTH_COOKIE);
       this.apiClient.logOut();
-      window.location.reload();
+      this.setState({logged: false});
   }
 }
 
