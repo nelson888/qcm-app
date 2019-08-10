@@ -102,6 +102,7 @@ class TeacherPage extends LoggedPage<Props, State> {
     }
 
     private renderQuestions(questions: Question[]): React.ReactElement {
+        let i: number = 0;
         return (
             <ul
                 className="no-margin no-padding"
@@ -110,7 +111,7 @@ class TeacherPage extends LoggedPage<Props, State> {
                     <li key={q.id}
                         className="no-margin no-padding full-width"
                     >
-                        <h3>{q.question}</h3>
+                        <h3>Question n°{++i}: {q.question}</h3>
                         {this.renderChoices(q.choices)}
                     </li>
                 ))}
