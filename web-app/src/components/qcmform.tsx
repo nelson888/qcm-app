@@ -189,10 +189,10 @@ class QcmForm extends FormComponent<Props, Qcm> {
                     className="full-height full-width"
                 >
                     <button
-                        className="center-fixed-width"
+                        className="center-relative no-padding no-margin"
                         style={{
                             width: 100,
-                            height: 30
+                            height: 30,
                         }}
                         onClick={() => {
                             let qcm: Qcm = {...this.state.form};
@@ -218,8 +218,8 @@ class QcmForm extends FormComponent<Props, Qcm> {
             <div
                 key={c.id.toString()}
             >
-                {this.renderInput({placeholder: "Enter the name of the choice", type: "", label: `Choice ${j + 1}`, name: `q${i}Choice${j}`,
-                    width: '80%',
+                {this.renderInput({placeholder: "Enter the choice", type: "", label: `Choice ${j + 1}`, name: `q${i}Choice${j}`,
+                    width: '80%', marginBottom: 0,
                     valueLoader: () => c.value,
                     onChange: (event: any): any => {
                         let qcm: Qcm = {...this.state.form};
@@ -232,8 +232,13 @@ class QcmForm extends FormComponent<Props, Qcm> {
                     }})}
 
                 <div>
+                    <div>
                     <p
-                        className="inline"
+                        className="inline no-margin no-padding"
+                        style={{
+                            marginRight: 8,
+                            verticalAlign: 'middle'
+                        }}
                     >Right answer: </p>
                     <Checkbox
                         className="inline"
@@ -246,6 +251,7 @@ class QcmForm extends FormComponent<Props, Qcm> {
                             form: qcm
                         });
                     }} />
+                    </div>
                 </div>
             </div>
         )

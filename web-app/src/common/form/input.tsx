@@ -11,13 +11,18 @@ type InputParameters = {
     onChange?: any, //callback
     autoFocus?: boolean,
     placeholder?: string,
-    width?: number|string
+    width?: number|string,
+    marginBottom?: number
 };
 
-const Input = ({value, name, label, error, type, onChange, autoFocus, placeholder, width }: InputParameters) => {
+const Input = ({value, name, label, error, type, onChange, autoFocus, placeholder, width, marginBottom=undefined }: InputParameters) => {
 
     return (
-    <div className="form-container">
+    <div className="form-container"
+         style={{
+             marginBottom
+         }}
+    >
         <label htmlFor={name} className="form-label">{label}</label>
         <input
             style={{

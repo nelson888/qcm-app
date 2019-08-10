@@ -11,7 +11,8 @@ type render_input_parameters<T> = {
     errors?: any,
     placeholder?: string,
     width?: number|string,
-    valueLoader?(form: T): string
+    valueLoader?(form: T): string,
+    marginBottom?: number
 };
 abstract class FormComponent<P, Form> extends Component<P, any> {
 
@@ -56,7 +57,7 @@ abstract class FormComponent<P, Form> extends Component<P, any> {
     };
 
 
-    renderInput = ({name, label = "", type, autoFocus = false, onChange = this.onInputChange, errors=this.state.errors, placeholder, width, valueLoader } : render_input_parameters<Form>): any => {
+    renderInput = ({name, label = "", type, autoFocus = false, onChange = this.onInputChange, errors=this.state.errors, placeholder, width, valueLoader, marginBottom } : render_input_parameters<Form>): any => {
         if (!label) {
             label = name.charAt(0).toLocaleUpperCase() + name.substr(1);
         }
@@ -69,6 +70,7 @@ abstract class FormComponent<P, Form> extends Component<P, any> {
                 label={label}
                 type={type}
                 width={width}
+                marginBottom={marginBottom}
                 onChange={onChange}
                 placeholder={placeholder}
                 error={errors ? errors[name]: ""}

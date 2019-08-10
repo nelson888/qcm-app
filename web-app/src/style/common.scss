@@ -101,3 +101,10 @@ $gradAnimDuration: 0.6s;
 .btn-grad:active {
   opacity: 0.8;
 }
+
+.center-relative {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
