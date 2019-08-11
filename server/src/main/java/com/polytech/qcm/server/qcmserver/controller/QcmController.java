@@ -227,7 +227,10 @@ public class QcmController {
       QCM qcm = getQcm(id);
     checkRights(user, qcm);
     List<Question> questions = qcm.getQuestions();
-    int questionIndex = currentQuestionMap.get(id);
+    Integer questionIndex = currentQuestionMap.get(id);
+    if (questionIndex == null) {
+      throw new NotFoundException("There is no current question for mcq with id " + id);
+    }
     if (questionIndex >= questions.size() - 1) {
       qcm.setState(State.FINISHED);
       qcmRepository.saveAndFlush(qcm);
