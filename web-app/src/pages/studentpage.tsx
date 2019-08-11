@@ -33,6 +33,24 @@ class StudentPage extends LoggedPage<Props, State> {
                                           apiClient={this.props.apiClient}
                                           onRefresh={this.refresh}
                 />;
+            case "COMPLETE":
+                return (
+                    <React.Fragment>
+                        <div
+                            style={{
+                                marginTop: 64
+                            }}
+                            className="center-horizontal text-center"
+                        >
+                            <h1>{qcm.name}</h1>
+                            <p
+                                style={{
+                                    fontSize: 20
+                                }}
+                            >This MCQ hasn't started yet</p>
+                        </div>
+                    </React.Fragment>
+                );
             default:
                 return (
                     <div>
