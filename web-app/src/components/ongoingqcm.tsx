@@ -105,15 +105,13 @@ abstract class OnGoingQCM<P extends Props, S extends State> extends Component<P,
                         padding: 8
                     }}
                     onClick={() => this.onChoiceClick(c)}
-                    className={this.choiceClassName(c)}
+                    className={"unselectable " + this.choiceClassName(c)}
                 >{c.value}</h4>
             </div>
         );
     };
 
-    protected choiceClassName = (c: Choice): string => {
-        return "unselectable ongoing-choice " + (c.answer ? "ongoing-choice-answer" : "");
-    };
+    protected abstract choiceClassName(c: Choice): string;
 
     protected onChoiceClick(c: Choice) {
 

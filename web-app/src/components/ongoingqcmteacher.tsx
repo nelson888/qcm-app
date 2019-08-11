@@ -1,9 +1,9 @@
 import React from "react";
-import {Qcm, Question} from "../types";
+import {Choice, Qcm, Question} from "../types";
 import {NullableQuestionResponse, QcmClient} from "../services/qcmClient";
 import {toast} from "react-toastify";
 import OnGoingQCM from "./ongoingqcm";
-import './ongoingqcmstudent.scss';
+import './ongoingqcmteacher.scss';
 
 type Props = {
     qcm: Qcm,
@@ -64,7 +64,11 @@ class OnGoingQCMTeacher extends OnGoingQCM<Props, State> {
                 toast.error("An error occurred: " + response.errorData);
             }
         }
-    }
+    };
+
+    protected choiceClassName = (c: Choice): string => {
+        return c.answer ? "teacher-choice " : "teacher-answer";
+    };
 }
 
 export default OnGoingQCMTeacher;

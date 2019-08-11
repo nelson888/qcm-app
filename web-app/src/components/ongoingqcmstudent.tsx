@@ -4,6 +4,7 @@ import {BoolResponse, QcmClient, QuestionResponse, VoidResponse} from "../servic
 import OnGoingQCM from "./ongoingqcm";
 import {clearInterval} from "timers";
 import {toast} from "react-toastify";
+import './ongoingqcmstudent.scss';
 
 type Props = {
     qcm: Qcm,
@@ -91,7 +92,7 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
 
     protected choiceClassName = (c: Choice): string => {
         const {choices} = this.state;
-        return "unselectable  " + (choices.indexOf(c.id) >= 0 ? "student-choice-selected" : "student-choice");
+        return choices.indexOf(c.id) >= 0 ? "student-choice-selected" : "student-choice";
     };
 
     onSubmit = () => {
@@ -135,6 +136,7 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
                 }
             })
     };
+
 }
 
 export default OngoingQCMStudent;
