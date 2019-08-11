@@ -1,13 +1,14 @@
 import React from "react";
 import {Qcm, Question} from "../types";
-import {QcmClient, QuestionResponse} from "../services/qcmClient";
+import {NullableQuestionResponse, QcmClient} from "../services/qcmClient";
 import {toast} from "react-toastify";
 import OnGoingQCM from "./ongoingqcm";
 import './ongoingqcmstudent.scss';
 
 type Props = {
     qcm: Qcm,
-    apiClient: QcmClient
+    apiClient: QcmClient,
+    refresh(): void
 };
 
 type State = {
@@ -44,27 +45,25 @@ class OnGoingQCMTeacher extends OnGoingQCM<Props, State> {
         );
     }
 
-    private nextQuestion = () => {
+    private nextQuestion = async () => {
         this.setState({loading: true});
         const {qcm, apiClient} = this.props;
-        apiClient.nextQuestion(qcm.id)
-            .then((response: QuestionResponse) => {
-                this.setState({loading: false});
-                console.log(response);
-                if (response.isSuccess) {
-                    this.setState({question: response.successData });
-                } else {
-                    if (response.code === 404) {
-                        toast.error("There is no next question for this qcm");
-                    } else {
-                        toast.error("An error occurred: " + response.errorData);
-                    }
-                }
-            })
-            .catch((error: any) => {
-                this.setState({loading: false});
-                toast.error("An error occurred: " + error.toString());
-            });
+        const response: NullableQuestionResponse = await apiClient.nextQuestion(qcm.id);
+        console.log(response);
+        if (response.isSuccess) {
+            if (response.successData != null) {
+                this.setState({question: response.successData, loading: false });
+            } else {
+                this.props.refresh();
+            }
+        } else {
+            this.setState({loading: false});
+            if (response.code === 404) {
+                toast.error("There is no next question for this qcm");
+            } else {
+                toast.error("An error occurred: " + response.errorData);
+            }
+        }
     }
 }
 

@@ -88,7 +88,7 @@ class TeacherPage extends LoggedPage<Props, State> {
                     </div>
                 );
             case "STARTED":
-                return <OnGoingQCMTeacher qcm={qcm} apiClient={this.props.apiClient} />;
+                return <OnGoingQCMTeacher qcm={qcm} apiClient={this.props.apiClient} refresh={this.refresh} />;
             default:
                 return (
                     <div
@@ -131,6 +131,7 @@ class TeacherPage extends LoggedPage<Props, State> {
                     qcms[index] = response.successData;
                     this.setState({qcms});
                     toast.success(`Successfully updated ${response.successData.name}`);
+                    this.refresh();
                 } else {
                     toast.error(`Couldn't update qcm: ${response.errorData}`)
                 }

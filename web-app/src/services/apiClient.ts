@@ -2,7 +2,7 @@ import {Qcm, QcmResult, Question} from "../types";
 import {
     APIResponse, BoolResponse,
     login_response,
-    LoginResponse, MeResponse, QcmAllResponse,
+    LoginResponse, MeResponse, NullableQuestionResponse, QcmAllResponse,
     QcmClient, QcmResponse, QuestionResponse, ResultResponse, Role,
     STUDENT,
     User, VoidResponse
@@ -198,15 +198,19 @@ class ApiClient implements QcmClient {
         });
     }
 
-    async nextQuestion(id: number): Promise<QuestionResponse> {
+    async nextQuestion(id: number): Promise<NullableQuestionResponse> {
         let response: Response = await this.get(`/qcm/${id}/nextQuestion`);
         if (this.isError(response)) {
             return await this.errorResponse<Question>(response);
         }
-        let json: Question = await response.json();
+        let output: string = await response.text();
+        let question: Question|null = null;
+        if (output) {
+            question = JSON.parse(output);
+        }
         return new APIResponse({
             isSuccess: true,
-            successData: json,
+            successData: question,
             code: response.status
         });
     }

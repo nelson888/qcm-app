@@ -49,6 +49,7 @@ abstract class OnGoingQCM<P extends Props, S extends State> extends Component<P,
         if (question != null) {
             index = qcm.questions.findIndex(q => q.id === question.id);
             isLast = index === qcm.questions.length - 1;
+            console.log(index.toString() + " " + qcm.questions[index].id.toString());
         }
         return (
             <LoadingScreen

@@ -129,7 +129,8 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
                 this.setState({loading: false});
                 if (response.isSuccess) {
                     this.setState({
-                        qcms: this.state.qcms.concat(response.successData)
+                        qcms: this.state.qcms.concat(response.successData),
+                        current: response.successData
                     })
                 } else {
                     toast.error(`Couldn't create new qcm: ${response.errorData}`);

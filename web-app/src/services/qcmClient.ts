@@ -18,6 +18,7 @@ export type MeResponse = APIResponse<User, string>;
 export type QcmResponse = APIResponse<Qcm, string>;
 export type VoidResponse = APIResponse<{}, string>;
 export type QuestionResponse = APIResponse<Question, string>;
+export type NullableQuestionResponse = APIResponse<Question|null, string>;
 export type ResultResponse = APIResponse<QcmResult, string>;
 export type BoolResponse = APIResponse<boolean, string>;
 
@@ -63,7 +64,7 @@ export interface QcmClient {
     getMe(): Promise<MeResponse>,
     launchQcm(id: number): Promise<VoidResponse>,
     finishQcm(id: number): Promise<VoidResponse>,
-    nextQuestion(id: number): Promise<QuestionResponse>,
+    nextQuestion(id: number): Promise<NullableQuestionResponse>,
     currentQuestion(qcmId: number): Promise<QuestionResponse>,
     setUser(user: User): void
     setJwt(jwt: string): void,
