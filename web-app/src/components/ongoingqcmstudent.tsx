@@ -1,6 +1,6 @@
 import React from "react";
 import {Choice, Qcm, Question} from "../types";
-import {QcmClient, QuestionResponse, VoidResponse} from "../services/qcmClient";
+import {BoolResponse, QcmClient, QuestionResponse, VoidResponse} from "../services/qcmClient";
 import OnGoingQCM from "./ongoingqcm";
 import {clearInterval} from "timers";
 import {toast} from "react-toastify";
@@ -28,8 +28,35 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
     loadingMessage = "Waiting for next question...";
     intId: any| null = null;
 
-    componentDidMount(): void {
-        super.componentDidMount();
+    async componentDidMount(): Promise<void> {
+        const {apiClient, qcm} = this.props;
+        const response: QuestionResponse = await apiClient.currentQuestion(qcm.id);
+        if (!response.isSuccess) {
+            if (response.code === 404) {
+                toast.error("There is no next question for this qcm");
+            } else {
+                toast.error("An error occurred: " + response.errorData);
+            }
+            return;
+        }
+        this.setState({question: response.successData });
+        const question: Question = response.successData;
+        const answeredResponse: BoolResponse = await apiClient.hasAnswered(question);
+        if (!response.isSuccess) {
+            if (response.code === 404) {
+                toast.error("There is no next question for this qcm");
+            } else {
+                toast.error("An error occurred: " + response.errorData);
+            }
+            return;
+        }
+        if (answeredResponse.successData) {
+            this.loadingMessage = "Question answered. Waiting for next question...";
+            this.setState({loading: true});
+        } else {
+            this.setState({loading: false});
+
+        }
        // this.intId = setInterval(this.checkNewQuestion, 800);
     }
 

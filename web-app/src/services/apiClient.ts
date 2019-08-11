@@ -1,6 +1,6 @@
 import {Qcm, QcmResult, Question} from "../types";
 import {
-    APIResponse,
+    APIResponse, BoolResponse,
     login_response,
     LoginResponse, MeResponse, QcmAllResponse,
     QcmClient, QcmResponse, QuestionResponse, ResultResponse, Role,
@@ -217,6 +217,19 @@ class ApiClient implements QcmClient {
             return await this.errorResponse<Question>(response);
         }
         let json: Question = await response.json();
+        return new APIResponse({
+            isSuccess: true,
+            successData: json,
+            code: response.status
+        });
+    }
+
+    async hasAnswered(question: Question): Promise<BoolResponse> {
+        let response: Response = await this.get(`/question/${question.id}/hasAnswered`);
+        if (this.isError(response)) {
+            return await this.errorResponse<boolean>(response);
+        }
+        let json: boolean = await response.json();
         return new APIResponse({
             isSuccess: true,
             successData: json,

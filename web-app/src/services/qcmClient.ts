@@ -19,6 +19,7 @@ export type QcmResponse = APIResponse<Qcm, string>;
 export type VoidResponse = APIResponse<{}, string>;
 export type QuestionResponse = APIResponse<Question, string>;
 export type ResultResponse = APIResponse<QcmResult, string>;
+export type BoolResponse = APIResponse<boolean, string>;
 
 
 type APIResponseConstructor<S, E> = {
@@ -67,6 +68,7 @@ export interface QcmClient {
     setUser(user: User): void
     setJwt(jwt: string): void,
     logOut(): void,
+    hasAnswered(question: Question): Promise<BoolResponse>,
     getResult(id: number): Promise<ResultResponse>
     postChoices(ids: number[]): Promise<VoidResponse>
 }
