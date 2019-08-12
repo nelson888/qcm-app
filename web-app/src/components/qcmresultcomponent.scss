@@ -8,9 +8,10 @@
   @extend .vertical-middle;
   font-weight: bold;
   text-align: center;
+  margin: auto;
 }
 
 .result-answer {
-  @extend .center-horizontal;
-  @extend .vertical-middle;
+  margin: auto;
+
 }

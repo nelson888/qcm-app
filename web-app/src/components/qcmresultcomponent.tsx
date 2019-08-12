@@ -49,37 +49,54 @@ class QcmResultComponent extends Component<Props, State> {
         if (result == null) {
             return <div/>;
         }
+        let i: number = 0;
+        const gridStyle = this.getGridStyle(result.questionResults.length + 1);
         return (
-            <div
-                style={this.getGridStyle(result.questionResults.length + 1)}
-            >
-                <div/>
-                {qcm.questions.map(q =>
-                    <p
-                        className="result-question"
-                        key={q.id}>{q.question}</p>)}
-
-                {result.participants.map(p => this.participantRow(p, result.questionResults))}
-            </div>
+            <React.Fragment>
+                <div
+                    style={gridStyle}
+                >
+                    <div/>
+                    {qcm.questions.map(q =>
+                        <p
+                            style={{
+                                margin: 'auto'
+                            }}
+                            className="result-question"
+                            key={q.id}>{q.question}</p>)}
+                </div>
+                <div className="black-line" />
+                {result.participants.map(p => this.participantRow(p, result.questionResults, i++, gridStyle))}
+            </React.Fragment>
         );
     }
 
-    participantRow = (p: string, questionResults: QuestionResult[]) => {
+    participantRow = (p: string, questionResults: QuestionResult[], rowId: number, gridStyle: object) => {
         let i: number = 0;
+        let background: string = rowId % 2 ? '#e2e2e2': '#ffffff';
         return (
-            <React.Fragment
+            <div
                 key={p}
+                style={{
+                    ...gridStyle,
+                    background,
+                    padding: 6
+                }}
+
             >
                 <p
                     className="result-participant"
+                    style={{
+                        background
+                    }}
                 >{p}</p>
                 {questionResults.map(q => q.responses[p]).map(answer => this.responseComponent(i++, answer))}
-            </React.Fragment>
+            </div>
         );
     };
 
-    responseComponent = (cId: number, correct: boolean|null) => { //TODO
-        const size = 32;
+    responseComponent = (cId: number, correct: boolean|null) => {
+        const size = 28;
         let alt = 'unanswered';
         if (correct !== null) {
             alt = correct ? 'correct' : 'incorrect';
@@ -87,7 +104,7 @@ class QcmResultComponent extends Component<Props, State> {
         return <img
             key={cId}
             alt={alt}
-            className="result-answer"
+            className="result-answer no-margin no-padding"
             src={this.answerIcon(correct)}
             style={{
                 width: size,

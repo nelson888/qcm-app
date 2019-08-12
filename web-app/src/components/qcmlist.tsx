@@ -55,7 +55,9 @@ class QcmList extends Component<Props, {}> {
                         style={{
                             width: 32,
                             height: 32,
-                            marginLeft: 40
+                            float: 'right',
+                            margin: 'auto',
+                            marginRight: 4
                         }}
                         alt={qcm.state.toLowerCase()}
                         src={this.getIcon(qcm.state)}
