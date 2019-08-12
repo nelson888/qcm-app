@@ -234,8 +234,8 @@ public class QcmController {
     if (questionIndex >= questions.size() - 1) {
       qcm.setState(State.FINISHED);
       qcmRepository.saveAndFlush(qcm);
-      Question question = questions.get(currentQuestionMap.remove(id));
-      return ResponseEntity.ok(question);
+      currentQuestionMap.remove(id);
+      return ResponseEntity.ok(null);
     } else {
       currentQuestionMap.put(id, questionIndex + 1);
       Question question = questions.get(currentQuestionMap.get(id));
@@ -258,7 +258,7 @@ public class QcmController {
       result.getParticipants().clear();
       result.getParticipants().add(username);
       for (QuestionResult qr : result.getQuestionResults()) {
-        Map<String, Boolean> responses = qr.getReponses();
+        Map<String, Boolean> responses = qr.getResponses();
         Boolean response = responses.get(username);
         responses.clear();
         responses.put(username, response);

@@ -31,8 +31,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -166,7 +164,7 @@ public class QcmServerApplicationTests {
 		assertEquals(2, result.getQuestionResults().size());
 
 		for (QuestionResult qr : result.getQuestionResults()) {
-			Map<String, Boolean> responsesMap = qr.getReponses();
+			Map<String, Boolean> responsesMap = qr.getResponses();
 			assertEquals(1, responsesMap.size());
 			assertTrue(responsesMap.containsKey(STUDENT_USERNAME));
 			assertTrue(responsesMap.get(STUDENT_USERNAME));
@@ -193,7 +191,7 @@ public class QcmServerApplicationTests {
 		assertEquals(2, result.getQuestionResults().size());
 
 		for (QuestionResult qr : result.getQuestionResults()) {
-			Map<String, Boolean> responsesMap = qr.getReponses();
+			Map<String, Boolean> responsesMap = qr.getResponses();
 			assertEquals(1, responsesMap.size());
 			assertTrue(responsesMap.containsKey(STUDENT_USERNAME));
 			assertFalse(responsesMap.get(STUDENT_USERNAME));

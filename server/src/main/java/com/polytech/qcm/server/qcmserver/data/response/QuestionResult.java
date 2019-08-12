@@ -11,7 +11,7 @@ import java.util.Map;
 public class QuestionResult {
 
   private Question question;
-  private Map<String, Boolean> reponses; // username =>  vrai si reponse juste, faux sinon
+  private Map<String, Boolean> responses; // username =>  vrai si reponse juste, faux sinon
 
 
 }
