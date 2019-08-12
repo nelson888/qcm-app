@@ -8,6 +8,7 @@ import LoggedPage from "./loggedpage";
 import QcmForm from "../components/qcmform";
 import {toast} from "react-toastify";
 import OnGoingQCMTeacher from "../components/ongoingqcmteacher";
+import QcmResultComponent from "../components/qcmresultcomponent";
 
 type State = {
     qcms: Qcm[],
@@ -54,23 +55,26 @@ class TeacherPage extends LoggedPage<Props, State> {
                         {this.renderQuestions(qcm.questions)}
 
                         <div
-                            className="full-width"
                             style={{
-                                marginTop: 32
+                                marginTop: 32,
+                                marginLeft: 20
                             }}
                         >
                             <button
-                                className="inline"
+                                className="inline btn-grad"
                                 onClick={() => this.startQcm(qcm)}
                             >Start</button>
 
                             <button
-                                className="inline"
+                                className="inline btn-grad"
+                                style={{
+                                    margin: 32
+                                }}
                                 onClick={() => this.setState({modifying: true })}
                             >Modify</button>
 
                             <button
-                                className="inline"
+                                className="inline btn-grad-danger"
                                 onClick={() => this.onDeleteQcm(qcm)}
                             >Delete</button>
                         </div>
@@ -89,6 +93,8 @@ class TeacherPage extends LoggedPage<Props, State> {
                 );
             case "STARTED":
                 return <OnGoingQCMTeacher qcm={qcm} apiClient={this.props.apiClient} refresh={this.refresh} />;
+            case "FINISHED":
+                return <QcmResultComponent apiClient={this.props.apiClient} qcm={qcm}/>;
             default:
                 return (
                     <div

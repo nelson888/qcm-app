@@ -1,0 +1,16 @@
+@import "../style/common.scss";
+@import "../style/colors.scss";
+
+.result-question {
+  text-align: center;
+}
+.result-participant {
+  @extend .vertical-middle;
+  font-weight: bold;
+  text-align: center;
+}
+
+.result-answer {
+  @extend .center-horizontal;
+  @extend .vertical-middle;
+}
