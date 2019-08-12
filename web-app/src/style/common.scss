@@ -76,35 +76,6 @@ p, h1, h2, h3, h4, h5, h6, a, label, input, button {
 .text-center {
   text-align: center;
 }
-$gradAnimDuration: 0.6s;
-
-.btn-grad {
-  padding: 0.5em 1em;
-  border: none;
-  font-size: 1em;
-  background: linear-gradient(to right, $gradButtonColor1 0%, $gradButtonColor2 51%, $gradButtonColor3 100%);
-  border-radius: 8px;
-  background-size: 400% 400%;
-  opacity: 1;
-  font-weight: bold;
-
-  -webkit-transition: background $gradAnimDuration ease-out;
-  -moz-transition: background $gradAnimDuration ease-out;
-  -o-transition: background $gradAnimDuration ease-out;
-  transition: background $gradAnimDuration ease-out;
-}
-
-.btn-grad:hover {
-  background-position:100%;
-}
-
-.btn-grad:focus {
-  outline:0;
-}
-
-.btn-grad:active {
-  opacity: 0.8;
-}
 
 .center-relative {
   position: relative;
@@ -113,30 +84,56 @@ $gradAnimDuration: 0.6s;
   transform: translate(-50%, -50%);
 }
 
-.btn-grad-danger {
+$gradAnimDuration: 0.6s;
+
+@mixin grad-but($col1, $col2, $col3) {
   padding: 0.5em 1em;
   border: none;
-  font-size: 1em;
-  background: linear-gradient(to right, #ff000b 0%, #ff811a 51%, #ff3d25 100%);
-  border-radius: 8px;
+  background: linear-gradient(to right, $col1 0%, $col2 51%, $col3 100%);
   background-size: 400% 400%;
+  font-size: 1em;
+  border-radius: 8px;
   opacity: 1;
   font-weight: bold;
-
   -webkit-transition: background $gradAnimDuration ease-out;
   -moz-transition: background $gradAnimDuration ease-out;
   -o-transition: background $gradAnimDuration ease-out;
   transition: background $gradAnimDuration ease-out;
 }
-
-.btn-grad-danger:hover {
+@mixin grad-but-hover {
   background-position:100%;
 }
 
-.btn-grad-danger:focus {
+@mixin grad-but-focus {
   outline:0;
 }
 
-.btn-grad-danger:active {
+@mixin grad-but-active {
   opacity: 0.8;
+}
+.btn-grad {
+  @include grad-but($gradButtonColor1, $gradButtonColor2, $gradButtonColor3);
+
+}
+.btn-grad:hover {
+  @include grad-but-hover;
+}
+.btn-grad:focus {
+  @include grad-but-focus;
+}
+.btn-grad:active {
+  @include grad-but-active;
+}
+
+.btn-grad-danger {
+  @include grad-but(#ff000b, #ff811a, #ff3d25);
+}
+.btn-grad-danger:hover {
+  @include grad-but-hover;
+}
+.btn-grad-danger:focus {
+  @include grad-but-focus;
+}
+.btn-grad-danger:active {
+  @include grad-but-active;
 }
