@@ -5,6 +5,7 @@ import {Qcm} from "../types";
 import {QcmAllResponse, QcmClient} from "../services/qcmClient";
 import LoggedPage from "./loggedpage";
 import OngoingQCMStudent from "../components/ongoingqcmstudent";
+import QcmResultComponent from "../components/qcmresultcomponent";
 
 
 type State = {
@@ -33,6 +34,8 @@ class StudentPage extends LoggedPage<Props, State> {
                                           apiClient={this.props.apiClient}
                                           onRefresh={this.refresh}
                 />;
+            case "FINISHED":
+                return <QcmResultComponent apiClient={this.props.apiClient} qcm={qcm}/>;
             case "COMPLETE":
                 return (
                     <React.Fragment>
