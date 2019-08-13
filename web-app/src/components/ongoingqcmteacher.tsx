@@ -26,7 +26,11 @@ class OnGoingQCMTeacher extends OnGoingQCM<Props, State> {
 
     renderContent(q: Question, qcm: Qcm, index: number, isLast: boolean): React.ReactElement {
         return (
-        <React.Fragment>
+        <div
+            style={{
+                margin: 16
+            }}
+        >
             <p
                 className='unselectable'
             >Question {index + 1} out of {qcm.questions.length}</p>
@@ -42,7 +46,7 @@ class OnGoingQCMTeacher extends OnGoingQCM<Props, State> {
             >
                 {isLast ? "Finish MCQ" : "Next Question"}
             </button>
-        </React.Fragment>
+        </div>
         );
     }
 

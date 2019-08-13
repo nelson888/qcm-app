@@ -13,6 +13,7 @@ type State = {
 type Props = {
     onSubmit(qcm: Qcm): void,
     onCancel(): void,
+    creating?: boolean
     qcm: Qcm // initial qcm
 };
 
@@ -68,7 +69,14 @@ class QcmForm extends FormComponent<Props, Qcm> {
         }
         return (
             <React.Fragment>
-                {this.renderInput({placeholder: "Enter the title of the qcm", type: "", name: "name", autoFocus: true})}
+                <div
+                    style={{
+                        marginLeft: 16,
+                        marginTop: 16
+                    }}
+                >
+                    {this.renderInput({placeholder: "Enter the title of the qcm", type: "", name: "name", autoFocus: true})}
+                </div>
 
                 {questionsElements}
 
@@ -99,14 +107,22 @@ class QcmForm extends FormComponent<Props, Qcm> {
                         margin: 40
                     }}
                 >
-                    <button
-                        onClick={this.props.onCancel}
-                    >Cancel</button>
 
                     <button
-                        className="center-horizontal"
+                        className="inline btn-grad"
                         onClick={this.onSubmit}
                     >Save</button>
+
+                    {
+                        !this.props.creating &&
+                        <button
+                            className="inline btn-grad-danger"
+                            style={{
+                                marginLeft: 30
+                            }}
+                            onClick={this.props.onCancel}
+                        >Cancel</button>
+                    }
                 </div>
             </React.Fragment>
         );
@@ -166,6 +182,7 @@ class QcmForm extends FormComponent<Props, Qcm> {
         return <div
             key={q.id}
             style={{
+                padding: 16,
                 background: i % 2 ? '#c6c6c6': '#ffffff'
             }}
         >

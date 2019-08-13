@@ -107,9 +107,6 @@ abstract class LoggedPage<P extends Props, S extends State> extends Component<P,
                         current &&
                         <div
                             className="no-margin no-padding"
-                            style={{
-                                margin: 16
-                            }}
                         >
                             {this.renderQcm(current as Qcm)}
                         </div>

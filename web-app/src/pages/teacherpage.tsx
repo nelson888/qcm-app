@@ -38,6 +38,9 @@ class TeacherPage extends LoggedPage<Props, State> {
                     return (
                         <div
                             className="full-width"
+                            style={{
+                                margin: 16
+                            }}
                         >
                             <QcmForm
                                 qcm={qcm}
@@ -49,6 +52,9 @@ class TeacherPage extends LoggedPage<Props, State> {
                 return (
                     <div
                         className="full-width"
+                        style={{
+                            margin: 16
+                        }}
                     >
                         <h1>{qcm.name}</h1>
                         <p>Status: complete MCQ (not started yet)</p>
@@ -88,7 +94,8 @@ class TeacherPage extends LoggedPage<Props, State> {
                         <QcmForm
                             qcm={qcm}
                             onCancel={() => this.setState({modifying: false})}
-                            onSubmit={this.updateQcm}/>
+                            onSubmit={this.updateQcm}
+                            creating={true}/>
                     </div>
                 );
             case "STARTED":

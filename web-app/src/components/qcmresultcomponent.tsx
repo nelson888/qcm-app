@@ -43,16 +43,17 @@ class QcmResultComponent extends Component<Props, State> {
     render() {
         const {result, loading} = this.state;
         const { qcm } = this.props;
-        if (loading) {
-            return <h1>LOADING</h1>;
-        }
-        if (result == null) {
+        if (loading || result == null) {
             return <div/>;
         }
         let i: number = 0;
         const gridStyle = this.getGridStyle(result.questionResults.length + 1);
         return (
-            <React.Fragment>
+            <div
+                style={{
+                    margin: 16
+                }}
+            >
                 <div
                     style={gridStyle}
                 >
@@ -67,7 +68,7 @@ class QcmResultComponent extends Component<Props, State> {
                 </div>
                 <div className="black-line" />
                 {result.participants.map(p => this.participantRow(p, result.questionResults, i++, gridStyle))}
-            </React.Fragment>
+            </div>
         );
     }
 
