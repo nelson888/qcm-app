@@ -33,6 +33,7 @@ class OnGoingQCMTeacher extends OnGoingQCM<Props, State> {
 
             {this.renderQuestion(q)}
             <button
+                className="btn-grad"
                 style={{
                     float: 'right',
                     margin: 20
