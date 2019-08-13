@@ -180,7 +180,7 @@ class QcmForm extends FormComponent<Props, Qcm> {
             choicesElements.push(this.renderChoice(q, c, i, j++));
         }
         return <div
-            key={q.id}
+            key={i}
             style={{
                 padding: 16,
                 background: i % 2 ? '#c6c6c6': '#ffffff'
@@ -190,8 +190,8 @@ class QcmForm extends FormComponent<Props, Qcm> {
                 valueLoader:() => q.question,
                 width: '80%',
                 onChange: (event: any): any => {
-                let qcm: Qcm = {...this.state.form};
-                    qcm.questions.filter(que => q.id === que.id)[0].question = event.target.value;
+                    let qcm: Qcm = {...this.state.form};
+                    qcm.questions[i].question = event.target.value;
                 this.setState({
                     form: qcm
                 });
@@ -213,7 +213,7 @@ class QcmForm extends FormComponent<Props, Qcm> {
                         }}
                         onClick={() => {
                             let qcm: Qcm = {...this.state.form};
-                            let question: Question = qcm.questions.filter(que => q.id  === que.id)[0];
+                            let question: Question = qcm.questions[i];
                             question.choices.push({
                                 id: - question.choices.length - 1,
                                 value: "",
@@ -233,15 +233,15 @@ class QcmForm extends FormComponent<Props, Qcm> {
     private renderChoice = (q: Question, c: Choice, i: number, j: number): React.ReactElement => { //TODO render checkbox for is answer
         return (
             <div
-                key={c.id.toString()}
+                key={j}
             >
                 {this.renderInput({placeholder: "Enter the choice", type: "", label: `Choice ${j + 1}`, name: `q${i}Choice${j}`,
                     width: '80%', marginBottom: 0,
                     valueLoader: () => c.value,
                     onChange: (event: any): any => {
                         let qcm: Qcm = {...this.state.form};
-                        let question: Question = qcm.questions.filter(que => q.id  === que.id)[0];
-                        let choice: Choice = question.choices.filter(ch => c.id === ch.id)[0];
+                        let question: Question = qcm.questions[i];
+                        let choice: Choice = question.choices[j];
                         choice.value = event.target.value;
                         this.setState({
                             form: qcm
@@ -261,8 +261,8 @@ class QcmForm extends FormComponent<Props, Qcm> {
                         className="inline"
                         checked={c.answer} onValueChange={() => {
                         let qcm: Qcm = {...this.state.form};
-                        let question: Question = qcm.questions.filter(que => q.id  === que.id)[0];
-                        let choice: Choice = question.choices.filter(ch => c.id === ch.id)[0];
+                        let question: Question = qcm.questions[i];
+                        let choice: Choice = question.choices[j];
                         choice.answer = !choice.answer;
                         this.setState({
                             form: qcm
