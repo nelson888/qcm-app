@@ -6,10 +6,15 @@ type Props = {
     children: any,
     zoom?: number
     message?: string,
-    active: boolean
+    active: boolean,
+    className?: string
 }
-const LoadingScreen = ({active, children, zoom=1.5, message=""}: Props) => {
+const LoadingScreen = ({active, children, zoom=1.5, message="", className:otherClassName}: Props) => {
 
+    let className = active ? "input-disabled" : undefined;
+    if (otherClassName) {
+        className = className === undefined ? otherClassName : className + ' ' + otherClassName;
+    }
     return <div
     style={{
         width: '100%',
@@ -17,7 +22,7 @@ const LoadingScreen = ({active, children, zoom=1.5, message=""}: Props) => {
         margin: 0,
         padding: 0
     }}
-    className={active ? "input-disabled" : undefined}
+    className={className}
     >
         {children}
 
