@@ -111,7 +111,7 @@ public class ApplicationConfiguration {
     List<User> users = Arrays.asList(
       new User("nelson", passwordEncoder.encode("nelson"), STUDENT),
       new User("nicolas", passwordEncoder.encode("nicolas"), STUDENT),
-      new User("teacher2", passwordEncoder.encode("teacher2"), STUDENT),
+      new User("teacher2", passwordEncoder.encode("teacher2"), TEACHER),
       new User("admin", passwordEncoder.encode("admin"), Role.ADMIN),
         teacherUser);
     users.forEach(userRepository::saveAndFlush);

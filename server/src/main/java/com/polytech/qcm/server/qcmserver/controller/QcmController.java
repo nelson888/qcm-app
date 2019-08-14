@@ -67,7 +67,7 @@ public class QcmController {
       .filter(qcm -> qcm.getState() != State.INCOMPLETE || isOwner(qcm, user))
       .collect(Collectors.toList());
     qcms.forEach(q -> checkOwner(q, user));
-    return ResponseEntity.ok(qcmRepository.findAll());
+    return ResponseEntity.ok(qcms);
   }
 
   @GetMapping("/mines")
@@ -96,8 +96,6 @@ public class QcmController {
     checkOwner(qcm, principal);
     return ResponseEntity.ok(qcm);
   }
-
-
 
   @GetMapping("/new")
   @ApiOperation(value = "Creates a new qcm", response = QCM.class)
@@ -208,7 +206,7 @@ public class QcmController {
     QCM qcm = getQcm(id);
     Integer questionIndex = currentQuestionMap.get(id);
     if (questionIndex == null){
-      throw new BadRequestException("The qcm has not started");
+      throw new NotFoundException("There is no current question for this qcm");
     }
     Question question = qcm.getQuestions().get(questionIndex);
     if (!isOwner(qcm, user)) {
