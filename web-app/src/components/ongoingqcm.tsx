@@ -12,12 +12,12 @@ type Props = {
 
 type State = {
     loading: boolean,
-    question: Question|null
+    question: Question|null,
+    loadingMessage: string
 };
 
 abstract class OnGoingQCM<P extends Props, S extends State> extends Component<P, S> {
 
-    loadingMessage: string  = "";
 
     componentDidMount(): void {
         const {apiClient, qcm} = this.props;
@@ -41,7 +41,7 @@ abstract class OnGoingQCM<P extends Props, S extends State> extends Component<P,
     }
 //TODO afficher le nombre de reponses?
     render() {
-        const {loading, question} = this.state;
+        const {loading, question, loadingMessage} = this.state;
         const {qcm} = this.props;
 
         let index: number = 0;
@@ -54,7 +54,7 @@ abstract class OnGoingQCM<P extends Props, S extends State> extends Component<P,
         return (
             <LoadingScreen
                 active={loading}
-                message={this.loadingMessage}
+                message={loadingMessage}
             >
 
                 {

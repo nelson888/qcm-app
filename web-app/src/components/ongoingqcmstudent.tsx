@@ -2,7 +2,7 @@ import React from "react";
 import {Choice, Qcm, Question} from "../types";
 import {BoolResponse, QcmClient, QuestionResponse, VoidResponse} from "../services/qcmClient";
 import OnGoingQCM from "./ongoingqcm";
-import {clearInterval} from "timers";
+import {clearInterval, setInterval} from "timers";
 import {toast} from "react-toastify";
 import './ongoingqcmstudent.scss';
 
@@ -16,6 +16,7 @@ type State = {
     loading: boolean,
     question: Question|null,
     choices: number[],
+    loadingMessage: string
 };
 
 
@@ -24,10 +25,10 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
     state: State = {
         loading: true,
         question: null,
-        choices: []
+        choices: [],
+        loadingMessage: "Waiting for next question..."
     };
-    loadingMessage = "Waiting for next question...";
-    intId: any| null = null;
+    intId: any | null = null;
 
     async componentDidMount(): Promise<void> {
         const {apiClient, qcm} = this.props;
@@ -52,13 +53,12 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
             return;
         }
         if (answeredResponse.successData) {
-            this.loadingMessage = "Question answered. Waiting for next question...";
-            this.setState({loading: true});
+            this.setState({loading: true, loadingMessage: "Question answered. Waiting for next question..."});
         } else {
             this.setState({loading: false});
 
         }
-       // this.intId = setInterval(this.checkNewQuestion, 800);
+       this.intId = setInterval(this.checkNewQuestion, 800);
     }
 
     componentWillUnmount(): void {
@@ -73,6 +73,7 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
                 {this.renderQuestion(q)}
 
                 <button
+                    className="btn-grad"
                     onClick={this.onSubmit}
                 >Submit</button>
             </React.Fragment>
@@ -97,13 +98,17 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
 
     onSubmit = () => {
         const choices: number[] = [...this.state.choices];
-        this.loadingMessage = "Posting choices...";
+        this.setState({
+            loadingMessage: "Posting choices..."
+        });
         this.setState({loading: true, choices: [] });
         this.props.apiClient
             .postChoices(choices)
             .then((response: VoidResponse) => {
                 if (response.isSuccess) {
-                    this.loadingMessage = "Waiting for next question...";
+                    this.setState({
+                        loadingMessage: "Waiting for next question..."
+                    });
                 } else {
                     toast.error(response.errorData);
                     this.props.onRefresh();
@@ -112,14 +117,15 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
             })
             .catch((error) => {
                 toast.error("An error occurred: " + error.toString());
+                this.setState({loading: false});
             });
-        //TODO api call
     };
 
     checkNewQuestion = () => {
         const {qcm, apiClient} = this.props;
         apiClient.currentQuestion(qcm.id)
             .then((response: QuestionResponse) => {
+                console.log(response);
                 if (response.isSuccess) {
                     const question = response.successData;
                     if (this.state.question !== null && question.id !== this.state.question.id) {
@@ -128,9 +134,13 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
                             question: question,
                             loading: false
                         });
+                    } else {
+                        toast.error(response.errorData);
                     }
                 } else {
                     if (response.code === 404) { //not found = no other questions
+                        clearInterval(this.intId);
+                        this.intId = null;
                         this.props.onRefresh();
                     }
                 }

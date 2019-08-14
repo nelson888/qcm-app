@@ -13,16 +13,17 @@ type Props = {
 
 type State = {
     loading: boolean,
-    question: Question|null
+    question: Question|null,
+    loadingMessage: string
 };
 
 class OnGoingQCMTeacher extends OnGoingQCM<Props, State> {
 
     state: State = {
         loading: true,
-        question: null
+        question: null,
+        loadingMessage: "Loading next question..."
     };
-    loadingMessage = "Loading next question...";
 
     renderContent(q: Question, qcm: Qcm, index: number, isLast: boolean): React.ReactElement {
         return (
@@ -54,7 +55,6 @@ class OnGoingQCMTeacher extends OnGoingQCM<Props, State> {
         this.setState({loading: true});
         const {qcm, apiClient} = this.props;
         const response: NullableQuestionResponse = await apiClient.nextQuestion(qcm.id);
-        console.log(response);
         if (response.isSuccess) {
             if (response.successData != null) {
                 this.setState({question: response.successData, loading: false });
