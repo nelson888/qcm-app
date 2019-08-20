@@ -125,7 +125,6 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
         const {qcm, apiClient} = this.props;
         apiClient.currentQuestion(qcm.id)
             .then((response: QuestionResponse) => {
-                console.log(response);
                 if (response.isSuccess) {
                     const question = response.successData;
                     if (this.state.question !== null && question.id !== this.state.question.id) {
@@ -134,15 +133,13 @@ class OngoingQCMStudent extends OnGoingQCM<Props, State> {
                             question: question,
                             loading: false
                         });
-                    } else {
-                        toast.error(response.errorData);
                     }
+                } else if (response.code === 404) { //not found = no other questions
+                     clearInterval(this.intId);
+                     this.intId = null;
+                     this.props.onRefresh();
                 } else {
-                    if (response.code === 404) { //not found = no other questions
-                        clearInterval(this.intId);
-                        this.intId = null;
-                        this.props.onRefresh();
-                    }
+                    toast.error(response.errorData);
                 }
             })
     };
