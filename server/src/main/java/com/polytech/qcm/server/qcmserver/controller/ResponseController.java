@@ -12,7 +12,6 @@ import com.polytech.qcm.server.qcmserver.repository.ChoiceRepository;
 import com.polytech.qcm.server.qcmserver.repository.QcmRepository;
 import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
 import com.polytech.qcm.server.qcmserver.repository.UserRepository;
-import com.polytech.qcm.server.qcmserver.service.MessageSender;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -43,19 +42,17 @@ public class ResponseController {
   private final ResponseRepository responseRepository;
   private final QcmRepository qcmRepository;
   private final Map<Integer, Integer> currentQuestionMap;
-  private final MessageSender messageSender;
 
   public ResponseController(ChoiceRepository choiceRepository,
                             UserRepository userRepository,
                             ResponseRepository responseRepository,
-                            QcmRepository qcmRepository, MessageSender messageSender,
+                            QcmRepository qcmRepository,
                             Map<Integer, Integer> currentQuestionMap) {
     this.choiceRepository = choiceRepository;
     this.userRepository = userRepository;
     this.responseRepository = responseRepository;
     this.qcmRepository = qcmRepository;
     this.currentQuestionMap = Collections.unmodifiableMap(currentQuestionMap);
-    this.messageSender = messageSender;
   }
 
   @PostMapping("/")
