@@ -59,6 +59,7 @@ export interface QcmClient {
     getMyQcms(): Promise<QcmAllResponse>,
     getQcms(): Promise<QcmAllResponse>,
     newQcm(): Promise<QcmResponse>,
+    getQcm(id: number): Promise<QcmResponse>,
     updateQcm(qcm: Qcm): Promise<QcmResponse>,
     deleteQcm(id: number): Promise<QcmResponse>,
     getMe(): Promise<MeResponse>,

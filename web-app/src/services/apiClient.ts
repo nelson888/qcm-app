@@ -267,6 +267,19 @@ class ApiClient implements QcmClient {
         });
     }
 
+    async getQcm(id: number): Promise<QcmResponse> {
+        let response: Response = await this.get(`/qcm/${id}`);
+        if (this.isError(response)) {
+            return await this.errorResponse<Qcm>(response);
+        }
+        let json: Qcm = await response.json();
+        return new APIResponse({
+            isSuccess: true,
+            successData: json,
+            code: response.status
+        });
+    }
+
     setUser(user: User): void {
         this.user = user;
     }

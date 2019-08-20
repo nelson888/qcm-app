@@ -6,6 +6,7 @@ import {QcmAllResponse, QcmClient} from "../services/qcmClient";
 import LoggedPage from "./loggedpage";
 import OngoingQCMStudent from "../components/ongoingqcmstudent";
 import QcmResultComponent from "../components/qcmresultcomponent";
+import NotStartedQCMComponent from "../components/notstartedqcm";
 
 
 type State = {
@@ -38,21 +39,11 @@ class StudentPage extends LoggedPage<Props, State> {
                 return <QcmResultComponent apiClient={this.props.apiClient} qcm={qcm}/>;
             case "COMPLETE":
                 return (
-                    <React.Fragment>
-                        <div
-                            style={{
-                                marginTop: 64
-                            }}
-                            className="center-horizontal text-center"
-                        >
-                            <h1>{qcm.name}</h1>
-                            <p
-                                style={{
-                                    fontSize: 20
-                                }}
-                            >This MCQ hasn't started yet</p>
-                        </div>
-                    </React.Fragment>
+                    <NotStartedQCMComponent
+                        qcm={qcm}
+                        onRefresh={this.refresh}
+                        apiClient={this.props.apiClient}
+                    />
                 );
             default:
                 return (
