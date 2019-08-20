@@ -116,21 +116,37 @@ public class ApplicationConfiguration {
         teacherUser);
     users.forEach(userRepository::saveAndFlush);
 
-    List<Question> questions = new ArrayList<>();
-    QCM qcm = new QCM("Test QCM", teacherUser, State.COMPLETE, questions);
 
-    questions.addAll((
+
+    savePhilosophyQcm(teacherUser, users);
+    saveMathQcm(teacherUser);
+    LOGGER.info("Created users {}", users.stream().map(User::getUsername).collect(Collectors.toList()));
+    for (Question question : questionRepository.findAll()) {
+      LOGGER.info("Created {}", question);
+    }
+    for (Choice choice : choiceRepository.findAll()) {
+      LOGGER.info("Created {}", choice);
+    }
+
+    for (Response response : responseRepository.findAll()) {
+      LOGGER.info("Created {}", response);
+    }
+  }
+
+  private void savePhilosophyQcm(User teacherUser, List<User> users) {
+    QCM qcm = new QCM("Philosophy MCQ", teacherUser, State.FINISHED, Collections.emptyList());
+    List<Question> questions = new ArrayList<>((
       Arrays.asList(
         new Question("What is life?", new ArrayList<>(), qcm),
         new Question("What is love?", new ArrayList<>(), qcm),
         new Question("What is something?", new ArrayList<>(), qcm))));
 
     qcmRepository.saveAndFlush(qcm);
-    questions = questionRepository.findAll();
+    questions = questionRepository.saveAll(questions);
 
     List<Choice> choices = choiceRepository.saveAll(
       Arrays.asList(
-        new Choice("life itself", true, questions.get(0)),
+        new Choice("life", true, questions.get(0)),
         new Choice("nothing", false, questions.get(0)),
         new Choice("something", false, questions.get(0)),
         new Choice("life", false, questions.get(1)),
@@ -151,19 +167,29 @@ public class ApplicationConfiguration {
         new Response(users.get(0), choices.get(8))
       ));
     responseRepository.flush();
-
-    LOGGER.info("Created users {}", users.stream().map(User::getUsername).collect(Collectors.toList()));
-    LOGGER.info("Created {}", qcm);
-    for (Question question : questionRepository.findAll()) {
-      LOGGER.info("Created {}", question);
-    }
-    for (Choice choice : choiceRepository.findAll()) {
-      LOGGER.info("Created {}", choice);
-    }
-
-    for (Response response : responseRepository.findAll()) {
-      LOGGER.info("Created {}", response);
-    }
   }
+  private void saveMathQcm(User teacherUser) {
+    QCM qcm = new QCM("Math MCQ", teacherUser, State.COMPLETE, Collections.emptyList());
+    qcm = qcmRepository.saveAndFlush(qcm);
+    List<Question> questions = new ArrayList<>((
+      Arrays.asList(
+        new Question("1 + 1", new ArrayList<>(), qcm),
+        new Question("10 / 50 = ?", new ArrayList<>(), qcm),
+        new Question(" - i * i = 1 ?", new ArrayList<>(), qcm))));
 
+    questions = questionRepository.saveAll(questions);
+
+    List<Choice> choices = Arrays.asList(
+      new Choice("0", false, questions.get(0)),
+      new Choice("1", false, questions.get(0)),
+      new Choice("2", true, questions.get(0)),
+      new Choice("0.5", false, questions.get(1)),
+      new Choice("1 / 5", true, questions.get(1)),
+      new Choice("0.2", true, questions.get(1)),
+      new Choice("yes", true, questions.get(2)),
+      new Choice("no", false, questions.get(2))
+    );
+    choiceRepository.saveAll(choices);
+    choiceRepository.flush();
+  }
 }
