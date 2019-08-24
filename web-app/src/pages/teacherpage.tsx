@@ -101,7 +101,17 @@ class TeacherPage extends LoggedPage<Props, State> {
             case "STARTED":
                 return <OnGoingQCMTeacher qcm={qcm} apiClient={this.props.apiClient} refresh={this.refresh} />;
             case "FINISHED":
-                return <QcmResultComponent apiClient={this.props.apiClient} qcm={qcm}/>;
+                return <div>
+                    <QcmResultComponent apiClient={this.props.apiClient} qcm={qcm}/>
+                    <button
+                        style={{
+                            marginLeft: 16,
+                            marginTop: 32
+                        }}
+                        className="btn-grad-danger"
+                        onClick={() => this.onDeleteQcm(qcm)}
+                    >Delete</button>
+                </div>;
             default:
                 return (
                     <div
