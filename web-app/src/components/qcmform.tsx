@@ -230,7 +230,7 @@ class QcmForm extends FormComponent<Props, Qcm> {
     };
 
     // id = index
-    private renderChoice = (q: Question, c: Choice, i: number, j: number): React.ReactElement => { //TODO render checkbox for is answer
+    private renderChoice = (q: Question, c: Choice, i: number, j: number): React.ReactElement => {
         return (
             <div
                 key={j}

@@ -39,7 +39,7 @@ abstract class OnGoingQCM<P extends Props, S extends State> extends Component<P,
             toast.error("An error occurred: " + error.toString());
         });
     }
-//TODO afficher le nombre de reponses?
+
     render() {
         const {loading, question, loadingMessage} = this.state;
         const {qcm} = this.props;
