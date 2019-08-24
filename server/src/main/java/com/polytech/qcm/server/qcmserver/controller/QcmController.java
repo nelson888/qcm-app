@@ -158,10 +158,10 @@ public class QcmController {
       .flatMap(q -> responseRepository.findAllByChoice_Question_Id(q.getId()).stream())
       .collect(Collectors.toList());
     responseRepository.deleteAll(qcmResponses);
-    qcmRepository.deleteById(id);
+    qcmRepository.delete(qcm);
 
     LOGGER.info("User {} deleted qcm with id {}", user.getName(), id);
-    return ResponseEntity.status(HttpStatus.OK).build();
+    return ResponseEntity.ok(qcm);
   }
 
   @GetMapping("/{id}/launch")
