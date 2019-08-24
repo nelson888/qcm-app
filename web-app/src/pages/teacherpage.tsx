@@ -189,7 +189,7 @@ class TeacherPage extends LoggedPage<Props, State> {
         });
     }
 
-    private deleteQcm(qcm: Qcm): void { //TODO seems to throw error (unexpected output end)
+    private deleteQcm(qcm: Qcm): void {
         this.setState({loading: true});
         this.props.apiClient.deleteQcm(qcm.id)
             .then((response: QcmResponse) => {
