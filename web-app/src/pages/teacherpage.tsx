@@ -197,7 +197,8 @@ class TeacherPage extends LoggedPage<Props, State> {
                 if (response.isSuccess) {
                     let qcms: Qcm[] = [...this.state.qcms].filter(qu => qu.id !== response.successData.id);
                     this.setState({ qcms });
-                    toast.success(`Successfully deleted ${response.successData.name}`)
+                    toast.success(`Successfully deleted ${response.successData.name}`);
+                    this.refresh();
                 } else {
                     toast.error(`Couldn't delete qcm: ${response.errorData}`)
                 }
