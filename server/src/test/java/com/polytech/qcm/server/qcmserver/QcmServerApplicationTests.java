@@ -15,6 +15,7 @@ import com.polytech.qcm.server.qcmserver.data.response.AuthResponse;
 import com.polytech.qcm.server.qcmserver.data.response.QcmResult;
 import com.polytech.qcm.server.qcmserver.data.response.QuestionResult;
 import com.polytech.qcm.server.qcmserver.exception.BadRequestException;
+import com.polytech.qcm.server.qcmserver.exception.ForbiddenRequestException;
 import com.polytech.qcm.server.qcmserver.exception.NotFoundException;
 import com.polytech.qcm.server.qcmserver.repository.QcmRepository;
 import com.polytech.qcm.server.qcmserver.repository.ResponseRepository;
@@ -148,15 +149,15 @@ public class QcmServerApplicationTests {
 
 	@Test
 	public void rightAnswerTest() {
-		ChoiceIds rightChoiceIds = new ChoiceIds();
 		List<Question> questions = qcm.getQuestions();
-		rightChoiceIds.setIds(
-			Stream.of(questions.get(0).getChoices().get(0), questions.get(1).getChoices().get(1))
-				.map(Choice::getId)
-				.collect(Collectors.toSet()));
 
-		responseController.postResponse(STUDENT_PRINCIPAL, rightChoiceIds);
+		qcmController.launchQCM(TEACHER_PRINCIPAL, qcm.getId());
+		// answer question 1
+		responseController.postResponse(STUDENT_PRINCIPAL, new ChoiceIds(Collections.singleton(questions.get(0).getChoices().get(0).getId())));
 
+		qcmController.nextQuestion(TEACHER_PRINCIPAL, qcm.getId());
+		// answer question 2
+		responseController.postResponse(STUDENT_PRINCIPAL, new ChoiceIds(Collections.singleton(questions.get(1).getChoices().get(1).getId())));
 		QcmResult result = qcmController.qcmResult(STUDENT_PRINCIPAL, qcm.getId()).getBody();
 
 		assertNotNull(result);
@@ -177,12 +178,17 @@ public class QcmServerApplicationTests {
 		List<Question> questions = qcm.getQuestions();
 		wrongAnswers.setIds(
 			Stream.of(questions.get(0).getChoices().get(0),
-				questions.get(0).getChoices().get(1),
-				questions.get(1).getChoices().get(0))
+				questions.get(0).getChoices().get(1))
 				.map(Choice::getId)
 				.collect(Collectors.toSet()));
 
+		qcmController.launchQCM(TEACHER_PRINCIPAL, qcm.getId());
+		// answer question 1
 		responseController.postResponse(STUDENT_PRINCIPAL, wrongAnswers);
+
+		qcmController.nextQuestion(TEACHER_PRINCIPAL, qcm.getId());
+		// answer question 2
+		responseController.postResponse(STUDENT_PRINCIPAL, new ChoiceIds(Collections.singleton(questions.get(1).getChoices().get(0).getId())));
 
 		QcmResult result = qcmController.qcmResult(STUDENT_PRINCIPAL, qcm.getId()).getBody();
 
@@ -198,7 +204,7 @@ public class QcmServerApplicationTests {
 		}
 	}
 
-	@Test(expected = BadRequestException.class)
+	@Test(expected = ForbiddenRequestException.class)
 	public void answerTwiceTest() {
 		ChoiceIds choiceIds = new ChoiceIds();
 
