@@ -3,7 +3,7 @@
 This is a full stack project consisting of developing the front and back end of a school MCQ website.
 You may see 'QCM' instead of MCQ sometimes, well, excuse my french.
 
-The documentation of the API can be found [here](https://nelson888.github.io/qcm-app/)
+The documentation of the API can be found [here](https://nelson888.github.io/qcm-app/api/index.html)
 
 
 ## Users
